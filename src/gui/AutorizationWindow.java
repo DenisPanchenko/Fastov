@@ -38,6 +38,7 @@ public class AutorizationWindow extends JDialog {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		frame = new JFrame();
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		
@@ -79,5 +80,9 @@ public class AutorizationWindow extends JDialog {
 			}
 		});
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+	}
+
+	public JFrame getFrame() {
+		return frame;
 	}
 }

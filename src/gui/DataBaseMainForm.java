@@ -45,7 +45,7 @@ public class DataBaseMainForm extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JTree tree = new JTree();
+		JTree tree = new JTree(createTreeNode());
 		contentPane.add(tree, BorderLayout.WEST);
 		
 		table = new JTable();
@@ -84,22 +84,22 @@ public class DataBaseMainForm extends JFrame {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
 		List<DataBase> dataBases = dbManager.getDataBaseList();
-		List<String> dataBasesNames = new ArrayList<String>();
-		List<List<String>> tablesNames = new ArrayList<List<String>>();
 		DataBase curDB;
-		List<List<DefaultMutableTreeNode>> tablesNodes = new ArrayList<List<DefaultMutableTreeNode>>();
-		List<DefaultMutableTreeNode> dataBasesNodes = new  ArrayList<DefaultMutableTreeNode>();
+		DefaultMutableTreeNode dataBaseNode;
+		DefaultMutableTreeNode tableNode;
 		
-		for(int i = 0; i < dataBases.size(); i++) {
-			curDB = dataBases.get(i);
-			dataBasesNames.add(curDB.getName()); 
-			for(int j = 0; j < curDB.getTableList().size(); j++) {
-				tablesNames.get(i).add(curDB.getTableList().get(j).getTableName());
+		if(dataBases != null) {
+			for(int i = 0; i < dataBases.size(); i++) {
+				curDB = dataBases.get(i);
+				dataBaseNode = new DefaultMutableTreeNode(curDB.getName());
+				for(int j = 0; j < curDB.getTableList().size(); j++) {
+					tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j).getTableName());
+					dataBaseNode.add(tableNode);
+				}
+				root.add(dataBaseNode);
 			}
-			tablesNodes.get(i).add(new DefaultMutableTreeNode(tablesNames.get(i)));
 		}
-		
-		return null;
+		return root;
 	}
 	
 	public static void main(String[] args) {
@@ -109,6 +109,7 @@ public class DataBaseMainForm extends JFrame {
 					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
 					AutorizationWindow window = new AutorizationWindow(dbManager);
 					window.getFrame().setVisible(true);
+					dbBaseMainForm.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
