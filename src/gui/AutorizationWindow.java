@@ -3,35 +3,18 @@ package gui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-
-import java.awt.FlowLayout;
-
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import java.awt.GridLayout;
-import java.awt.BorderLayout;
-
-import javax.swing.BoxLayout;
-
-import java.awt.CardLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
 
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.SwingConstants;
 import javax.swing.JButton;
+
+import core.DBManager;
 
 public class AutorizationWindow {
 
@@ -40,6 +23,7 @@ public class AutorizationWindow {
 	private JTextField textField_1;
 	private JLabel lblNewLabel_1;
 	private JButton btnSignIn;
+	private DBManager dbManager;
 
 	/**
 	 * Launch the application.
@@ -61,6 +45,7 @@ public class AutorizationWindow {
 	 * Create the application.
 	 */
 	public AutorizationWindow() {
+		dbManager = new DBManager();
 		initialize();
 	}
 
@@ -97,7 +82,16 @@ public class AutorizationWindow {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				if(dbManager.authenticate(textField.getText(), textField_1.getText()) 
+						== DBManager.AUTH_TYPE.ADMIN) {
+				} else if(dbManager.authenticate(textField.getText(), textField_1.getText()) 
+						== DBManager.AUTH_TYPE.USER) {
+					
+				} else {
+					JOptionPane.showMessageDialog(frame, "Invalid login or password");
+					textField.setText("");
+					textField_1.setText("");
+				}
 				
 			}
 		});
