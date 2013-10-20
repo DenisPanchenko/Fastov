@@ -15,6 +15,8 @@ package core;
 import java.util.*;
 
 public class DataBase {
+	private String _dbName;
+	
 	private ArrayList<Table> _tableList; // list of tables	
 	
 	/**
@@ -55,4 +57,15 @@ public class DataBase {
 	public ArrayList<Table> getTableList() {
 		return _tableList;
 	};
+	
+	public DataBase(){
+		_dbName = "New database";
+	}
+	
+	public DataBase(String name){
+		if(name != null)
+			_dbName = name;
+		else
+			_dbName = "New database";
+	}
 }

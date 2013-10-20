@@ -11,6 +11,7 @@
 package core;
 
 import java.util.*;
+import java.io.*;
 
 public class DBManager {
 	public enum AUTH_TYPE {ADMIN, USER, FAIL};
@@ -44,14 +45,19 @@ public class DBManager {
 		return result;
 	}
 	
-	private static final String _dbPath = "DBS"; 
+	private static final String _dbConfigPath = "config"; 
 	private List<DataBase> _dataBases;
 	
 	/**
 	 *	Create a database manager 
 	 */
 	public DBManager() {
-		
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
+		} catch(Exception e) {
+			
+		}
 	}
 	
 	/**
