@@ -15,8 +15,10 @@ import javax.swing.JButton;
 import core.DBManager;
 
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class DataBaseMainForm {
+public class DataBaseMainForm extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -62,6 +64,17 @@ public class DataBaseMainForm {
 		btnNewButton_3 = new JButton("remove table");
 		panel.add(btnNewButton_3);
 		
+		AutorizationWindow dialog = new AutorizationWindow(dbManager);
+		
+		dialog.setVisible(true);
+		dialog.addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosed(WindowEvent e){
+				System.exit(NORMAL);
+			}
+		}
+		);
+		//dialog.setModal(true);
 	}
 	
 	private DefaultMutableTreeNode createTreeNode() {
@@ -75,8 +88,9 @@ public class DataBaseMainForm {
 			public void run() {
 				try {
 					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
-					AutorizationWindow window = new AutorizationWindow(dbManager);
-					window.getFrame().setVisible(true);
+					dbBaseMainForm.setVisible(true);
+					//AutorizationWindow window = new AutorizationWindow(dbManager);
+					//window.getFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
