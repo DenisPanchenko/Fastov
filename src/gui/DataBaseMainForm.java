@@ -13,10 +13,11 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 
 import core.DBManager;
+import core.DataBase;
 
 import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataBaseMainForm extends JFrame {
 
@@ -64,21 +65,26 @@ public class DataBaseMainForm extends JFrame {
 		btnNewButton_3 = new JButton("remove table");
 		panel.add(btnNewButton_3);
 		
-		AutorizationWindow dialog = new AutorizationWindow(dbManager);
-		
-		dialog.setVisible(true);
-		dialog.addWindowListener(new WindowAdapter(){
-			@Override
-			public void windowClosed(WindowEvent e){
-				System.exit(NORMAL);
-			}
-		}
-		);
-		//dialog.setModal(true);
 	}
 	
 	private DefaultMutableTreeNode createTreeNode() {
 		
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
+		List<DataBase> dataBases = dbManager.getDataBaseList();
+		List<String> dataBasesNames = new ArrayList<String>();
+		List<List<String>> tablesNames = new ArrayList<List<String>>();
+		DataBase curDB;
+		List<List<DefaultMutableTreeNode>> tablesNodes = new ArrayList<List<DefaultMutableTreeNode>>();
+		List<DefaultMutableTreeNode> dataBasesNodes = new  ArrayList<DefaultMutableTreeNode>();
+		
+		for(int i = 0; i < dataBases.size(); i++) {
+			curDB = dataBases.get(i);
+			dataBasesNames.add(curDB.getName()); 
+			for(int j = 0; j < curDB.getTableList().size(); j++) {
+				tablesNames.get(i).add(curDB.getTableList().get(j).getTableName());
+			}
+			tablesNodes.get(i).add(new DefaultMutableTreeNode(tablesNames.get(i)));
+		}
 		
 		return null;
 	}
@@ -88,9 +94,8 @@ public class DataBaseMainForm extends JFrame {
 			public void run() {
 				try {
 					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
-					dbBaseMainForm.setVisible(true);
-					//AutorizationWindow window = new AutorizationWindow(dbManager);
-					//window.getFrame().setVisible(true);
+					AutorizationWindow window = new AutorizationWindow(dbManager);
+					window.getFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
