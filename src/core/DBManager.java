@@ -32,12 +32,12 @@ public class DBManager {
 	 */
 	public AUTH_TYPE authenticate(String login, String password){
 		AUTH_TYPE result = AUTH_TYPE.FAIL;
-		if(login == _ADMIN_LOGIN && password == _ADMIN_PASS)
+		if(login.equals(_ADMIN_LOGIN) && password.equals(_ADMIN_PASS))
 		{
 			result = AUTH_TYPE.ADMIN;
 			_CURRENT_USER_TYPE = AUTH_TYPE.ADMIN;
 		}
-		else if(login == _USER_LOGIN && password == _USER_PASS)
+		else if(login.equals(_USER_LOGIN) && password.equals(_USER_PASS))
 		{
 			result = AUTH_TYPE.USER;
 			_CURRENT_USER_TYPE = AUTH_TYPE.USER;
@@ -55,6 +55,7 @@ public class DBManager {
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
+			
 		} catch(Exception e) {
 			
 		}

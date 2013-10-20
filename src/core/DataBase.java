@@ -59,7 +59,7 @@ public class DataBase {
 	};
 	
 	public DataBase(){
-		_dbName = "New database";
+		_dbName = "New database ";
 	}
 	
 	public DataBase(String name){
