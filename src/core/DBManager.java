@@ -65,7 +65,7 @@ public class DBManager {
 	/**
 	 * 
 	 */
-	public void addDataBase(DataBase){
+	public void addDataBase(DataBase db){
 		
 	}
 }
