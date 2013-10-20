@@ -13,7 +13,21 @@ package core;
 import java.util.*;
 import java.io.*;
 
+
 public class DBManager {
+	/**
+	 * Class create DataBase object based on
+	 * directory hierarchy
+	 * @author denis
+	 */
+	class DBFactory{
+		public DataBase getDataBase(String filePath){
+			DataBase result = new DataBase();
+			
+			return result;
+		}
+	}
+	
 	public enum AUTH_TYPE {ADMIN, USER, FAIL};
 	
 	private static final String _ADMIN_LOGIN = "admin"; // login for admin
@@ -55,6 +69,14 @@ public class DBManager {
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
+			Integer num = Integer.parseInt(br.readLine());
+			DBFactory factory = new DBFactory();
+			for(int i = 0; i < num; i++)
+			{
+				String dbPath = br.readLine();
+				DataBase db = factory.getDataBase(dbPath);
+				_dataBases.add(db);
+			}
 			
 		} catch(Exception e) {
 			

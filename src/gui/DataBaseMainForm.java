@@ -13,7 +13,7 @@ import javax.swing.JButton;
 
 import java.awt.GridLayout;
 
-public class DataBaseMainForm extends JFrame {
+public class DataBaseMainForm {
 
 	private JPanel contentPane;
 	private JTable table;

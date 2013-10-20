@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,7 +17,7 @@ import javax.swing.JButton;
 
 import core.DBManager;
 
-public class AutorizationWindow {
+public class AutorizationWindow extends JDialog {
 
 	private JFrame frame;
 	private JTextField textField;
