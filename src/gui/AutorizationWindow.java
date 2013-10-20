@@ -1,11 +1,10 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import java.awt.Dialog;
@@ -21,7 +20,7 @@ public class AutorizationWindow extends JDialog {
 
 	private JFrame frame;
 	private JTextField textField;
-	private JTextField textField_1;
+	private JPasswordField password;
 	private JLabel lblNewLabel_1;
 	private JButton btnSignIn;
 	private DBManager dbManager;
@@ -45,8 +44,8 @@ public class AutorizationWindow extends JDialog {
 		textField = new JTextField();
 		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		password = new JPasswordField();
+		password.setColumns(10);
 		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		lblNewLabel_1 = new JLabel("Enter login and password");
@@ -58,7 +57,7 @@ public class AutorizationWindow extends JDialog {
 		
 		JLabel lblNewLabel = new JLabel("Password:");
 		getContentPane().add(lblNewLabel);
-		getContentPane().add(textField_1);
+		getContentPane().add(password);
 		
 		btnSignIn = new JButton("Sign in");
 		getContentPane().add(btnSignIn);
@@ -66,15 +65,15 @@ public class AutorizationWindow extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(dbManager.authenticate(textField.getText(), textField_1.getText()).equals(DBManager.AUTH_TYPE.ADMIN)) {
+				if(dbManager.authenticate(textField.getText(), password.getText()).equals(DBManager.AUTH_TYPE.ADMIN)) {
 					//dispose();
 					setVisible(false);
-				} else if(dbManager.authenticate(textField.getText(), textField_1.getText()).equals(DBManager.AUTH_TYPE.USER)) {
+				} else if(dbManager.authenticate(textField.getText(), password.getText()).equals(DBManager.AUTH_TYPE.USER)) {
 					setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(frame, "Invalid login or password");
 					textField.setText("");
-					textField_1.setText("");
+					password.setText("");
 				}
 				
 			}

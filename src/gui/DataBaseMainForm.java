@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +15,6 @@ import core.DBManager;
 import core.DataBase;
 
 import java.awt.GridLayout;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
