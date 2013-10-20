@@ -7,9 +7,12 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
+
+import core.DBManager;
 
 import java.awt.GridLayout;
 
@@ -22,11 +25,14 @@ public class DataBaseMainForm {
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
+	private static DBManager dbManager;
 
 	/**
 	 * Create the frame.
 	 */
 	public DataBaseMainForm() {
+		dbManager = new DBManager();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -56,7 +62,25 @@ public class DataBaseMainForm {
 		btnNewButton_3 = new JButton("remove table");
 		panel.add(btnNewButton_3);
 		
-		
 	}
-
+	
+	private DefaultMutableTreeNode createTreeNode() {
+		
+		
+		return null;
+	}
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
+					AutorizationWindow window = new AutorizationWindow(dbManager);
+					window.getFrame().setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

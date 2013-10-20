@@ -27,26 +27,10 @@ public class AutorizationWindow extends JDialog {
 	private DBManager dbManager;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AutorizationWindow window = new AutorizationWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
-	public AutorizationWindow() {
-		dbManager = new DBManager();
+	public AutorizationWindow(DBManager dbManager) {
+		this.dbManager = dbManager;
 		initialize();
 	}
 
@@ -78,16 +62,14 @@ public class AutorizationWindow extends JDialog {
 		
 		btnSignIn = new JButton("Sign in");
 		frame.getContentPane().add(btnSignIn);
-		btnSignIn.setMargin(new Insets(10, 10, 10, 10));
 		btnSignIn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(dbManager.authenticate(textField.getText(), textField_1.getText()) 
-						== DBManager.AUTH_TYPE.ADMIN) {
-				} else if(dbManager.authenticate(textField.getText(), textField_1.getText()) 
-						== DBManager.AUTH_TYPE.USER) {
-					
+				if(dbManager.authenticate(textField.getText(), textField_1.getText()).equals(DBManager.AUTH_TYPE.ADMIN)) {
+					frame.dispose();
+				} else if(dbManager.authenticate(textField.getText(), textField_1.getText()).equals(DBManager.AUTH_TYPE.USER)) {
+					frame.dispose();
 				} else {
 					JOptionPane.showMessageDialog(frame, "Invalid login or password");
 					textField.setText("");
@@ -96,5 +78,9 @@ public class AutorizationWindow extends JDialog {
 				
 			}
 		});
+	}
+
+	public JFrame getFrame() {
+		return frame;
 	}
 }
