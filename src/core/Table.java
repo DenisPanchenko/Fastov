@@ -24,6 +24,8 @@ public class Table {
 	 * Return a cell by two indices
 	 * If pair of indices does not match real cell
 	 * in the table throws an wrong argument exception
+	 * @param i - row number
+	 * @param j - column number
 	 * @return DataType of specified cell
 	 * @throws WrongArgumentException
 	 */
@@ -33,8 +35,9 @@ public class Table {
 	
 	/**
 	 * 
+	 * @param filePath
 	 */
-	public Table(String filePaht){
+	public Table(String filePath){
 		
 	}
 	
