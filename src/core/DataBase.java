@@ -68,4 +68,8 @@ public class DataBase {
 		else
 			_dbName = "New database";
 	}
+	
+	public String getName(){
+		return _dbName;
+	}
 }
