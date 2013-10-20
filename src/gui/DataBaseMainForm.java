@@ -18,6 +18,8 @@ import core.DataBase;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class DataBaseMainForm extends JFrame {
 
@@ -65,6 +67,17 @@ public class DataBaseMainForm extends JFrame {
 		btnNewButton_3 = new JButton("remove table");
 		panel.add(btnNewButton_3);
 		
+		AutorizationWindow dialog = new AutorizationWindow(dbManager);
+		
+		dialog.setVisible(true);
+		dialog.addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosed(WindowEvent e){
+				System.exit(NORMAL);
+			}
+		}
+		);
+		//dialog.setModal(true);
 	}
 	
 	private DefaultMutableTreeNode createTreeNode() {

@@ -69,7 +69,7 @@ public class AutorizationWindow extends JDialog {
 					//dispose();
 					setVisible(false);
 				} else if(dbManager.authenticate(textField.getText(), textField_1.getText()).equals(DBManager.AUTH_TYPE.USER)) {
-					dispose();
+					setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(frame, "Invalid login or password");
 					textField.setText("");
@@ -79,9 +79,5 @@ public class AutorizationWindow extends JDialog {
 			}
 		});
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-	}
-
-	public JFrame getFrame() {
-		return frame;
 	}
 }
