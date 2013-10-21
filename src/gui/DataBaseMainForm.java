@@ -116,8 +116,6 @@ public class DataBaseMainForm extends JFrame {
 			public void run() {
 				try {
 					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
-					AutorizationWindow window = new AutorizationWindow(dbManager);
-					window.getFrame().setVisible(true);
 					dbBaseMainForm.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
