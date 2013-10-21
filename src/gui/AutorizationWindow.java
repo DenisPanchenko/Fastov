@@ -74,9 +74,9 @@ public class AutorizationWindow extends JDialog {
 		getContentPane().add(lblLogin);
 		getContentPane().add(textField);
 		
-		JLabel lblNewLabel = new JLabel("Password:");
-		lblNewLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		getContentPane().add(lblNewLabel);
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		getContentPane().add(lblPassword);
 		getContentPane().add(password);
 		
 		panel = new JPanel();
