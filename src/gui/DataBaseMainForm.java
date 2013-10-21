@@ -18,8 +18,6 @@ import java.awt.GridLayout;
 import java.util.List;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
 
 public class DataBaseMainForm extends JFrame {
 
@@ -53,7 +51,7 @@ public class DataBaseMainForm extends JFrame {
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
 		
-		table = new JTable();
+		table = createTable();
 		panel_1.add(table);
 		
 		panel = new JPanel();
@@ -109,6 +107,10 @@ public class DataBaseMainForm extends JFrame {
 			}
 		}
 		return root;
+	}
+	
+	private JTable createTable() {
+		return null;
 	}
 	
 	public static void main(String[] args) {
