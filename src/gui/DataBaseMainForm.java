@@ -18,6 +18,8 @@ import java.awt.GridLayout;
 import java.util.List;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
 
 public class DataBaseMainForm extends JFrame {
 
@@ -30,6 +32,7 @@ public class DataBaseMainForm extends JFrame {
 	private JButton btnNewButton_3;
 	private static DBManager dbManager;
 	private JPanel panel_1;
+	private JPanel panel_2;
 
 	/**
 	 * Create the frame.
@@ -55,19 +58,23 @@ public class DataBaseMainForm extends JFrame {
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(4, 1, 15, 15));
+		panel.setLayout(new GridLayout(3, 1, 0, 0));
+		
+		panel_2 = new JPanel();
+		panel.add(panel_2);
+		panel_2.setLayout(new GridLayout(0, 1, 10, 10));
 		
 		btnNewButton = new JButton("Save");
-		panel.add(btnNewButton);
+		panel_2.add(btnNewButton);
 		
 		btnNewButton_1 = new JButton("create DB");
-		panel.add(btnNewButton_1);
+		panel_2.add(btnNewButton_1);
 		
 		btnNewButton_2 = new JButton("create new table");
-		panel.add(btnNewButton_2);
+		panel_2.add(btnNewButton_2);
 		
 		btnNewButton_3 = new JButton("remove table");
-		panel.add(btnNewButton_3);
+		panel_2.add(btnNewButton_3);
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
