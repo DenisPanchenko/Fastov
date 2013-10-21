@@ -1,5 +1,6 @@
 package gui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,14 +17,33 @@ import javax.swing.JButton;
 
 import core.DBManager;
 
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+
+import java.awt.FlowLayout;
+
 public class AutorizationWindow extends JDialog {
 
 	private JFrame frame;
 	private JTextField textField;
 	private JPasswordField password;
-	private JLabel lblNewLabel_1;
 	private JButton btnSignIn;
 	private DBManager dbManager;
+	private JPanel panel;
 
 	/**
 	 * Create the application.
@@ -37,30 +57,34 @@ public class AutorizationWindow extends JDialog {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame("Login");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setTitle("Login");
 		
 		textField = new JTextField();
 		textField.setColumns(10);
 		
 		password = new JPasswordField();
 		password.setColumns(10);
-		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-		
-		lblNewLabel_1 = new JLabel("Enter login and password");
-		getContentPane().add(lblNewLabel_1);
-		
+		getContentPane().setLayout(new GridLayout(0, 1, 20, 0));
+
 		JLabel lblLogin = new JLabel("Login:");
+		lblLogin.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		getContentPane().add(lblLogin);
 		getContentPane().add(textField);
 		
 		JLabel lblNewLabel = new JLabel("Password:");
+		lblNewLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		getContentPane().add(lblNewLabel);
 		getContentPane().add(password);
 		
-		btnSignIn = new JButton("Sign in");
-		getContentPane().add(btnSignIn);
+		panel = new JPanel();
+		getContentPane().add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		
+		btnSignIn = new JButton("Login");
+		panel.add(btnSignIn);
 		btnSignIn.addActionListener(new ActionListener() {
 			
 			@Override

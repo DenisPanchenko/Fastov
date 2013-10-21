@@ -29,6 +29,7 @@ public class DataBaseMainForm extends JFrame {
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
 	private static DBManager dbManager;
+	private JPanel panel_1;
 
 	/**
 	 * Create the frame.
@@ -37,7 +38,7 @@ public class DataBaseMainForm extends JFrame {
 		dbManager = new DBManager();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(50, 50, 950, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -46,12 +47,15 @@ public class DataBaseMainForm extends JFrame {
 		JTree tree = new JTree(createTreeNode());
 		contentPane.add(tree, BorderLayout.WEST);
 		
+		panel_1 = new JPanel();
+		contentPane.add(panel_1, BorderLayout.NORTH);
+		
 		table = new JTable();
-		contentPane.add(table, BorderLayout.CENTER);
+		panel_1.add(table);
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(4, 1, 0, 0));
+		panel.setLayout(new GridLayout(4, 1, 15, 15));
 		
 		btnNewButton = new JButton("Save");
 		panel.add(btnNewButton);
