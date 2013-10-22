@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -16,6 +16,7 @@ import core.DBManager;
 import core.DataBase;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	private static JButton createDBBtn;
 	private static JButton createTableBtn;
 	private static JButton removeTableBtn;
+	private static JButton projectionBtn;
+	private static JButton unitTableBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -54,12 +57,12 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
 		
-		table = /*createTable();*/ new JTable();
+		table = createTable();
 		panel_1.add(table);
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(3, 1, 0, 0));
+		panel.setLayout(new GridLayout(2, 1, 0, 0));
 		
 		panel_2 = new JPanel();
 		panel.add(panel_2);
@@ -67,15 +70,59 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		
 		saveBtn = new JButton("Save");
 		panel_2.add(saveBtn);
+		saveBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//dbManager.save();
+				
+			}
+		});
 		
 		createDBBtn = new JButton("create DB");
 		panel_2.add(createDBBtn);
+		createDBBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				List<String> dbNames = new ArrayList<String>();
+				List<DataBase> dataBases = new ArrayList<DataBase>()/* dbManager.getDataBaseList()*/;
+				
+				//assert.notNull(dataBases)
+				for(DataBase db: dataBases) {
+					dbNames.add(db.getName());
+				}
+				String dbName = JOptionPane.showInputDialog("Enter data base name");
+				
+				while(dbNames.contains(dbName)){
+					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
+					if(dbName == null) break;
+				}
+				if(dbName != null) {
+					dbManager.createNewDB(dbName);	
+				}
+			}
+		});
 		
 		createTableBtn = new JButton("create new table");
 		panel_2.add(createTableBtn);
+		createTableBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
 		
 		removeTableBtn = new JButton("remove table");
 		panel_2.add(removeTableBtn);
+		
+		projectionBtn = new JButton("tables projection");
+		panel_2.add(projectionBtn);
+		
+		unitTableBtn = new JButton("unit tables");
+		panel_2.add(unitTableBtn);
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
@@ -91,10 +138,10 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	}
 	
 	public static void disableButtons() {
-		createDBBtn.disable();
-		saveBtn.disable();
-		removeTableBtn.disable();
-		createTableBtn.disable();
+		createDBBtn.setEnabled(false);
+		saveBtn.setEnabled(false);
+		removeTableBtn.setEnabled(false);
+		createTableBtn.setEnabled(false);
 	}
 	
 	private DefaultMutableTreeNode createTreeNode() {
