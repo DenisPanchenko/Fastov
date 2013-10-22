@@ -10,6 +10,7 @@
  */
 package core;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 
@@ -25,6 +26,25 @@ public class DBManager {
 			DataBase result = new DataBase();
 			
 			return result;
+		}
+	}
+	
+	static class ConfigManager
+	{
+		private static String _configFilePath;
+		public ConfigManager(String configFilePath)
+		{
+			_configFilePath = configFilePath;
+		}
+		public static void addNewDB(String name)
+		{
+			File file = new File(_configFilePath);
+			try
+			{
+				FileOutputStream fos = new FileOutputStream(file);
+			} catch (Exception e) {
+				System.out.println();
+			}
 		}
 	}
 	
@@ -60,12 +80,15 @@ public class DBManager {
 	}
 	
 	private static final String _dbConfigPath = "config"; 
+	private static final String _dbPath = "DB";
+	private static ConfigManager _configManager;
 	private List<DataBase> _dataBases;
 	
 	/**
 	 *	Create a database manager 
 	 */
 	public DBManager() {
+		_configManager = new ConfigManager(_dbConfigPath);
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
@@ -79,7 +102,7 @@ public class DBManager {
 			}
 			
 		} catch(Exception e) {
-			
+			System.out.println(e.toString());
 		}
 	}
 	
@@ -94,7 +117,19 @@ public class DBManager {
 	/**
 	 * 
 	 */
-	public void addDataBase(DataBase db){
-		
+	public void createNewDB(String dbName){
+		if(dbName == null)
+		{
+			StringBuilder defaultName = new StringBuilder();
+			defaultName.append("New Database (");
+			defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
+			.format(Calendar.getInstance().getTime()));
+			defaultName.append(")");
+			dbName = defaultName.toString();
+		}
+		DataBase db = new DataBase(dbName);
+		new File(_dbPath + dbName).mkdir();
+		_configManager.addNewDB(dbName);
+		_dataBases.add(db);
 	}
 }

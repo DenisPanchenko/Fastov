@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JDialog;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -16,10 +17,12 @@ import core.DataBase;
 
 import java.awt.GridLayout;
 import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class DataBaseMainForm extends JFrame {
+public class DataBaseMainForm extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -110,7 +113,7 @@ public class DataBaseMainForm extends JFrame {
 	}
 	
 	private JTable createTable() {
-		return null;
+		return new JTable();
 	}
 	
 	public static void main(String[] args) {
@@ -124,5 +127,53 @@ public class DataBaseMainForm extends JFrame {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		// TODO Auto-generated method stub
+		if(event.getActionCommand().equals("create db"))
+		{
+			String dbName = null;
+			// TODO
+			/*
+			 * Create input dialog as separate class and show it here to 
+			 * get name of database. Then pass this name as a string to
+			 * DBManager.createNewDB(name);
+			 * 
+			 * 
+			 * !!! Do not forget to check whether name is already exists !!!
+			 * 
+			 *  import javax.swing.*;
+import java.awt.event.*;
+
+public class ShowInputDialog{
+  public static void main(String[] args){
+  JFrame frame = new JFrame("Input Dialog Box Frame");
+  JButton button = new JButton("Show Input Dialog Box");
+  button.addActionListener(new ActionListener(){
+  public void actionPerformed(ActionEvent ae){
+  String str = JOptionPane.showInputDialog(null, "Enter some text : ", 
+"Roseindia.net", 1);
+  if(str != null)
+  JOptionPane.showMessageDialog(null, "You entered the text : " + str, 
+"Roseindia.net", 1);
+  else
+  JOptionPane.showMessageDialog(null, "You pressed cancel button.", 
+"Roseindia.net", 1);
+  }
+  });
+  JPanel panel = new JPanel();
+  panel.add(button);
+  frame.add(panel);
+  frame.setSize(400, 400);
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.setVisible(true);
+  }
+}
+			 */
+			dbManager.createNewDB(dbName);
+		}
+		
 	}
 }
