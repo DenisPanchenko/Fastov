@@ -72,4 +72,12 @@ public class DataBase {
 	public String getName(){
 		return _dbName;
 	}
+
+	@Override
+	public String toString() {
+		
+		return _dbName;
+	}
+	
+	
 }

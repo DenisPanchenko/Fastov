@@ -48,4 +48,11 @@ public class Table {
 	public String getTableName() {
 		return _name;
 	}
+
+	@Override
+	public String toString() {
+		return _name;
+	}
+	
+	
 }

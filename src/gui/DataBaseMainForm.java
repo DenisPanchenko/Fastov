@@ -14,6 +14,7 @@ import javax.swing.JButton;
 
 import core.DBManager;
 import core.DataBase;
+import core.Table;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
+	private JTree tree;
 
 	/**
 	 * Create the frame.
@@ -51,7 +53,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JTree tree = new JTree(createTreeNode());
+		tree = new JTree(createTreeNodes());
 		contentPane.add(tree, BorderLayout.WEST);
 		
 		panel_1 = new JPanel();
@@ -117,6 +119,18 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		
 		removeTableBtn = new JButton("remove table");
 		panel_2.add(removeTableBtn);
+		removeTableBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+				if(node.isLeaf()) {
+					Table table = (Table)(node.getUserObject());
+					
+				}
+			}
+		});
 		
 		projectionBtn = new JButton("tables projection");
 		panel_2.add(projectionBtn);
@@ -144,7 +158,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		createTableBtn.setEnabled(false);
 	}
 	
-	private DefaultMutableTreeNode createTreeNode() {
+	private DefaultMutableTreeNode createTreeNodes() {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
 		List<DataBase> dataBases = dbManager.getDataBaseList();
@@ -155,9 +169,9 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		if(dataBases != null) {
 			for(int i = 0; i < dataBases.size(); i++) {
 				curDB = dataBases.get(i);
-				dataBaseNode = new DefaultMutableTreeNode(curDB.getName());
+				dataBaseNode = new DefaultMutableTreeNode(curDB);
 				for(int j = 0; j < curDB.getTableList().size(); j++) {
-					tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j).getTableName());
+					tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j));
 					dataBaseNode.add(tableNode);
 				}
 				root.add(dataBaseNode);
