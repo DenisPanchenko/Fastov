@@ -94,6 +94,7 @@ public class AutorizationWindow extends JDialog {
 					setVisible(false);
 				} else if(dbManager.authenticate(textField.getText(), password.getText()).equals(DBManager.AUTH_TYPE.USER)) {
 					setVisible(false);
+					DataBaseMainForm.disableButtons();
 				} else {
 					JOptionPane.showMessageDialog(frame, "Invalid login or password");
 					textField.setText("");

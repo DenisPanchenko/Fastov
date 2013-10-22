@@ -24,10 +24,10 @@ public class DataBaseMainForm extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JPanel panel;
-	private JButton btnNewButton;
-	private JButton btnNewButton_1;
-	private JButton btnNewButton_2;
-	private JButton btnNewButton_3;
+	private static JButton saveBtn;
+	private static JButton createDBBtn;
+	private static JButton createTableBtn;
+	private static JButton removeTableBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -51,7 +51,7 @@ public class DataBaseMainForm extends JFrame {
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
 		
-		table = createTable();
+		table = /*createTable();*/ new JTable();
 		panel_1.add(table);
 		
 		panel = new JPanel();
@@ -62,17 +62,17 @@ public class DataBaseMainForm extends JFrame {
 		panel.add(panel_2);
 		panel_2.setLayout(new GridLayout(0, 1, 10, 10));
 		
-		btnNewButton = new JButton("Save");
-		panel_2.add(btnNewButton);
+		saveBtn = new JButton("Save");
+		panel_2.add(saveBtn);
 		
-		btnNewButton_1 = new JButton("create DB");
-		panel_2.add(btnNewButton_1);
+		createDBBtn = new JButton("create DB");
+		panel_2.add(createDBBtn);
 		
-		btnNewButton_2 = new JButton("create new table");
-		panel_2.add(btnNewButton_2);
+		createTableBtn = new JButton("create new table");
+		panel_2.add(createTableBtn);
 		
-		btnNewButton_3 = new JButton("remove table");
-		panel_2.add(btnNewButton_3);
+		removeTableBtn = new JButton("remove table");
+		panel_2.add(removeTableBtn);
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
@@ -85,6 +85,13 @@ public class DataBaseMainForm extends JFrame {
 		}
 		);
 		//dialog.setModal(true);
+	}
+	
+	public static void disableButtons() {
+		createDBBtn.disable();
+		saveBtn.disable();
+		removeTableBtn.disable();
+		createTableBtn.disable();
 	}
 	
 	private DefaultMutableTreeNode createTreeNode() {
