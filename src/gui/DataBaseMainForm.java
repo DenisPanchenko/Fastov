@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -106,7 +107,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
 				}
 				if(dbName != null) {
-					dbManager.createNewDB(dbName);	
+					DataBase db = dbManager.createNewDB(dbName);
+					addNewNodeToTree(db);
 				}
 			}
 		});
@@ -119,34 +121,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				
 				JTable table = new JTable();
-				JDialog createTableDialog = new JDialog();
-				JLabel tableNameL = new JLabel("Table Name: ");
-				JLabel columnNameL = new JLabel("Column Name: ");
-				JTextField tName = new JTextField();
-				JTextField cName = new JTextField();
-				JButton addBtn = new JButton("Add");
-				JButton okBtn = new JButton("Ok");
-				JButton cancelBtn = new JButton("Cancel");
-				JPanel tablePanel = new JPanel(new GridLayout(1, 2, 10, 10));
-				JPanel columnPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-				JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+				JDialog dialog = getCreationTableDialog();
 				
-				tablePanel.add(tableNameL);
-				tablePanel.add(tName);
-				columnPanel.add(columnNameL);
-				columnNameL.add(cName);
-				columnPanel.add(addBtn);
-				buttonPanel.add(okBtn);
-				buttonPanel.add(cancelBtn);
-				
-				createTableDialog.setSize(300, 200);
-				createTableDialog.setLayout(new GridLayout(3, 1, 10, 10));
-				createTableDialog.add(tablePanel);
-				createTableDialog.add(columnPanel);
-				createTableDialog.add(buttonPanel);
-				
-				createTableDialog.setVisible(true);
-				createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);
 				//Table newTable = new Table(filePath);
 				
 			}
@@ -165,7 +141,6 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 					Table table = (Table)userObject;
 					DataBase dataBase = (DataBase)(node.getParent());
 					dataBase.deleteTable(dataBase.getTableList().indexOf(table));
-					refreshTree();
 				}
 			}
 		});
@@ -196,14 +171,50 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		createTableBtn.setEnabled(false);
 	}
 	
-	private void refreshTree() {
-		tree = new JTree(createTreeNodes());
+	private JDialog getCreationTableDialog() {
+		JDialog createTableDialog = new JDialog();
+		JLabel tableNameL = new JLabel("Table Name: ");
+		JLabel columnNameL = new JLabel("Column Name: ");
+		JTextField tName = new JTextField();
+		JTextField cName = new JTextField();
+		JButton addBtn = new JButton("Add");
+		JButton okBtn = new JButton("Ok");
+		JButton cancelBtn = new JButton("Cancel");
+		JPanel tablePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+		JPanel columnPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+		
+		tablePanel.add(tableNameL);
+		tablePanel.add(tName);
+		columnPanel.add(columnNameL);
+		columnNameL.add(cName);
+		columnPanel.add(addBtn);
+		buttonPanel.add(okBtn);
+		buttonPanel.add(cancelBtn);
+		
+		createTableDialog.setSize(300, 200);
+		createTableDialog.setLayout(new GridLayout(3, 1, 10, 10));
+		createTableDialog.add(tablePanel);
+		createTableDialog.add(columnPanel);
+		createTableDialog.add(buttonPanel);
+		
+		createTableDialog.setVisible(true);
+		createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+		
+		return createTableDialog;
+	}
+	
+	private void addNewNodeToTree(Object o) {
+		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		root.add(new DefaultMutableTreeNode(o));
 	}
 	
 	private DefaultMutableTreeNode createTreeNodes() {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
 		List<DataBase> dataBases = dbManager.getDataBaseList();
+		System.out.println(dataBases);
 		DataBase curDB;
 		DefaultMutableTreeNode dataBaseNode;
 		DefaultMutableTreeNode tableNode;
@@ -212,9 +223,11 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			for(int i = 0; i < dataBases.size(); i++) {
 				curDB = dataBases.get(i);
 				dataBaseNode = new DefaultMutableTreeNode(curDB);
-				for(int j = 0; j < curDB.getTableList().size(); j++) {
-					tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j));
-					dataBaseNode.add(tableNode);
+				if(curDB.getTableList() != null) {
+					for(int j = 0; j < curDB.getTableList().size(); j++) {
+						tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j));
+						dataBaseNode.add(tableNode);
+					}
 				}
 				root.add(dataBaseNode);
 			}

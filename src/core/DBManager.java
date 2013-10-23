@@ -121,10 +121,12 @@ public class DBManager {
 	/**
 	 * 
 	 */
-	public void createNewDB(String dbName){
+	public DataBase createNewDB(String dbName){
 		DataBase db = new DataBase(dbName);
 		new File(_dbPath + dbName).mkdir();
 		_configManager.addNewDB(db.getName());
 		_dataBases.add(db);
+		
+		return db;
 	}
 }
