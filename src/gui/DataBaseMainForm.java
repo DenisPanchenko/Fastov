@@ -96,9 +96,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 				}
 				String dbName = JOptionPane.showInputDialog("Enter data base name");
 				
-				while(dbNames.contains(dbName)){
+				while(dbNames.contains(dbName) && dbName != null){
 					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
-					if(dbName == null) break;
 				}
 				if(dbName != null) {
 					dbManager.createNewDB(dbName);	
@@ -125,9 +124,12 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent arg0) {
 				
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-				if(node.isLeaf()) {
-					Table table = (Table)(node.getUserObject());
-					
+				Object userObject = node.getUserObject();
+				if(userObject instanceof Table) {
+					Table table = (Table)userObject;
+					DataBase dataBase = (DataBase)(node.getParent());
+					dataBase.deleteTable(dataBase.getTableList().indexOf(table));
+					refreshTree();
 				}
 			}
 		});
@@ -156,6 +158,10 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		saveBtn.setEnabled(false);
 		removeTableBtn.setEnabled(false);
 		createTableBtn.setEnabled(false);
+	}
+	
+	private void refreshTree() {
+		tree = new JTree(createTreeNodes());
 	}
 	
 	private DefaultMutableTreeNode createTreeNodes() {

@@ -23,7 +23,7 @@ public class DataBase {
 	 * Add a new table to the database
 	 * @return void
 	 */
-	public void addTable(Table table) {
+	public void createTable(Table table) {
 
 	}
 	
