@@ -29,19 +29,35 @@ public class DBManager {
 		}
 	}
 	
-	static class ConfigManager
+	static class ConfigManager // TODO translate class into STATE object
 	{
+		
+		// TODO implement action queue
+		
+		private static File _file;
 		private static String _configFilePath;
+		/**
+		 * Open specified file
+		 * @param configFilePath - String
+		 */
 		public ConfigManager(String configFilePath)
 		{
-			_configFilePath = configFilePath;
+			if(configFilePath != null)
+			{
+				_configFilePath = configFilePath;
+				_file = new File(_configFilePath);
+			}
 		}
+		/**
+		 * Add new database specified by name
+		 * to config file
+		 * @param name - String name of new database
+		 */
 		public static void addNewDB(String name)
 		{
-			File file = new File(_configFilePath);
 			try
 			{
-				FileWriter fw = new FileWriter(file, true);
+				FileWriter fw = new FileWriter(_file, true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.append(name + "\n");
 				bw.close();
@@ -128,5 +144,24 @@ public class DBManager {
 		_dataBases.add(db);
 		
 		return db;
+	}
+	/**
+	 * Deletes database from list
+	 * @param dbName - String name of the DB
+	 */
+	public void deleteDB(String dbName)
+	{
+		Integer index = new Integer(-1);
+		if(dbName != null)
+		{
+			for(DataBase db : _dataBases)
+				if(db.getName() == dbName)
+					index = _dataBases.indexOf(db);
+		}
+		if(index > -1)
+		{
+			_dataBases.remove(index);
+			// TODO delete from file system and from config file!!!
+		}
 	}
 }
