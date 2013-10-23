@@ -12,6 +12,7 @@
 
 package core;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Table {
@@ -19,6 +20,16 @@ public class Table {
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
+	
+	private String generateDefaultName()
+	{
+		StringBuilder defaultName = new StringBuilder();
+		defaultName.append("New Table (");
+		defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
+		.format(Calendar.getInstance().getTime()));
+		defaultName.append(")");
+		return defaultName.toString();
+	}
 	
 	/**
 	 * Return a cell by two indices
@@ -31,15 +42,19 @@ public class Table {
 	 */
 	public DataType getCell(Integer i, Integer j) {
 		return _content.get(i).get(j);
-	}
+	}	
 	
 	/**
 	 * 
-	 * @param filePath
+	 * @param tableName - String name of the table
 	 */
 	public Table(String tableName){
-		if(tableName != null)
+		if(tableName == null)
+			_name = generateDefaultName();
+		else
+		{
 			_name = tableName;
+		}
 	}
 	
 	/**

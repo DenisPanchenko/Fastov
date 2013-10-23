@@ -42,7 +42,8 @@ public class DataBase {
 	 */
 	public void createTable(Table table) 
 	{
-		
+		if(table != null)
+			_tableList.add(table);
 	}
 	
 	/**
