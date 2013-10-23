@@ -40,6 +40,10 @@ public class DataBase {
 	 * Add a new table to the database
 	 * @return void
 	 */
+<<<<<<< HEAD
+	public void createTable(Table table) {
+		
+=======
 	public void createTable(Table table) 
 	{
 		if(table != null)
@@ -65,6 +69,7 @@ public class DataBase {
 		if(result == false)
 			_tableList.add(new Table(tableName));
 		return result;
+>>>>>>> d130367d461753475abf935af8fdfe0eebdfa33e
 	}
 	
 	/**

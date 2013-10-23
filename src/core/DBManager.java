@@ -41,9 +41,12 @@ public class DBManager {
 			File file = new File(_configFilePath);
 			try
 			{
-				FileOutputStream fos = new FileOutputStream(file);
+				FileWriter fw = new FileWriter(file, true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.append(name + "\n");
+				bw.close();
 			} catch (Exception e) {
-				System.out.println();
+				System.out.println(e.getStackTrace().toString());
 			}
 		}
 	}
@@ -80,15 +83,16 @@ public class DBManager {
 	}
 	
 	private static final String _dbConfigPath = "config"; 
-	private static final String _dbPath = "DB";
+	private static final String _dbPath = "DB/";
 	private static ConfigManager _configManager;
-	private List<DataBase> _dataBases;
+	private ArrayList<DataBase> _dataBases;
 	
 	/**
 	 *	Create a database manager 
 	 */
 	public DBManager() {
 		_configManager = new ConfigManager(_dbConfigPath);
+		_dataBases = new ArrayList<DataBase>();
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
@@ -108,9 +112,9 @@ public class DBManager {
 	
 	/**
 	 * Returns the list of available databases
-	 * @return List<DataBase> - list of databases
+	 * @return ArrayList<DataBase> - list of databases
 	 */
-	public List<DataBase> getDataBaseList(){
+	public ArrayList<DataBase> getDataBaseList(){
 		return _dataBases;
 	}
 	
@@ -118,18 +122,9 @@ public class DBManager {
 	 * 
 	 */
 	public void createNewDB(String dbName){
-		if(dbName == null)
-		{
-			StringBuilder defaultName = new StringBuilder();
-			defaultName.append("New Database (");
-			defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
-			.format(Calendar.getInstance().getTime()));
-			defaultName.append(")");
-			dbName = defaultName.toString();
-		}
 		DataBase db = new DataBase(dbName);
 		new File(_dbPath + dbName).mkdir();
-		_configManager.addNewDB(dbName);
+		_configManager.addNewDB(db.getName());
 		_dataBases.add(db);
 	}
 }
