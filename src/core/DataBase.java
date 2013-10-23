@@ -24,7 +24,7 @@ public class DataBase {
 	 * @return void
 	 */
 	public void createTable(Table table) {
-
+		
 	}
 	
 	/**

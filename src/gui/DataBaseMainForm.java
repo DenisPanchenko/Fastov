@@ -1,13 +1,19 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
+import java.awt.TextArea;
+import java.awt.TextField;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -112,6 +118,36 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				JTable table = new JTable();
+				JDialog createTableDialog = new JDialog();
+				JLabel tableNameL = new JLabel("Table Name: ");
+				JLabel columnNameL = new JLabel("Column Name: ");
+				JTextField tName = new JTextField();
+				JTextField cName = new JTextField();
+				JButton addBtn = new JButton("Add");
+				JButton okBtn = new JButton("Ok");
+				JButton cancelBtn = new JButton("Cancel");
+				JPanel tablePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+				JPanel columnPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+				JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+				
+				tablePanel.add(tableNameL);
+				tablePanel.add(tName);
+				columnPanel.add(columnNameL);
+				columnNameL.add(cName);
+				columnPanel.add(addBtn);
+				buttonPanel.add(okBtn);
+				buttonPanel.add(cancelBtn);
+				
+				createTableDialog.setSize(300, 200);
+				createTableDialog.setLayout(new GridLayout(3, 1, 10, 10));
+				createTableDialog.add(tablePanel);
+				createTableDialog.add(columnPanel);
+				createTableDialog.add(buttonPanel);
+				
+				createTableDialog.setVisible(true);
+				createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				//Table newTable = new Table(filePath);
 				
 			}
 		});
