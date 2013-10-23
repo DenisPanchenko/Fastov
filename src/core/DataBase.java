@@ -12,6 +12,7 @@
 
 package core;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DataBase {
@@ -20,11 +21,49 @@ public class DataBase {
 	private ArrayList<Table> _tableList; // list of tables	
 	
 	/**
+	 * Generates name for database.
+	 * Name is based upon current date and time in order
+	 * to avoid collisions.
+	 * @return String
+	 */
+	private String generateDefaultName()
+	{
+		StringBuilder defaultName = new StringBuilder();
+		defaultName.append("New Database (");
+		defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
+		.format(Calendar.getInstance().getTime()));
+		defaultName.append(")");
+		return defaultName.toString();
+	}
+	
+	/**
 	 * Add a new table to the database
 	 * @return void
 	 */
-	public void createTable(Table table) {
-
+	public void createTable(Table table) 
+	{
+		
+	}
+	
+	/**
+	 * Create new table with defined name
+	 * Returns false if operation was successfully completed
+	 * otherwise returns false.
+	 * @param tableName - String name of new table
+	 * @return boolean - success flag
+	 */
+	public boolean createTable(String tableName)
+	{
+		boolean result = false;
+		for(Table table : _tableList)
+			if(table.getTableName().equals(tableName))
+			{
+				result = true;
+				break;
+			}
+		if(result == false)
+			_tableList.add(new Table(tableName));
+		return result;
 	}
 	
 	/**
@@ -59,14 +98,13 @@ public class DataBase {
 	};
 	
 	public DataBase(){
-		_dbName = "New database ";
+		_dbName = generateDefaultName();
 	}
 	
 	public DataBase(String name){
-		if(name != null)
-			_dbName = name;
-		else
-			_dbName = "New database";
+		if(name == null)
+			name = generateDefaultName();
+		_dbName = name;
 	}
 	
 	public String getName(){

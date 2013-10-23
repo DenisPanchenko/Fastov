@@ -37,8 +37,9 @@ public class Table {
 	 * 
 	 * @param filePath
 	 */
-	public Table(String filePath){
-		
+	public Table(String tableName){
+		if(tableName != null)
+			_name = tableName;
 	}
 	
 	/**

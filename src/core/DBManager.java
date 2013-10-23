@@ -118,15 +118,6 @@ public class DBManager {
 	 * 
 	 */
 	public void createNewDB(String dbName){
-		if(dbName == null)
-		{
-			StringBuilder defaultName = new StringBuilder();
-			defaultName.append("New Database (");
-			defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
-			.format(Calendar.getInstance().getTime()));
-			defaultName.append(")");
-			dbName = defaultName.toString();
-		}
 		DataBase db = new DataBase(dbName);
 		new File(_dbPath + dbName).mkdir();
 		_configManager.addNewDB(dbName);
