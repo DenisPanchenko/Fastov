@@ -9,8 +9,11 @@ import java.awt.TextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -95,14 +98,15 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				List<String> dbNames = new ArrayList<String>();
-				List<DataBase> dataBases = new ArrayList<DataBase>()/* dbManager.getDataBaseList()*/;
+				List<DataBase> dataBases = dbManager.getDataBaseList();
 				
-				//assert.notNull(dataBases)
-				for(DataBase db: dataBases) {
-					dbNames.add(db.getName());
-				}
 				String dbName = JOptionPane.showInputDialog("Enter data base name");
 				
+				if(dataBases != null) {
+					for(DataBase db: dataBases) {
+						dbNames.add(db.getName());
+					}
+				}
 				while(dbNames.contains(dbName) && dbName != null){
 					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
 				}
@@ -205,16 +209,27 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	}
 	
 	private void addNewNodeToTree(Object o) {
-		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+		DefaultMutableTreeNode root = getRoot();
 		root.add(new DefaultMutableTreeNode(o));
+		
+		tree.setModel(new DefaultTreeModel(root));
+		tree.repaint();
+	}
+	
+	private DefaultMutableTreeNode getRoot() {
+		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		return (DefaultMutableTreeNode)model.getRoot();
+	}
+	
+	private void removeNodeFromTree(Object o) {
+		DefaultMutableTreeNode root = getRoot();
+		//root.removeN (new DefaultMutableTreeNode(o));
 	}
 	
 	private DefaultMutableTreeNode createTreeNodes() {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
 		List<DataBase> dataBases = dbManager.getDataBaseList();
-		System.out.println(dataBases);
 		DataBase curDB;
 		DefaultMutableTreeNode dataBaseNode;
 		DefaultMutableTreeNode tableNode;
