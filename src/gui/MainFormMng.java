@@ -10,6 +10,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import core.DBManager;
 import core.DataBase;
+import core.Table;
 
 public class MainFormMng {
 	
@@ -46,5 +47,45 @@ public class MainFormMng {
 	private static DefaultMutableTreeNode getRoot(JTree tree) {
 		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 		return (DefaultMutableTreeNode)model.getRoot();
+	}
+	
+	public static JTree removeTable(JTree tree) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object userObject = node.getUserObject();
+		if(userObject instanceof Table) {
+			Table table = (Table)userObject;
+			DataBase dataBase = (DataBase)(node.getParent());
+			dataBase.deleteTable(dataBase.getTableList().indexOf(table));
+		}
+		return tree;
+	}
+	
+	public static void removeNodeFromTree(Object o, JTree tree) {
+		DefaultMutableTreeNode root = getRoot(tree);
+		
+	}
+	
+	public static DefaultMutableTreeNode createTreeNodes(DBManager dbManager) {
+		
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
+		List<DataBase> dataBases = dbManager.getDataBaseList();
+		DataBase curDB;
+		DefaultMutableTreeNode dataBaseNode;
+		DefaultMutableTreeNode tableNode;
+		
+		if(dataBases != null) {
+			for(int i = 0; i < dataBases.size(); i++) {
+				curDB = dataBases.get(i);
+				dataBaseNode = new DefaultMutableTreeNode(curDB);
+				if(curDB.getTableList() != null) {
+					for(int j = 0; j < curDB.getTableList().size(); j++) {
+						tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j));
+						dataBaseNode.add(tableNode);
+					}
+				}
+				root.add(dataBaseNode);
+			}
+		}
+		return root;
 	}
 }
