@@ -97,23 +97,8 @@ public class MainForm extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				List<String> dbNames = new ArrayList<String>();
-				List<DataBase> dataBases = dbManager.getDataBaseList();
-				
-				String dbName = JOptionPane.showInputDialog("Enter data base name");
-				
-				if(dataBases != null) {
-					for(DataBase db: dataBases) {
-						dbNames.add(db.getName());
-					}
-				}
-				while(dbNames.contains(dbName) && dbName != null){
-					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
-				}
-				if(dbName != null) {
-					DataBase db = dbManager.createNewDB(dbName);
-					addNewNodeToTree(db);
-				}
+				JTree newTree = MainFormMng.createDB(dbManager, tree);
+				newTree.repaint();
 			}
 		});
 		
@@ -208,21 +193,8 @@ public class MainForm extends JFrame implements ActionListener{
 		return createTableDialog;
 	}
 	
-	private void addNewNodeToTree(Object o) {
-		DefaultMutableTreeNode root = getRoot();
-		root.add(new DefaultMutableTreeNode(o));
-		
-		tree.setModel(new DefaultTreeModel(root));
-		tree.repaint();
-	}
-	
-	private DefaultMutableTreeNode getRoot() {
-		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		return (DefaultMutableTreeNode)model.getRoot();
-	}
-	
 	private void removeNodeFromTree(Object o) {
-		DefaultMutableTreeNode root = getRoot();
+		DefaultMutableTreeNode root; //= getRoot();
 		//root.removeN (new DefaultMutableTreeNode(o));
 	}
 	
