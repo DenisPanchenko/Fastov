@@ -34,7 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class DataBaseMainForm extends JFrame implements ActionListener{
+public class MainForm extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -53,7 +53,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	/**
 	 * Create the frame.
 	 */
-	public DataBaseMainForm() {
+	public MainForm() {
 		dbManager = new DBManager();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -258,7 +258,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
+					MainForm dbBaseMainForm = new MainForm();
 					dbBaseMainForm.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
