@@ -14,8 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-public class DBManager {
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class DBManager extends ActionPool{
+	
 	/**
 	 * Class create DataBase object based on
 	 * directory hierarchy
@@ -33,9 +41,9 @@ public class DBManager {
 	{
 		
 		// TODO implement action queue
-		
 		private static File _file;
 		private static String _configFilePath;
+		private static Document _configDoc;
 		/**
 		 * Open specified file
 		 * @param configFilePath - String
@@ -46,11 +54,21 @@ public class DBManager {
 			{
 				_configFilePath = configFilePath;
 				_file = new File(_configFilePath);
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				try 
+				{
+					DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+					_configDoc = dBuilder.parse(_file);
+					_configDoc.normalize();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		/**
 		 * Add new database specified by name
-		 * to config file
+		 * to configuration file.
 		 * @param name - String name of new database
 		 */
 		public static void addNewDB(String name)
@@ -64,6 +82,20 @@ public class DBManager {
 			} catch (Exception e) {
 				System.out.println(e.getStackTrace().toString());
 			}
+		}
+		/**
+		 * Returns the list of databases
+		 * registered in configuration file.
+		 * Returns empty ArrayList if configuration file is empty.
+		 * @return ArrayList<String>
+		 */
+		public ArrayList<String> getDBList()
+		{
+			ArrayList<String> result = new ArrayList<String>();
+			NodeList nodes = _configDoc.getElementsByTagName("database");
+			for(int i = 0; i < nodes.getLength(); i++)
+				result.add(nodes.item(i).getChildNodes().item(0).getNodeValue());
+			return result;
 		}
 	}
 	
@@ -99,7 +131,6 @@ public class DBManager {
 	}
 	
 	private static final String _dbConfigPath = "config"; 
-	private static final String _dbPath = "DB/";
 	private static ConfigManager _configManager;
 	private ArrayList<DataBase> _dataBases;
 	
@@ -111,12 +142,10 @@ public class DBManager {
 		_dataBases = new ArrayList<DataBase>();
 		try
 		{
-			BufferedReader br = new BufferedReader(new FileReader(_dbConfigPath));
-			Integer num = Integer.parseInt(br.readLine());
+			ArrayList<String> dbList = _configManager.getDBList();
 			DBFactory factory = new DBFactory();
-			for(int i = 0; i < num; i++)
+			for(String dbPath : dbList)
 			{
-				String dbPath = br.readLine();
 				DataBase db = factory.getDataBase(dbPath);
 				_dataBases.add(db);
 			}
@@ -135,23 +164,41 @@ public class DBManager {
 	}
 	
 	/**
-	 * 
+	 * Create database by specified name
+	 * @param dbName - String
 	 */
-	public DataBase createNewDB(String dbName){
-		DataBase db = new DataBase(dbName);
-		new File(_dbPath + dbName).mkdir();
-		_configManager.addNewDB(db.getName());
-		_dataBases.add(db);
-		
-		return db;
+	public void createDB(String dbName){
+		Action createDB = new Action(Action.ACTION_TYPE.CREATE);
+		createDB.setData(dbName, null);
+		pushAction(createDB);
 	}
+	
 	/**
 	 * Deletes database from list
 	 * @param dbName - String name of the DB
 	 */
 	public void deleteDB(String dbName)
 	{
-		Integer index = new Integer(-1);
+		if(dbName == null)
+			return;
+		Action deleteDB = new Action(Action.ACTION_TYPE.DELETE);
+		deleteDB.setData(dbName, null);
+		pushAction(deleteDB);
+	}
+	
+	public void undoAction()
+	{
+		popAction();
+	}
+	
+	@Override
+	public void performAll() {
+		
+		// TODO Auto-generated method stub
+		
+		/* DELETE DATABASE
+		 * 
+		 * Integer index = new Integer(-1);
 		if(dbName != null)
 		{
 			for(DataBase db : _dataBases)
@@ -163,5 +210,16 @@ public class DBManager {
 			_dataBases.remove(index);
 			// TODO delete from file system and from config file!!!
 		}
+		 * 
+		 */
+		
+		
+		/*CREATE DATABASE
+		 * DataBase db = new DataBase(dbName);
+		new File(_dbPath + dbName).mkdir();
+		_configManager.addNewDB(db.getName());
+		_dataBases.add(db);
+		 */
+		
 	}
 }

@@ -15,7 +15,7 @@ package core;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class DataBase {
+public class DataBase extends ActionPool{
 	private String _dbName;
 	
 	private ArrayList<Table> _tableList; // list of tables	
@@ -63,7 +63,11 @@ public class DataBase {
 				break;
 			}
 		if(result == false)
-			_tableList.add(new Table(tableName));
+		{
+			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
+			createTable.setData(tableName, null);
+			pushAction(createTable);
+		}
 		return result;
 	}
 	
@@ -115,8 +119,12 @@ public class DataBase {
 	@Override
 	public String toString() {
 		
-		return _dbName;
+		return getName();
 	}
-	
-	
+
+	@Override
+	public void performAll() {
+		// TODO Auto-generated method stub
+		
+	}
 }
