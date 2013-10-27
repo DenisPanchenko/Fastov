@@ -12,8 +12,18 @@
 
 package core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 public class Table {
 	private Integer _WIDTH; // width of table
@@ -57,6 +67,16 @@ public class Table {
 		}
 	}
 	
+	public Table(File t) throws SAXException, IOException, ParserConfigurationException 
+	{
+		if(t == null || !t.canRead())
+			throw new FileNotFoundException();
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(t);
+		
+	}
+
 	/**
 	 * Returns the name of the table
 	 * @return String - name of the table
@@ -69,6 +89,4 @@ public class Table {
 	public String toString() {
 		return _name;
 	}
-	
-	
 }

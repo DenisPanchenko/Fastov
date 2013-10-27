@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table>
+	<name>table1</name>
+	<meta>
+		<column>integer</column>
+		<column>string</column>
+		<column>float</column>
+	</meta>
+	<row>
+		<column>123</column>
+		<column>adf</column>
+		<column>2.03</column>
+	</row>
+</table>

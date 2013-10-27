@@ -12,8 +12,14 @@
 
 package core;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 public class DataBase extends ActionPool{
 	private String _dbName;
@@ -126,5 +132,16 @@ public class DataBase extends ActionPool{
 	public void performAll() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void addExistingTableFromFile(File t) 
+	{
+		try 
+		{
+			_tableList.add(new Table(t));
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

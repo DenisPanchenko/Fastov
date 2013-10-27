@@ -30,9 +30,19 @@ public class DBManager extends ActionPool{
 	 * @author denis
 	 */
 	class DBFactory{
-		public DataBase getDataBase(String filePath){
-			DataBase result = new DataBase();
-			
+		public DataBase getDataBase(String filePath) throws FileNotFoundException{
+			DataBase result = null;
+			if(filePath == null)
+				return result;
+			File file = new File(filePath);
+			if(file.exists() && file.isDirectory())
+			{
+				result = new DataBase(file.getName());
+				System.out.println(file.getName());
+				File[] tables = file.listFiles();
+				for(File t : tables)
+					result.addExistingTableFromFile(t);
+			} else throw new FileNotFoundException();
 			return result;
 		}
 	}
@@ -190,7 +200,7 @@ public class DBManager extends ActionPool{
 	{
 		popAction();
 	}
-	
+
 	@Override
 	public void performAll() {
 		
