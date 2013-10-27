@@ -139,7 +139,7 @@ public class DataBase extends ActionPool{
 		try 
 		{
 			_tableList.add(new Table(t));
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
