@@ -9,8 +9,11 @@ import java.awt.TextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class DataBaseMainForm extends JFrame implements ActionListener{
+public class MainForm extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -50,7 +53,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 	/**
 	 * Create the frame.
 	 */
-	public DataBaseMainForm() {
+	public MainForm() {
 		dbManager = new DBManager();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,7 +63,7 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		tree = new JTree(createTreeNodes());
+		tree = new JTree(MainFormMng.createTreeNodes(dbManager));
 		contentPane.add(tree, BorderLayout.WEST);
 		
 		panel_1 = new JPanel();
@@ -84,7 +87,6 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//dbManager.save();
-				
 			}
 		});
 		
@@ -94,22 +96,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				List<String> dbNames = new ArrayList<String>();
-				List<DataBase> dataBases = new ArrayList<DataBase>()/* dbManager.getDataBaseList()*/;
-				
-				//assert.notNull(dataBases)
-				for(DataBase db: dataBases) {
-					dbNames.add(db.getName());
-				}
-				String dbName = JOptionPane.showInputDialog("Enter data base name");
-				
-				while(dbNames.contains(dbName) && dbName != null){
-					dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
-				}
-				if(dbName != null) {
-					DataBase db = dbManager.createNewDB(dbName);
-					addNewNodeToTree(db);
-				}
+				tree = MainFormMng.createDB(dbManager, tree);
+				tree.repaint();
 			}
 		});
 		
@@ -134,14 +122,8 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-				Object userObject = node.getUserObject();
-				if(userObject instanceof Table) {
-					Table table = (Table)userObject;
-					DataBase dataBase = (DataBase)(node.getParent());
-					dataBase.deleteTable(dataBase.getTableList().indexOf(table));
-				}
+				tree = MainFormMng.removeTable(tree);
+				tree.repaint();
 			}
 		});
 		
@@ -204,37 +186,6 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		return createTableDialog;
 	}
 	
-	private void addNewNodeToTree(Object o) {
-		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
-		root.add(new DefaultMutableTreeNode(o));
-	}
-	
-	private DefaultMutableTreeNode createTreeNodes() {
-		
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
-		List<DataBase> dataBases = dbManager.getDataBaseList();
-		System.out.println(dataBases);
-		DataBase curDB;
-		DefaultMutableTreeNode dataBaseNode;
-		DefaultMutableTreeNode tableNode;
-		
-		if(dataBases != null) {
-			for(int i = 0; i < dataBases.size(); i++) {
-				curDB = dataBases.get(i);
-				dataBaseNode = new DefaultMutableTreeNode(curDB);
-				if(curDB.getTableList() != null) {
-					for(int j = 0; j < curDB.getTableList().size(); j++) {
-						tableNode = new DefaultMutableTreeNode(curDB.getTableList().get(j));
-						dataBaseNode.add(tableNode);
-					}
-				}
-				root.add(dataBaseNode);
-			}
-		}
-		return root;
-	}
-	
 	private JTable createTable() {
 		return new JTable();
 	}
@@ -243,60 +194,12 @@ public class DataBaseMainForm extends JFrame implements ActionListener{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DataBaseMainForm dbBaseMainForm = new DataBaseMainForm();
+					MainForm dbBaseMainForm = new MainForm();
 					dbBaseMainForm.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
-		if(event.getActionCommand().equals("create db"))
-		{
-			String dbName = null;
-			// TODO
-			/*
-			 * Create input dialog as separate class and show it here to 
-			 * get name of database. Then pass this name as a string to
-			 * DBManager.createNewDB(name);
-			 * 
-			 * 
-			 * !!! Do not forget to check whether name is already exists !!!
-			 * 
-			 *  import javax.swing.*;
-import java.awt.event.*;
-
-public class ShowInputDialog{
-  public static void main(String[] args){
-  JFrame frame = new JFrame("Input Dialog Box Frame");
-  JButton button = new JButton("Show Input Dialog Box");
-  button.addActionListener(new ActionListener(){
-  public void actionPerformed(ActionEvent ae){
-  String str = JOptionPane.showInputDialog(null, "Enter some text : ", 
-"Roseindia.net", 1);
-  if(str != null)
-  JOptionPane.showMessageDialog(null, "You entered the text : " + str, 
-"Roseindia.net", 1);
-  else
-  JOptionPane.showMessageDialog(null, "You pressed cancel button.", 
-"Roseindia.net", 1);
-  }
-  });
-  JPanel panel = new JPanel();
-  panel.add(button);
-  frame.add(panel);
-  frame.setSize(400, 400);
-  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  frame.setVisible(true);
-  }
-}
-			 */
-			dbManager.createNewDB(dbName);
-		}
-		
 	}
 }
