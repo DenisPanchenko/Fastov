@@ -116,6 +116,7 @@ public class DataBase extends ActionPool{
 		if(name == null)
 			name = generateDefaultName();
 		_dbName = name;
+		_tableList = new ArrayList<Table>();
 	}
 	
 	public String getName(){
