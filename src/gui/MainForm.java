@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.TextArea;
 import java.awt.TextField;
 
@@ -97,6 +98,7 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.createDB(dbManager, tree);
+				System.out.println(tree);
 				tree.repaint();
 			}
 		});
@@ -154,31 +156,58 @@ public class MainForm extends JFrame {
 	}
 	
 	private JDialog getCreationTableDialog() {
-		JDialog createTableDialog = new JDialog();
-		JLabel tableNameL = new JLabel("Table Name: ");
+		final JDialog createTableDialog = new JDialog();
+		final JTextField tName = new JTextField();
+		final JTextField cName = new JTextField();
+		JLabel tableNameL = new JLabel("Table Name:    ");
 		JLabel columnNameL = new JLabel("Column Name: ");
-		JTextField tName = new JTextField();
-		JTextField cName = new JTextField();
+		JPanel tablePanel = new JPanel();
+		JPanel columnPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 50, 50));
+		JPanel okPanel = new JPanel();
+		JPanel cancelPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) tablePanel.getLayout();
 		JButton addBtn = new JButton("Add");
-		JButton okBtn = new JButton("Ok");
+		JButton okBtn = new JButton("   Ok   ");
 		JButton cancelBtn = new JButton("Cancel");
-		JPanel tablePanel = new JPanel(new GridLayout(1, 2, 10, 10));
-		JPanel columnPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 		
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		cName.setColumns(19);
+		tName.setColumns(25);
 		tablePanel.add(tableNameL);
 		tablePanel.add(tName);
+		columnPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		columnPanel.add(columnNameL);
-		columnNameL.add(cName);
+		columnPanel.add(cName);
 		columnPanel.add(addBtn);
-		buttonPanel.add(okBtn);
-		buttonPanel.add(cancelBtn);
 		
-		createTableDialog.setSize(300, 200);
-		createTableDialog.setLayout(new GridLayout(3, 1, 10, 10));
-		createTableDialog.add(tablePanel);
-		createTableDialog.add(columnPanel);
-		createTableDialog.add(buttonPanel);
+		createTableDialog.setSize(400, 150);
+		createTableDialog.getContentPane().setLayout(new GridLayout(3, 1, 10, 10));
+		createTableDialog.getContentPane().add(tablePanel);
+		createTableDialog.getContentPane().add(columnPanel);
+		createTableDialog.getContentPane().add(buttonPanel);
+		
+		buttonPanel.add(okPanel);
+		okBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				table.setName(tName.getText());
+				createTableDialog.setVisible(false);
+			}
+		});		
+		
+		cancelBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				createTableDialog.setVisible(false);
+			}
+		});
+		
+		okPanel.add(okBtn);
+		buttonPanel.add(cancelPanel);
+		cancelPanel.add(cancelBtn);
 		
 		createTableDialog.setVisible(true);
 		createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);

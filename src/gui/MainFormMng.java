@@ -61,12 +61,13 @@ public class MainFormMng {
 			DataBase dataBase = (DataBase)(node.getParent());
 			dataBase.deleteTable(dataBase.getTableList().indexOf(table));
 		}
+		removeNodeFromTree(node);
 		return tree;
 	}
 	
-	public static void removeNodeFromTree(Object o, JTree tree) {
-		DefaultMutableTreeNode root = getRoot(tree);
-		
+	public static void removeNodeFromTree(Object o) {
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(o);
+		node.removeFromParent();
 	}
 	
 	public static DefaultMutableTreeNode createTreeNodes(DBManager dbManager) {
