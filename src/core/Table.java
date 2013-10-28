@@ -74,7 +74,8 @@ public class Table {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(t);
-		
+		_content = new ArrayList<ArrayList<DataType> >();
+		_name = generateDefaultName();
 	}
 
 	/**
