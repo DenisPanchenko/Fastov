@@ -4,22 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.TextArea;
-import java.awt.TextField;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TreeModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.JTable;
@@ -29,12 +23,10 @@ import core.DBManager;
 import core.DataBase;
 import core.DataType;
 import core.DataType.TYPE;
-import core.Table;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -51,6 +43,7 @@ public class MainForm extends JFrame {
 	private static JButton removeTableBtn;
 	private static JButton projectionBtn;
 	private static JButton unitTableBtn;
+	private static JButton removeDB;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -105,6 +98,17 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.createDB(dbManager, tree);
+				tree.repaint();
+			}
+		});
+		
+		removeDB = new JButton("remove DB");
+		panel_2.add(removeDB);
+		removeDB.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tree = MainFormMng.removeDB(tree, dbManager);
 				tree.repaint();
 			}
 		});
