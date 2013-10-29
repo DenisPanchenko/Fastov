@@ -10,6 +10,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import core.DBManager;
 import core.DataBase;
+import core.DataType;
 import core.Table;
 
 public class MainFormMng {
@@ -41,7 +42,12 @@ public class MainFormMng {
 	
 	private static JTree addNewNodeToTree(Object o, JTree tree) {
 		DefaultMutableTreeNode root = getRoot(tree);
-		root.add(new DefaultMutableTreeNode(o));
+		if(o instanceof DataBase) {
+			root.add(new DefaultMutableTreeNode(o));
+		} else {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+			node.add(new DefaultMutableTreeNode(o));
+		}
 		
 		tree.setModel(new DefaultTreeModel(root));
 		return tree;
@@ -92,5 +98,17 @@ public class MainFormMng {
 			}
 		}
 		return root;
+	}
+
+	public static JTree createTable(DBManager dbManager, JTree tree, String name,
+			List<String> columnsNames, List<DataType> columnTypes) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object userObject = node.getUserObject();
+		if(userObject instanceof DataBase) {
+			DataBase dataBase = (DataBase) userObject;
+			Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
+			return addNewNodeToTree(table, tree);
+		}
+		return tree;
 	}
 }

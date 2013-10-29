@@ -251,9 +251,9 @@ public class DBManager extends ActionPool{
 		//TODO
 	}
 	
-	public void createTable(List<String> columnsNames, List<DataType> columnTypes) {
+	public Table createTable(DataBase dataBase, List<String> columnsNames, List<DataType> columnTypes) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 	
 	@Override
