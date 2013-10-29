@@ -52,13 +52,14 @@ public class MainFormMng {
 		return (DefaultMutableTreeNode)model.getRoot();
 	}
 	
-	public static JTree removeTable(JTree tree) {
+	public static JTree removeTable(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object userObject = node.getUserObject();
 		if(userObject instanceof Table) {
 			Table table = (Table)userObject;
-			DataBase dataBase = (DataBase)(node.getParent());
-			dataBase.deleteTable(dataBase.getTableList().indexOf(table));
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+			DataBase dataBase = (DataBase)(parent.getUserObject());
+			dbManager.deleteTable(dataBase.getName(), table.getTableName());
 		}
 		removeNodeFromTree(node);
 		return tree;

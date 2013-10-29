@@ -108,6 +108,24 @@ public class DBManager extends ActionPool{
 			}
 		}
 		
+		public static void removeDB(String name)
+		{
+			try
+			{
+				NodeList dbs = _configDoc.getElementsByTagName("database");
+				for(int i = 0; i < dbs.getLength(); i++)
+					if(dbs.item(i).getNodeName().equals(name))
+						_configDoc.removeChild(dbs.item(i));
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(_configDoc);
+				StreamResult result = new StreamResult(_file);
+		 		transformer.transform(source, result);
+			}catch (Exception e){
+				
+			}
+		}
+		
 		/**
 		 * Returns the list of databases
 		 * registered in configuration file.
@@ -228,6 +246,15 @@ public class DBManager extends ActionPool{
 	{
 		performAll();
 	}
+
+	public void deleteTable(String dbName, String tableName) {
+		//TODO
+	}
+	
+	public void createTable(List<String> columnsNames, List<DataType> columnTypes) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	@Override
 	protected void performAll() {
@@ -244,7 +271,16 @@ public class DBManager extends ActionPool{
 				_dataBases.add(db);
 				popAction();
 			} else if(action.getAction() == Action.ACTION_TYPE.DELETE) {
-				
+				String dbName = action.getValue();
+				File f = new File(_dbPath + dbName);
+				if(f.isDirectory())
+					for(File c : f.listFiles())
+						c.delete();
+				for(int j = 0; j < _dataBases.size(); j++)
+					if(_dataBases.get(j).getName().equals(dbName))
+						_dataBases.remove(j);
+				_configManager.removeDB(dbName);
+				popAction();
 			}
 		}
 		

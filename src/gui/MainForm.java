@@ -105,7 +105,6 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.createDB(dbManager, tree);
-				System.out.println(tree);
 				tree.repaint();
 			}
 		});
@@ -131,7 +130,7 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				tree = MainFormMng.removeTable(tree);
+				tree = MainFormMng.removeTable(tree, dbManager);
 				tree.repaint();
 			}
 		});
@@ -166,9 +165,10 @@ public class MainForm extends JFrame {
 		final JDialog createTableDialog = new JDialog();
 		final JTextField tName = new JTextField();
 		final JTextField cName = new JTextField();
-		final List<String> columns = new ArrayList<String>();
+		final List<String> columnsNames = new ArrayList<String>();
 		final List<DataType> columnTypes = new ArrayList<DataType>();
 		final JComboBox types = new JComboBox(DataType.TYPE.values());
+		final JTable newTable = new JTable();
 		JLabel tableNameL = new JLabel("Table Name:    ");
 		JLabel columnNameL = new JLabel("Column Name: ");
 		JLabel lblNewLabel = new JLabel("Choose type:   ");
@@ -206,9 +206,12 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				table.setName(tName.getText());
-				//dbManager.createTable(table, columns, columnTypes);
-				createTableDialog.setVisible(false);
+				
+				if(tName.getText() != null) {
+					newTable.setName(tName.getText());
+				}
+				//dbManager.createTable(table.getName(), columnsNames, columnTypes);
+				createTableDialog.setVisible(false);	
 			}
 		});		
 		
@@ -228,9 +231,9 @@ public class MainForm extends JFrame {
 				if(columnName != null) {
 					TableColumn column = new TableColumn();
 					column.setHeaderValue(columnName);
-					table.addColumn(new TableColumn());
-					columns.add(columnName);
-					//columnTypes.add(new DataType(TYPE.valueOf(types.getSelectedItem())))
+					newTable.addColumn(column);
+					columnsNames.add(columnName);
+					columnTypes.add(new DataType((TYPE)types.getSelectedItem()));
 					cName.setText("");
 				}
 			}
