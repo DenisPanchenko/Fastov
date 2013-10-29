@@ -91,7 +91,7 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		createDBBtn = new JButton("create DB");
+		createDBBtn = new JButton("Create DB");
 		panel_2.add(createDBBtn);
 		createDBBtn.addActionListener(new ActionListener() {
 			
@@ -102,7 +102,7 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		removeDB = new JButton("remove DB");
+		removeDB = new JButton("Remove DB");
 		panel_2.add(removeDB);
 		removeDB.addActionListener(new ActionListener() {
 			
@@ -113,7 +113,7 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		createTableBtn = new JButton("create new table");
+		createTableBtn = new JButton("Create Table");
 		panel_2.add(createTableBtn);
 		createTableBtn.addActionListener(new ActionListener() {
 			
@@ -128,7 +128,7 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		removeTableBtn = new JButton("remove table");
+		removeTableBtn = new JButton("Remove Table");
 		panel_2.add(removeTableBtn);
 		removeTableBtn.addActionListener(new ActionListener() {
 			
@@ -139,10 +139,10 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		projectionBtn = new JButton("tables projection");
+		projectionBtn = new JButton("Tables Projection");
 		panel_2.add(projectionBtn);
 		
-		unitTableBtn = new JButton("unit tables");
+		unitTableBtn = new JButton("Tables Union");
 		panel_2.add(unitTableBtn);
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);

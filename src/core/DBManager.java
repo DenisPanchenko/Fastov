@@ -13,6 +13,7 @@ package core;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
+import java.nio.file.Files;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -112,17 +113,21 @@ public class DBManager extends ActionPool{
 		{
 			try
 			{
+				Node root = _configDoc.getElementsByTagName("system").item(0);
 				NodeList dbs = _configDoc.getElementsByTagName("database");
 				for(int i = 0; i < dbs.getLength(); i++)
-					if(dbs.item(i).getNodeName().equals(name))
-						_configDoc.removeChild(dbs.item(i));
+				{
+					Element curElement = (Element)dbs.item(i);
+					if(curElement.getFirstChild().getTextContent().equals(_dbPath + name))
+						root.removeChild(curElement);
+				}
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
 				DOMSource source = new DOMSource(_configDoc);
 				StreamResult result = new StreamResult(_file);
 		 		transformer.transform(source, result);
 			}catch (Exception e){
-				
+				System.out.println(e.getStackTrace().toString());
 			}
 		}
 		
@@ -228,13 +233,13 @@ public class DBManager extends ActionPool{
 	 * Deletes database from list
 	 * @param dbName - String name of the DB
 	 */
-	public void deleteDB(String dbName)
+	public void removeDB(String dbName)
 	{
 		if(dbName == null)
 			return;
-		Action deleteDB = new Action(Action.ACTION_TYPE.DELETE);
-		deleteDB.setData(dbName, null);
-		pushAction(deleteDB);
+		Action removeDatabase = new Action(Action.ACTION_TYPE.DELETE);
+		removeDatabase.setData("name", dbName);
+		pushAction(removeDatabase);
 	}
 	
 	public void undoAction()
@@ -282,6 +287,7 @@ public class DBManager extends ActionPool{
 				if(f.isDirectory())
 					for(File c : f.listFiles())
 						c.delete();
+				f.delete();
 				for(int j = 0; j < _dataBases.size(); j++)
 					if(_dataBases.get(j).getName().equals(dbName))
 						_dataBases.remove(j);
@@ -289,5 +295,7 @@ public class DBManager extends ActionPool{
 				popAction();
 			}
 		}
+		for(DataBase db : _dataBases)
+			db.save();
 	}
 }

@@ -114,7 +114,7 @@ public class MainFormMng {
 		Object o = node.getUserObject();
 		if(o instanceof DataBase) {
 			DataBase dataBase = (DataBase)o;
-			dbManager.deleteDB(dataBase.getName());
+			dbManager.removeDB(dataBase.getName());
 			removeNodeFromTree(dataBase);
 		}
 		return tree;

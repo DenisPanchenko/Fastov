@@ -137,7 +137,7 @@ public class DataBase extends ActionPool{
 
 	public void save()
 	{
-		
+		performAll();
 	}
 	
 	@Override
@@ -149,7 +149,17 @@ public class DataBase extends ActionPool{
 	@Override
 	protected void performAll() {
 		// TODO Auto-generated method stub
-		
+		for(Action action : _actionStack)
+		{
+			if(action.getAction().equals(Action.ACTION_TYPE.CREATE))
+			{
+				// TODO create table
+			}
+			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
+			{
+				// TODO delete table
+			}
+		}
 	}
 
 	public void addExistingTableFromFile(File t) 
