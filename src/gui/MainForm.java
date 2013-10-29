@@ -95,7 +95,7 @@ public class MainForm extends JFrame {
 				dbManager.save();
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 				model.setRoot(MainFormMng.createTreeNodes(dbManager));
-				}
+			}
 		});
 		
 		createDBBtn = new JButton("create DB");

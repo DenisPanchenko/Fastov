@@ -92,6 +92,18 @@ public class DataBase extends ActionPool{
 		return result;
 	}
 	
+	public void removeTable(String tableName)
+	{
+		if(tableName == null)
+			return;
+		for(int i = 0; i < _tableList.size(); i++)
+			if(_tableList.get(i).getTableName().equals(tableName))
+			{
+				Action deleteTable = new Action(Action.ACTION_TYPE.DELETE);
+				pushAction(deleteTable);
+			}
+	}
+	
 	/**
 	 * Returns number of tables in database
 	 * @return Integer - quantity of tables
@@ -123,14 +135,19 @@ public class DataBase extends ActionPool{
 		return _dbName;
 	}
 
-	@Override
-	public String toString() {
+	public void save()
+	{
 		
+	}
+	
+	@Override
+	public String toString() 
+	{		
 		return getName();
 	}
 
 	@Override
-	public void performAll() {
+	protected void performAll() {
 		// TODO Auto-generated method stub
 		
 	}

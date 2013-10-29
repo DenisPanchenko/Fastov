@@ -247,8 +247,14 @@ public class DBManager extends ActionPool{
 		performAll();
 	}
 
-	public void deleteTable(String dbName, String tableName) {
+	public void deleteTable(String dbName, String tableName) 
+	{
 		//TODO
+		for(int i = 0; i < _dataBases.size(); i++)
+		{
+			if(_dataBases.get(i).getName().equals(dbName))
+				_dataBases.get(i).removeTable(tableName);
+		}
 	}
 	
 	public Table createTable(DataBase dataBase, List<String> columnsNames, List<DataType> columnTypes) {
@@ -283,25 +289,5 @@ public class DBManager extends ActionPool{
 				popAction();
 			}
 		}
-		
-		// TODO Auto-generated method stub
-		
-		/* DELETE DATABASE
-		 * 
-		 * Integer index = new Integer(-1);
-		if(dbName != null)
-		{
-			for(DataBase db : _dataBases)
-				if(db.getName() == dbName)
-					index = _dataBases.indexOf(db);
-		}
-		if(index > -1)
-		{
-			_dataBases.remove(index);
-			// TODO delete from file system and from config file!!!
-		}
-		 * 
-		 */
-		
 	}
 }

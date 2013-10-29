@@ -31,9 +31,6 @@ public class MainFormMng {
 		}
 		if(dbName != null) {
 			dbManager.createDB(dbName);
-			/*
-			return addNewNodeToTree(db, tree);
-			*/
 			return tree;
 		} else {
 			return tree;
