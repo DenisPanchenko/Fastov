@@ -208,8 +208,9 @@ public class MainForm extends JFrame {
 				if(tName.getText() != null) {
 					newTable.setName(tName.getText());
 				}
-				//dbManager.createTable(table.getName(), columnsNames, columnTypes);
-				createTableDialog.setVisible(false);	
+				tree = MainFormMng.createTable(dbManager, tree, newTable.getName(), columnsNames, columnTypes);
+				tree.repaint();
+				createTableDialog.setVisible(false);
 			}
 		});		
 		
