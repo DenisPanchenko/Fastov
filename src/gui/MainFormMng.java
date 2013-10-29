@@ -108,4 +108,15 @@ public class MainFormMng {
 		}
 		return tree;
 	}
+
+	public static JTree removeDB(JTree tree, DBManager dbManager) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		if(o instanceof DataBase) {
+			DataBase dataBase = (DataBase)o;
+			dbManager.deleteDB(dataBase.getName());
+			removeNodeFromTree(dataBase);
+		}
+		return tree;
+	}
 }
