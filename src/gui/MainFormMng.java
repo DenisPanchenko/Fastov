@@ -29,9 +29,7 @@ public class MainFormMng {
 			dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
 		}
 		if(dbName != null) {
-			// TODO 
-			/*
-			DataBase db = dbManager.createNewDB(dbName);
+			/*DataBase db = dbManager.createNewDB(dbName);
 			return addNewNodeToTree(db, tree);
 			*/
 			return null;

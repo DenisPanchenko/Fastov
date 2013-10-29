@@ -11,10 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeModelListener;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,11 +27,14 @@ import javax.swing.JButton;
 
 import core.DBManager;
 import core.DataBase;
+import core.DataType;
+import core.DataType.TYPE;
 import core.Table;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -159,19 +164,22 @@ public class MainForm extends JFrame {
 		final JDialog createTableDialog = new JDialog();
 		final JTextField tName = new JTextField();
 		final JTextField cName = new JTextField();
+		final List<String> columns = new ArrayList<String>();
+		final List<DataType> columnTypes = new ArrayList<DataType>();
+		final JComboBox types = new JComboBox(DataType.TYPE.values());
 		JLabel tableNameL = new JLabel("Table Name:    ");
 		JLabel columnNameL = new JLabel("Column Name: ");
-		JPanel tablePanel = new JPanel();
+		JLabel lblNewLabel = new JLabel("Choose type:   ");
+		JPanel tablePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		JPanel columnPanel = new JPanel();
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 50, 50));
 		JPanel okPanel = new JPanel();
 		JPanel cancelPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) tablePanel.getLayout();
+		JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		JButton addBtn = new JButton("Add");
 		JButton okBtn = new JButton("   Ok   ");
 		JButton cancelBtn = new JButton("Cancel");
 		
-		flowLayout.setAlignment(FlowLayout.LEFT);
 		cName.setColumns(19);
 		tName.setColumns(25);
 		tablePanel.add(tableNameL);
@@ -181,11 +189,15 @@ public class MainForm extends JFrame {
 		columnPanel.add(cName);
 		columnPanel.add(addBtn);
 		
-		createTableDialog.setSize(400, 150);
-		createTableDialog.getContentPane().setLayout(new GridLayout(3, 1, 10, 10));
+		createTableDialog.setSize(400, 200);
+		createTableDialog.getContentPane().setLayout(new GridLayout(4, 1, 10, 10));
 		createTableDialog.getContentPane().add(tablePanel);
 		createTableDialog.getContentPane().add(columnPanel);
+		createTableDialog.getContentPane().add(typePanel);
 		createTableDialog.getContentPane().add(buttonPanel);
+	
+		typePanel.add(lblNewLabel);
+		typePanel.add(types);
 		
 		buttonPanel.add(okPanel);
 		okBtn.addActionListener(new ActionListener() {
@@ -193,6 +205,7 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				table.setName(tName.getText());
+				//dbManager.createTable(table, columns, columnTypes);
 				createTableDialog.setVisible(false);
 			}
 		});		
@@ -200,8 +213,24 @@ public class MainForm extends JFrame {
 		cancelBtn.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				createTableDialog.setVisible(false);
+			}
+		});
+		
+		addBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String columnName = cName.getText(); 
+				if(columnName != null) {
+					TableColumn column = new TableColumn();
+					column.setHeaderValue(columnName);
+					table.addColumn(new TableColumn());
+					columns.add(columnName);
+					//columnTypes.add(new DataType(TYPE.valueOf(types.getSelectedItem())))
+					cName.setText("");
+				}
 			}
 		});
 		
