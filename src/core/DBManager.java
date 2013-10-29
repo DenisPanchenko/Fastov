@@ -201,6 +201,15 @@ public class DBManager extends ActionPool{
 		popAction();
 	}
 
+	public void deleteTable(String dbName, String tableName) {
+		//TODO
+	}
+	
+	public void createTable(List<String> columnsNames, List<DataType> columnTypes) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	public void performAll() {
 		
