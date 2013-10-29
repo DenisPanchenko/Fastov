@@ -17,10 +17,19 @@ import java.io.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class DBManager extends ActionPool{
 	
@@ -85,14 +94,20 @@ public class DBManager extends ActionPool{
 		{
 			try
 			{
-				FileWriter fw = new FileWriter(_file, true);
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.append(name + "\n");
-				bw.close();
+				Node root = _configDoc.getElementsByTagName("system").item(0);
+				Element db = _configDoc.createElement("database");
+				db.appendChild(_configDoc.createTextNode(_dbPath + name));
+			    root.appendChild(db);
+			    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(_configDoc);
+				StreamResult result = new StreamResult(_file);
+		 		transformer.transform(source, result);		
 			} catch (Exception e) {
 				System.out.println(e.getStackTrace().toString());
 			}
 		}
+		
 		/**
 		 * Returns the list of databases
 		 * registered in configuration file.
@@ -141,6 +156,7 @@ public class DBManager extends ActionPool{
 	}
 	
 	private static final String _dbConfigPath = "config"; 
+	private static final String _dbPath = "DB/";
 	private static ConfigManager _configManager;
 	private ArrayList<DataBase> _dataBases;
 	
@@ -150,6 +166,7 @@ public class DBManager extends ActionPool{
 	public DBManager() {
 		_configManager = new ConfigManager(_dbConfigPath);
 		_dataBases = new ArrayList<DataBase>();
+		_actionStack = new Stack<Action>();
 		try
 		{
 			ArrayList<String> dbList = _configManager.getDBList();
@@ -163,6 +180,12 @@ public class DBManager extends ActionPool{
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}
+	}
+	
+	// TODO
+	public void removeTable(String dbName, String tableName)
+	{
+		
 	}
 	
 	/**
@@ -179,7 +202,7 @@ public class DBManager extends ActionPool{
 	 */
 	public void createDB(String dbName){
 		Action createDB = new Action(Action.ACTION_TYPE.CREATE);
-		createDB.setData(dbName, null);
+		createDB.setData("name", dbName);
 		pushAction(createDB);
 	}
 	
@@ -201,8 +224,29 @@ public class DBManager extends ActionPool{
 		popAction();
 	}
 
+	public void save()
+	{
+		performAll();
+	}
+	
 	@Override
-	public void performAll() {
+	protected void performAll() {
+		
+		for(int i = 0; i < _actionStack.size(); i++)
+		{
+			Action action = _actionStack.get(i);
+			if(action.getAction() == Action.ACTION_TYPE.CREATE)
+			{
+				String dbName = action.getValue();
+				DataBase db = new DataBase(dbName);
+				new File("DB/" + db.getName()).mkdir();
+				_configManager.addNewDB(db.getName());
+				_dataBases.add(db);
+				popAction();
+			} else if(action.getAction() == Action.ACTION_TYPE.DELETE) {
+				
+			}
+		}
 		
 		// TODO Auto-generated method stub
 		
@@ -221,14 +265,6 @@ public class DBManager extends ActionPool{
 			// TODO delete from file system and from config file!!!
 		}
 		 * 
-		 */
-		
-		
-		/*CREATE DATABASE
-		 * DataBase db = new DataBase(dbName);
-		new File(_dbPath + dbName).mkdir();
-		_configManager.addNewDB(db.getName());
-		_dataBases.add(db);
 		 */
 		
 	}

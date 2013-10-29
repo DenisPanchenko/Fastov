@@ -92,8 +92,10 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//dbManager.save();
-			}
+				dbManager.save();
+				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+				model.setRoot(MainFormMng.createTreeNodes(dbManager));
+				}
 		});
 		
 		createDBBtn = new JButton("create DB");

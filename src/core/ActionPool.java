@@ -15,7 +15,7 @@ package core;
 import java.util.*;
 
 public abstract class ActionPool {
-	private Stack _actionStack; // stack of actions
+	protected Stack<Action> _actionStack; // stack of actions
 	
 	/**
 	 * Returns true is action pool does not
@@ -24,9 +24,7 @@ public abstract class ActionPool {
 	 */
 	public boolean isEmpty()
 	{
-		if(_actionStack.size() > 0)
-			return false;
-		return true;
+		return _actionStack.isEmpty();
 	}
 	
 	/**
@@ -53,5 +51,5 @@ public abstract class ActionPool {
 	 * Abstract method that performs all actions
 	 * in the pool 
 	 */
-	public abstract void performAll();
+	protected abstract void performAll();
 }

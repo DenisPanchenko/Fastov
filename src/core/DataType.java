@@ -3,11 +3,11 @@ package core;
 public class DataType 
 {
 	public enum TYPE {INTEGER, FLOAT, STRING, ENUM};
-	private TYPE _type;
+	protected TYPE _type;
 	
 	public DataType(TYPE type)
 	{
-		if(type != null)
+		if(type == null)
 			type = TYPE.INTEGER;
 		_type = type;
 	}

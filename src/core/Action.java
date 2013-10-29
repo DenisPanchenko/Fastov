@@ -47,6 +47,8 @@ public class Action
 	Action(ACTION_TYPE comType)
 	{
 		_comType = comType;
+		_name = new String();
+		_value = new String();
 	}
 	
 	/**
@@ -58,6 +60,8 @@ public class Action
 	 */
 	public void setData(String name, String value)
 	{
+		if(name == null || value == null)
+			System.out.println("NULL");
 		_name = name;
 		_value = value;
 	}
