@@ -87,8 +87,10 @@ public class Table extends ActionPool{
 		
 		Element name = table.createElement("name");
 		name.appendChild(table.createTextNode(t.getName()));
-		
 		root.appendChild(name);
+		
+		Element meta = table.createElement("meta");
+		root.appendChild(meta);
 		
 		try
 		{
