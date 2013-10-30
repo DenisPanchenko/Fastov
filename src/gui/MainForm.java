@@ -158,6 +158,7 @@ public class MainForm extends JFrame {
 		}
 		);
 		//dialog.setModal(true);
+		setLocationRelativeTo(null);
 	}
 	
 	public static void disableButtons() {

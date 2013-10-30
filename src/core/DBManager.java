@@ -47,7 +47,6 @@ public class DBManager extends ActionPool{
 			if(file.exists() && file.isDirectory())
 			{
 				result = new DataBase(file.getName());
-				System.out.println(file.getName());
 				File[] tables = file.listFiles();
 				for(File t : tables)
 					result.addExistingTableFromFile(t);

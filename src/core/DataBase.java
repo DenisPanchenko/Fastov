@@ -17,8 +17,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 public class DataBase extends ActionPool{
@@ -200,7 +205,15 @@ public class DataBase extends ActionPool{
 	{
 		try 
 		{
-			_tableList.add(new Table(t));
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(t);
+			doc.normalize();
+			Node root = doc.getElementsByTagName("table").item(0);
+			String name = doc.getElementsByTagName("name").item(0).getFirstChild().getTextContent();
+			Table table = new Table(name);
+			NodeList columns = doc.getElementsByTagName("meta");
+			_tableList.add(table);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
