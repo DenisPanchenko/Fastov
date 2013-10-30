@@ -286,26 +286,13 @@ public class DBManager extends ActionPool{
 		}
 	}
 	
-	/*
-	public void clearTableHistory()
+	public void cancelAllActions()
 	{
 		for(int i = 0; i < _dataBases.size(); i++)
 			for(int j = 0; j < _dataBases.get(i).getTableList().size(); j++)
 				_dataBases.get(i).getTableList().get(j).clearPool();
 	}
-	
-	public void clearDBHistory()
-	{
-		for(int i = 0; i < _dataBases.size(); i++)
-			_dataBases.get(i).clearPool();
-	}
-	
-	public void clearHistory()
-	{
-		clearPool();
-	}
-	*/
-	
+		
 	@Override
 	protected void performAll() {
 		while(!_actionPool.isEmpty())
