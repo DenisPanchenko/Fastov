@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class DataBase extends ActionPool{
@@ -213,6 +214,7 @@ public class DataBase extends ActionPool{
 			String name = doc.getElementsByTagName("name").item(0).getFirstChild().getTextContent();
 			Table table = new Table(name);
 			NodeList columns = doc.getElementsByTagName("meta");
+			//for(Node col : )
 			_tableList.add(table);
 		} catch (Exception e) {
 			e.printStackTrace();
