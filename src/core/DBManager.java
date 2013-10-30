@@ -286,6 +286,26 @@ public class DBManager extends ActionPool{
 		}
 	}
 	
+	/*
+	public void clearTableHistory()
+	{
+		for(int i = 0; i < _dataBases.size(); i++)
+			for(int j = 0; j < _dataBases.get(i).getTableList().size(); j++)
+				_dataBases.get(i).getTableList().get(j).clearPool();
+	}
+	
+	public void clearDBHistory()
+	{
+		for(int i = 0; i < _dataBases.size(); i++)
+			_dataBases.get(i).clearPool();
+	}
+	
+	public void clearHistory()
+	{
+		clearPool();
+	}
+	*/
+	
 	@Override
 	protected void performAll() {
 		while(!_actionPool.isEmpty())
@@ -310,6 +330,7 @@ public class DBManager extends ActionPool{
 						_dataBases.remove(j);
 				_configManager.removeDB(dbName);
 			}
+			removeAction();
 		}
 		for(DataBase db : _dataBases)
 			db.save();
