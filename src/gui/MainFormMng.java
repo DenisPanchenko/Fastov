@@ -16,22 +16,28 @@ import core.Table;
 public class MainFormMng {
 	
 	public static JTree createDB(DBManager dbManager, JTree tree) {
-		List<String> dbNames = new ArrayList<String>();
-		List<DataBase> dataBases = dbManager.getDataBaseList();
-		
-		String dbName = JOptionPane.showInputDialog("Enter data base name");
-		
-		if(dataBases != null) {
-			for(DataBase db: dataBases) {
-				dbNames.add(db.getName());
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		System.out.println(node);
+		if(node.isRoot()) {
+			List<String> dbNames = new ArrayList<String>();
+			List<DataBase> dataBases = dbManager.getDataBaseList();
+			
+			String dbName = JOptionPane.showInputDialog("Enter data base name");
+			
+			if(dataBases != null) {
+				for(DataBase db: dataBases) {
+					dbNames.add(db.getName());
+				}
 			}
-		}
-		while(dbNames.contains(dbName) && dbName != null){
-			dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
-		}
-		if(dbName != null) {
-			dbManager.createDB(dbName);
-			return tree;
+			while(dbNames.contains(dbName) && dbName != null){
+				dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
+			}
+			if(dbName != null) {
+				dbManager.createDB(dbName);
+				return tree;
+			} else {
+				return tree;
+			}
 		} else {
 			return tree;
 		}

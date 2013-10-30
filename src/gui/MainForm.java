@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import core.DBManager;
 import core.DataBase;
 import core.DataType;
+import core.Table;
 import core.DataType.TYPE;
 
 import java.awt.GridLayout;
@@ -120,11 +121,12 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				JTable table = new JTable();
-				JDialog dialog = getCreationTableDialog();
-				
-				//Table newTable = new Table(filePath);
-				
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+				Object userObject = node.getUserObject();
+				if(userObject instanceof DataBase) {
+					JTable table = new JTable();
+					JDialog dialog = getCreationTableDialog();
+				}								
 			}
 		});
 		
@@ -163,6 +165,7 @@ public class MainForm extends JFrame {
 		saveBtn.setEnabled(false);
 		removeTableBtn.setEnabled(false);
 		createTableBtn.setEnabled(false);
+		removeDB.setEnabled(false);
 	}
 	
 	private JDialog getCreationTableDialog() {
