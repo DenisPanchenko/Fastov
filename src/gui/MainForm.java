@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import core.DBManager;
 import core.DataBase;
 import core.DataType;
-import core.Table;
 import core.DataType.TYPE;
 
 import java.awt.GridLayout;
