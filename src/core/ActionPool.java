@@ -15,7 +15,7 @@ package core;
 import java.util.*;
 
 public abstract class ActionPool {
-	protected Stack<Action> _actionStack; // stack of actions
+	protected ArrayList<Action> _actionPool; // stack of actions
 	
 	/**
 	 * Returns true is action pool does not
@@ -24,27 +24,27 @@ public abstract class ActionPool {
 	 */
 	public boolean isEmpty()
 	{
-		return _actionStack.isEmpty();
+		return _actionPool.isEmpty();
 	}
 	
 	/**
 	 * Add action a to the end of the action stack
 	 * @param a
 	 */
-	public void pushAction(Action a)
+	public void addAction(Action a)
 	{
 		if(a != null)
-			_actionStack.push(a);
+			_actionPool.add(a);
 	}
 
 	/**
 	 * Remove last action in the pool
 	 * if it exists, otherwise does nothing.
 	 */
-	public void popAction()
+	public void removeAction()
 	{
 		if(!isEmpty())
-			_actionStack.pop();
+			_actionPool.remove(0);
 	}
 	
 	/**
@@ -52,4 +52,9 @@ public abstract class ActionPool {
 	 * in the pool 
 	 */
 	protected abstract void performAll();
+	
+	public ActionPool()
+	{
+		_actionPool = new ArrayList<Action>();
+	}
 }

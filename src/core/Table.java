@@ -21,21 +21,26 @@ import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-public class Table {
+public class Table extends ActionPool{
 	private Integer _WIDTH; // width of table
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
 	
-	private String generateDefaultName()
+	public static String generateDefaultName()
 	{
 		StringBuilder defaultName = new StringBuilder();
-		defaultName.append("New Table (");
-		defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
+		defaultName.append("NewTable(");
+		defaultName.append(new SimpleDateFormat("ddMMyy:HHmmss")
 		.format(Calendar.getInstance().getTime()));
 		defaultName.append(")");
 		return defaultName.toString();
@@ -69,13 +74,32 @@ public class Table {
 	
 	public Table(File t) throws SAXException, IOException, ParserConfigurationException 
 	{
+		_content = new ArrayList<ArrayList<DataType> >();
+		_name = t.getName();
+		
 		if(t == null || !t.canRead())
 			throw new FileNotFoundException();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(t);
-		_content = new ArrayList<ArrayList<DataType> >();
-		_name = generateDefaultName();
+		Document table = dBuilder.newDocument();
+		Element root = table.createElement("table");
+		table.appendChild(root);
+		
+		Element name = table.createElement("name");
+		name.appendChild(table.createTextNode(t.getName()));
+		
+		root.appendChild(name);
+		
+		try
+		{
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(table);
+			StreamResult result = new StreamResult(t);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -86,10 +110,19 @@ public class Table {
 		return _name;
 	}
 
-
+	public void save()
+	{
+		performAll();
+	}
 	
 	@Override
 	public String toString() {
 		return _name;
+	}
+
+	@Override
+	protected void performAll() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -103,8 +103,11 @@ public class MainFormMng {
 		Object userObject = node.getUserObject();
 		if(userObject instanceof DataBase) {
 			DataBase dataBase = (DataBase) userObject;
-			Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
-			return addNewNodeToTree(table, tree);
+			dbManager.createTable(dataBase.getName(),null);
+			//Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
+			//dbManager.createTable(((DataBase) userObject).getName(), columnsNames, columnTypes);
+			//return addNewNodeToTree(table, tree);
+			return tree;
 		}
 		return tree;
 	}
@@ -114,7 +117,7 @@ public class MainFormMng {
 		Object o = node.getUserObject();
 		if(o instanceof DataBase) {
 			DataBase dataBase = (DataBase)o;
-			dbManager.removeDB(dataBase.getName());
+			dbManager.deleteDB(dataBase.getName());
 			removeNodeFromTree(dataBase);
 		}
 		return tree;

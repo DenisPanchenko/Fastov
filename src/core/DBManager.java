@@ -179,7 +179,7 @@ public class DBManager extends ActionPool{
 	}
 	
 	private static final String _dbConfigPath = "config"; 
-	private static final String _dbPath = "DB/";
+	private static final String _dbPath = "DB" + File.separator;
 	private static ConfigManager _configManager;
 	private ArrayList<DataBase> _dataBases;
 	
@@ -187,9 +187,9 @@ public class DBManager extends ActionPool{
 	 *	Create a database manager 
 	 */
 	public DBManager() {
+		super();
 		_configManager = new ConfigManager(_dbConfigPath);
 		_dataBases = new ArrayList<DataBase>();
-		_actionStack = new Stack<Action>();
 		try
 		{
 			ArrayList<String> dbList = _configManager.getDBList();
@@ -203,12 +203,6 @@ public class DBManager extends ActionPool{
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}
-	}
-	
-	// TODO
-	public void removeTable(String dbName, String tableName)
-	{
-		
 	}
 	
 	/**
@@ -226,25 +220,25 @@ public class DBManager extends ActionPool{
 	public void createDB(String dbName){
 		Action createDB = new Action(Action.ACTION_TYPE.CREATE);
 		createDB.setData("name", dbName);
-		pushAction(createDB);
+		addAction(createDB);
 	}
 	
 	/**
 	 * Deletes database from list
 	 * @param dbName - String name of the DB
 	 */
-	public void removeDB(String dbName)
+	public void deleteDB(String dbName)
 	{
 		if(dbName == null)
 			return;
 		Action removeDatabase = new Action(Action.ACTION_TYPE.DELETE);
 		removeDatabase.setData("name", dbName);
-		pushAction(removeDatabase);
+		addAction(removeDatabase);
 	}
 	
 	public void undoAction()
 	{
-		popAction();
+		removeAction();
 	}
 
 	public void save()
@@ -262,17 +256,41 @@ public class DBManager extends ActionPool{
 		}
 	}
 	
-	public Table createTable(DataBase dataBase, List<String> columnsNames, List<DataType> columnTypes) {
-		// TODO Auto-generated method stub
-		return null;
+	public void createTable(String dbName, String tableName)
+	{
+		DataBase dataBase = null;
+		for(DataBase db : _dataBases)
+			if(db.getName().equals(dbName))
+				dataBase = db;
+		if(dataBase != null)
+		{
+			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
+			if(tableName == null)
+				tableName = Table.generateDefaultName();
+			createTable.setData("name", tableName);
+			dataBase.addAction(createTable);
+		}
+	}
+	
+	public void createTable(String dbName, List<String> columnNames, List<DataType> columnTypes) 
+	{
+		DataBase dataBase = null;
+		for(DataBase db : _dataBases)
+			if(db.getName().equals(dbName))
+				dataBase = db;
+		if(dataBase != null)
+		{
+			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
+			createTable.setData("name", "");
+			dataBase.addAction(createTable);
+		}
 	}
 	
 	@Override
 	protected void performAll() {
-		
-		for(int i = 0; i < _actionStack.size(); i++)
+		while(!_actionPool.isEmpty())
 		{
-			Action action = _actionStack.get(i);
+			Action action = _actionPool.get(0);
 			if(action.getAction() == Action.ACTION_TYPE.CREATE)
 			{
 				String dbName = action.getValue();
@@ -280,7 +298,6 @@ public class DBManager extends ActionPool{
 				new File("DB/" + db.getName()).mkdir();
 				_configManager.addNewDB(db.getName());
 				_dataBases.add(db);
-				popAction();
 			} else if(action.getAction() == Action.ACTION_TYPE.DELETE) {
 				String dbName = action.getValue();
 				File f = new File(_dbPath + dbName);
@@ -292,7 +309,6 @@ public class DBManager extends ActionPool{
 					if(_dataBases.get(j).getName().equals(dbName))
 						_dataBases.remove(j);
 				_configManager.removeDB(dbName);
-				popAction();
 			}
 		}
 		for(DataBase db : _dataBases)

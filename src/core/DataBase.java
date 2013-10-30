@@ -72,7 +72,7 @@ public class DataBase extends ActionPool{
 		{
 			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
 			createTable.setData(tableName, null);
-			pushAction(createTable);
+			addAction(createTable);
 		}
 		return result;
 	}
@@ -86,7 +86,8 @@ public class DataBase extends ActionPool{
 	 * @throws WrongArgumentException if id is not exists
 	 * @return boolean
 	 */
-	public boolean deleteTable(Integer id) {
+	public boolean removeTable(Integer id) 
+	{
 		boolean result = false;
 		
 		return result;
@@ -100,7 +101,8 @@ public class DataBase extends ActionPool{
 			if(_tableList.get(i).getTableName().equals(tableName))
 			{
 				Action deleteTable = new Action(Action.ACTION_TYPE.DELETE);
-				pushAction(deleteTable);
+				deleteTable.setData("name", tableName);
+				addAction(deleteTable);
 			}
 	}
 	
@@ -121,10 +123,13 @@ public class DataBase extends ActionPool{
 	};
 	
 	public DataBase(){
+		super();
 		_dbName = generateDefaultName();
+		
 	}
 	
 	public DataBase(String name){
+		super();
 		if(name == null)
 			name = generateDefaultName();
 		_dbName = name;
@@ -148,27 +153,55 @@ public class DataBase extends ActionPool{
 
 	@Override
 	protected void performAll() {
-		// TODO Auto-generated method stub
-		for(Action action : _actionStack)
+		while(!_actionPool.isEmpty())
 		{
+			Action action = _actionPool.get(0);
 			if(action.getAction().equals(Action.ACTION_TYPE.CREATE))
 			{
-				// TODO create table
+				// TODO check this function
+				try
+				{
+					String tableName = action.getValue();
+					File newTable = new File(getPath() + tableName);
+					newTable.createNewFile();
+					Table table = new Table(newTable);
+					_tableList.add(table);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
 			{
-				// TODO delete table
+				// TODO check this code block!!!
+				String tableName = action.getValue();
+				System.out.println(tableName);
+				for(int i = 0; i < _tableList.size(); i++)
+					if(_tableList.get(i).getTableName().equals(tableName))
+					{
+						System.out.println("REMOVED");
+						_tableList.remove(i);
+						break;
+					}
+				File table = new File(getPath() + tableName);
+				table.delete();
 			}
+			removeAction();
 		}
+		for(Table table : _tableList)
+			table.save();
 	}
 
+	private String getPath()
+	{
+		return "DB" + File.separator + getName() + File.separator;
+	}
+	
 	public void addExistingTableFromFile(File t) 
 	{
 		try 
 		{
 			_tableList.add(new Table(t));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
