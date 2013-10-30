@@ -165,6 +165,7 @@ public class MainForm extends JFrame {
 		saveBtn.setEnabled(false);
 		removeTableBtn.setEnabled(false);
 		createTableBtn.setEnabled(false);
+		removeDB.setEnabled(false);
 	}
 	
 	private JDialog getCreationTableDialog() {

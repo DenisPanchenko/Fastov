@@ -17,6 +17,7 @@ public class MainFormMng {
 	
 	public static JTree createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		System.out.println(node);
 		if(node.isRoot()) {
 			List<String> dbNames = new ArrayList<String>();
 			List<DataBase> dataBases = dbManager.getDataBaseList();
