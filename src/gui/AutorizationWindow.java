@@ -1,6 +1,5 @@
 package gui;
 
-import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -13,7 +12,6 @@ import javax.swing.KeyStroke;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

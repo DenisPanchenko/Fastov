@@ -108,7 +108,7 @@ public class MainFormMng {
 		Object userObject = node.getUserObject();
 		if(userObject instanceof DataBase) {
 			DataBase dataBase = (DataBase) userObject;
-			dbManager.createTable(dataBase.getName(),null);
+			dbManager.createTable(dataBase.getName(),name);
 			//Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
 			//dbManager.createTable(((DataBase) userObject).getName(), columnsNames, columnTypes);
 			//return addNewNodeToTree(table, tree);
