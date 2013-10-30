@@ -124,7 +124,20 @@ public class Table extends ActionPool{
 
 	@Override
 	protected void performAll() {
-		// TODO Auto-generated method stub
-		
+		while(!_actionPool.isEmpty())
+		{
+			Action action = _actionPool.get(0);
+			if(action.getAction().equals(Action.ACTION_TYPE.CREATE))
+			{
+				// TODO create new column
+				String columnName = action.getField();
+				String columnType = action.getValue();
+			}
+			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
+			{
+				// TODO delete column
+			}
+			removeAction();
+		}
 	}
 }

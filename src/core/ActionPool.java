@@ -22,7 +22,7 @@ public abstract class ActionPool {
 	 * contain any actions, otherwise returns false.
 	 * @return boolean
 	 */
-	public boolean isEmpty()
+	protected boolean isEmpty()
 	{
 		return _actionPool.isEmpty();
 	}
@@ -31,7 +31,7 @@ public abstract class ActionPool {
 	 * Add action a to the end of the action stack
 	 * @param a
 	 */
-	public void addAction(Action a)
+	protected void addAction(Action a)
 	{
 		if(a != null)
 			_actionPool.add(a);
@@ -41,7 +41,7 @@ public abstract class ActionPool {
 	 * Remove last action in the pool
 	 * if it exists, otherwise does nothing.
 	 */
-	public void removeAction()
+	protected void removeAction()
 	{
 		if(!isEmpty())
 			_actionPool.remove(0);
@@ -56,5 +56,13 @@ public abstract class ActionPool {
 	public ActionPool()
 	{
 		_actionPool = new ArrayList<Action>();
+	}
+	
+	/**
+	 * Clears the action pool
+	 */
+	public void clearPool()
+	{
+		_actionPool.clear();
 	}
 }
