@@ -215,6 +215,7 @@ public class DataBase extends ActionPool{
 			Table table = new Table(name);
 			NodeList columns = doc.getElementsByTagName("meta");
 			//for(Node col : )
+			// TODO read columns
 			_tableList.add(table);
 		} catch (Exception e) {
 			e.printStackTrace();
