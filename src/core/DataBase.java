@@ -37,8 +37,8 @@ public class DataBase extends ActionPool{
 	private String generateDefaultName()
 	{
 		StringBuilder defaultName = new StringBuilder();
-		defaultName.append("New Database (");
-		defaultName.append(new SimpleDateFormat("ddMMyy_HHmmss")
+		defaultName.append("NewDatabase(");
+		defaultName.append(new SimpleDateFormat("ddMMyy:HHmmss")
 		.format(Calendar.getInstance().getTime()));
 		defaultName.append(")");
 		return defaultName.toString();

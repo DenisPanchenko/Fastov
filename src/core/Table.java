@@ -34,8 +34,15 @@ public class Table extends ActionPool{
 	private Integer _WIDTH; // width of table
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
+	private ArrayList<DataType.TYPE> _columnPattern; // types sequence for column
+	private ArrayList<String> _columnName; // name sequence for column
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
 	
+	/**
+	 * Returns default unique name for table.
+	 * Based on the current date and time.
+	 * @return String - generated name
+	 */
 	public static String generateDefaultName()
 	{
 		StringBuilder defaultName = new StringBuilder();
@@ -60,18 +67,27 @@ public class Table extends ActionPool{
 	}	
 	
 	/**
-	 * 
+	 * Constructor with obligatory name parameter
 	 * @param tableName - String name of the table
 	 */
 	public Table(String tableName){
 		if(tableName == null)
 			_name = generateDefaultName();
 		else
-		{
 			_name = tableName;
-		}
+		_content = new ArrayList<ArrayList<DataType> >();
 	}
 	
+	/**
+	 * Construct new Table object according to the
+	 * defined into file t information.
+	 * File t must contain xml-presentation of table,
+	 * otherwise exception will be thrown.
+	 * @param t - File with table
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
 	public Table(File t) throws SAXException, IOException, ParserConfigurationException 
 	{
 		_content = new ArrayList<ArrayList<DataType> >();
@@ -112,6 +128,9 @@ public class Table extends ActionPool{
 		return _name;
 	}
 
+	/**
+	 * Perform all actions from action pool
+	 */
 	public void save()
 	{
 		performAll();
@@ -122,6 +141,11 @@ public class Table extends ActionPool{
 		return _name;
 	}
 
+	public void setCellValue(int x, int y, Object newValue)
+	{
+		_content.get(x).get(y).setValue(newValue);
+	}
+	
 	@Override
 	protected void performAll() {
 		while(!_actionPool.isEmpty())
@@ -129,13 +153,37 @@ public class Table extends ActionPool{
 			Action action = _actionPool.get(0);
 			if(action.getAction().equals(Action.ACTION_TYPE.CREATE))
 			{
-				// TODO create new column
+				// TODO check correctness
 				String columnName = action.getField();
 				String columnType = action.getValue();
+				
+				DataType.TYPE type;
+				if(columnType.equals("INTEGER"))
+					type = DataType.TYPE.INTEGER;
+				else if(columnType.equals("FLOAT"))
+					type = DataType.TYPE.FLOAT;
+				else if(columnType.equals("STRING"))
+					type = DataType.TYPE.STRING;
+				else if(columnType.equals("ENUM"))
+					type = DataType.TYPE.ENUM;
+				else
+					continue; 
+				_columnPattern.add(type);
+				_columnName.add(columnName);
+				for(int i = 0; i < _content.size(); i++)
+					_content.get(i).add(new DataType(type));
 			}
 			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
 			{
-				// TODO delete column
+				// TODO check correctness
+				String columnName = action.getValue();
+				int index = -1;
+				for(int i = 0; i < _columnName.size(); i++)
+					if(_columnName.get(i).equals(columnName))
+						index = i;
+				if(index >= 0)
+					for(int i = 0; i < _content.size(); i++)
+						_content.get(i).remove(index);
 			}
 			removeAction();
 		}
