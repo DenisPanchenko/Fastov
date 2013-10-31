@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import core.DBManager;
 import core.DataBase;
 import core.DataType;
-import core.Table;
 import core.DataType.TYPE;
 
 import java.awt.GridLayout;
@@ -39,6 +38,7 @@ public class MainForm extends JFrame {
 	private JTable table;
 	private JPanel panel;
 	private static JButton saveBtn;
+	private static JButton cancelBtn;
 	private static JButton createDBBtn;
 	private static JButton createTableBtn;
 	private static JButton removeTableBtn;
@@ -89,6 +89,16 @@ public class MainForm extends JFrame {
 				dbManager.save();
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 				model.setRoot(MainFormMng.createTreeNodes(dbManager));
+			}
+		});
+		
+		cancelBtn = new JButton("Cancel");
+		panel_2.add(cancelBtn);
+		cancelBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//dbManager.cancelAllActions();
 			}
 		});
 		
@@ -167,6 +177,7 @@ public class MainForm extends JFrame {
 		removeTableBtn.setEnabled(false);
 		createTableBtn.setEnabled(false);
 		removeDB.setEnabled(false);
+		cancelBtn.setEnabled(false);
 	}
 	
 	private JDialog getCreationTableDialog() {
