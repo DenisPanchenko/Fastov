@@ -283,6 +283,9 @@ public class DBManager extends ActionPool{
 		for(int i = 0; i < _dataBases.size(); i++)
 			for(int j = 0; j < _dataBases.get(i).getTableList().size(); j++)
 				_dataBases.get(i).getTableList().get(j).clearPool();
+		for(int i = 0; i < _dataBases.size(); i++)
+			_dataBases.get(i).clearPool();
+		clearPool();
 	}
 		
 	@Override
