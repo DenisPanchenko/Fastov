@@ -228,6 +228,16 @@ public class DBManager extends ActionPool{
 		addAction(removeDatabase);
 	}
 	
+	public void deleteColumn(String dbName, String tableName, String colName)
+	{
+		
+	}
+	
+	public void createColumn(String dbName, String tableName, String colName, DataType.TYPE colType)
+	{
+		
+	}
+	
 	public void undoAction()
 	{
 		removeAction();
