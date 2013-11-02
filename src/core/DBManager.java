@@ -237,7 +237,7 @@ public class DBManager extends ActionPool{
 	{
 		performAll();
 	}
-
+	
 	public void deleteTable(String dbName, String tableName) 
 	{
 		//TODO
