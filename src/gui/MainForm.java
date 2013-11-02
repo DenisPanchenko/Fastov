@@ -69,7 +69,7 @@ public class MainForm extends JFrame {
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.NORTH);
 		
-		table = createTable();
+		table = new JTable();
 		panel_1.add(table);
 		
 		panel = new JPanel();
@@ -98,7 +98,7 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//dbManager.cancelAllActions();
+				dbManager.cancelAllActions();
 			}
 		});
 		
@@ -109,7 +109,6 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.createDB(dbManager, tree);
-				tree.repaint();
 			}
 		});
 		
@@ -120,7 +119,6 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tree = MainFormMng.removeDB(tree, dbManager);
-				tree.repaint();
 			}
 		});
 		
@@ -130,13 +128,7 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-				Object userObject = node.getUserObject();
-				if(userObject instanceof DataBase) {
-					JTable table = new JTable();
-					JDialog dialog = getCreationTableDialog();
-				}								
+				tree = MainFormMng.createTable(dbManager, tree);
 			}
 		});
 		
@@ -147,7 +139,6 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.removeTable(tree, dbManager);
-				tree.repaint();
 			}
 		});
 		
@@ -180,7 +171,7 @@ public class MainForm extends JFrame {
 		cancelBtn.setEnabled(false);
 	}
 	
-	private JDialog getCreationTableDialog() {
+	/*private JDialog getCreationTableDialog() {
 		final JDialog createTableDialog = new JDialog();
 		final JTextField tName = new JTextField();
 		final JTextField cName = new JTextField();
@@ -267,11 +258,7 @@ public class MainForm extends JFrame {
 		createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);
 		
 		return createTableDialog;
-	}
-	
-	private JTable createTable() {
-		return new JTable();
-	}
+	}*/
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

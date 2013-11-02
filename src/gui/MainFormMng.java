@@ -17,7 +17,6 @@ public class MainFormMng {
 	
 	public static JTree createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		System.out.println(node);
 		if(node.isRoot()) {
 			List<String> dbNames = new ArrayList<String>();
 			List<DataBase> dataBases = dbManager.getDataBaseList();
@@ -103,17 +102,32 @@ public class MainFormMng {
 		return root;
 	}
 
-	public static JTree createTable(DBManager dbManager, JTree tree, String name,
-			List<String> columnsNames, List<DataType> columnTypes) {
+	public static JTree createTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object userObject = node.getUserObject();
 		if(userObject instanceof DataBase) {
 			DataBase dataBase = (DataBase) userObject;
-			dbManager.createTable(dataBase.getName(),name);
+			List<Table> tables = dataBase.getTableList();
+			List<String> tablesNames = new ArrayList<String>();
+			String tableName = JOptionPane.showInputDialog("Enter table name");
+			
+			if(tables != null) {
+				for(Table table: tables) {
+					tablesNames.add(table.getTableName());
+				}
+			}
+			while(tablesNames.contains(tableName) && tableName != null){
+				tableName = JOptionPane.showInputDialog("Table is already exists. Enter another name");
+			}
+			if(tableName != null) {
+				dbManager.createTable(dataBase.getName(), tableName);
+				return tree;
+			} else {
+				return tree;
+			}
 			//Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
 			//dbManager.createTable(((DataBase) userObject).getName(), columnsNames, columnTypes);
 			//return addNewNodeToTree(table, tree);
-			return tree;
 		}
 		return tree;
 	}
