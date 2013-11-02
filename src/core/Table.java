@@ -188,4 +188,8 @@ public class Table extends ActionPool{
 			removeAction();
 		}
 	}
+
+	public ArrayList<String> get_columnName() {
+		return _columnName;
+	}	
 }

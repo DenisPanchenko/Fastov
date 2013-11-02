@@ -31,6 +31,7 @@ public class MainForm extends JFrame {
 	private static JButton projectionBtn;
 	private static JButton unitTableBtn;
 	private static JButton removeDB;
+	private static JButton addColumn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -125,6 +126,16 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				tree = MainFormMng.removeTable(tree, dbManager);
+			}
+		});
+		
+		addColumn = new JButton("Add column");
+		panel_2.add(addColumn);
+		addColumn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				tree = MainFormMng.addColumnToTable(dbManager, tree);
 			}
 		});
 		

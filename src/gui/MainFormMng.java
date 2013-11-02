@@ -142,4 +142,25 @@ public class MainFormMng {
 		}
 		return tree;
 	}
+
+	public static JTree addColumnToTable(DBManager dbManager, JTree tree) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			List<String> columnNames = table.get_columnName();
+			String columnName = JOptionPane.showInputDialog("Enter column name");
+			
+			while(columnNames.contains(columnName) && columnName != null){
+				columnName = JOptionPane.showInputDialog("Column is already exists. Enter another name");
+			}
+			if(columnName != null) {
+				//dbManager.addColumnToTable();
+				return tree;
+			} else {
+				return tree;
+			}	
+		}
+		return tree;
+	}
 }
