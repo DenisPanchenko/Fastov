@@ -156,17 +156,25 @@ public class MainFormMng {
 		return tree;
 	}
 
-	public static void addColumnToTable(DBManager dbManager, JTree tree) {
+	public static void addColumnToTable(final DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object o = node.getUserObject();
-		if(o instanceof Table) {
-			Table table = (Table)o;
-			final InputDialog dialog = initDialog();
+		Object parent = ((DefaultMutableTreeNode)node.getParent()).getUserObject();
+		if(o instanceof Table && parent instanceof DataBase) {
+			final Table table = (Table)o;
+			final DataBase dataBase = (DataBase)parent;
+			final InputDialog dialog = new InputDialog();
+			final JTextField columnName = new JTextField();
+			final JComboBox types = new JComboBox(DataType.TYPE.values());
+			
+			columnName.setColumns(10);
+			
+			dialog.initialize(columnName, types, "Add column", "Column name:", "Type:", "Add");
 			dialog.getAcceptButton().addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//dbManager.createColumn(dbName, tableName, colName, colType);
+					dbManager.createColumn(dataBase.getName(), table.getTableName(), columnName.getText(), (DataType.TYPE)types.getSelectedItem());
 				}
 			});
 			
@@ -176,16 +184,7 @@ public class MainFormMng {
 					dialog.dispose();
 				}
 			});
+			dialog.setVisible(true);
 		}
-	}
-	
-	private static InputDialog initDialog() {
-		JComboBox types = new JComboBox(DataType.TYPE.values());
-		JTextField columnName = new JTextField();
-		columnName.setColumns(10);
-		final InputDialog dialog = new InputDialog();	
-		dialog.initialize(columnName, types, "Add column", "Column name:", "Type:", "Add");
-		
-		return dialog;
 	}
 }
