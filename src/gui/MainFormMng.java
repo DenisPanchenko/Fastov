@@ -1,10 +1,23 @@
 package gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -143,24 +156,36 @@ public class MainFormMng {
 		return tree;
 	}
 
-	public static JTree addColumnToTable(DBManager dbManager, JTree tree) {
+	public static void addColumnToTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object o = node.getUserObject();
 		if(o instanceof Table) {
 			Table table = (Table)o;
-			List<String> columnNames = table.get_columnName();
-			String columnName = JOptionPane.showInputDialog("Enter column name");
+			final InputDialog dialog = initDialog();
+			dialog.getAcceptButton().addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
 			
-			while(columnNames.contains(columnName) && columnName != null){
-				columnName = JOptionPane.showInputDialog("Column is already exists. Enter another name");
-			}
-			if(columnName != null) {
-				//dbManager.addColumnToTable();
-				return tree;
-			} else {
-				return tree;
-			}	
+			dialog.getBtnCancel().addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dialog.dispose();
+				}
+			});
 		}
-		return tree;
+	}
+	
+	private static InputDialog initDialog() {
+		JComboBox types = new JComboBox(DataType.TYPE.values());
+		JTextField columnName = new JTextField();
+		columnName.setColumns(10);
+		final InputDialog dialog = new InputDialog();	
+		dialog.initialize(columnName, types, "Add column", "Column name:", "Type:", "Add");
+		
+		return dialog;
 	}
 }

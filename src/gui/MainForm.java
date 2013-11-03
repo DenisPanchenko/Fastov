@@ -32,6 +32,7 @@ public class MainForm extends JFrame {
 	private static JButton unitTableBtn;
 	private static JButton removeDB;
 	private static JButton addColumn;
+	private static JButton deleteColumn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -61,7 +62,7 @@ public class MainForm extends JFrame {
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(2, 1, 0, 0));
+		panel.setLayout(new GridLayout(1, 1, 0, 0));
 		
 		panel_2 = new JPanel();
 		panel.add(panel_2);
@@ -135,7 +136,18 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				tree = MainFormMng.addColumnToTable(dbManager, tree);
+				MainFormMng.addColumnToTable(dbManager, tree);
+			}
+		});
+		
+		deleteColumn = new JButton("Remove column");
+		panel_2.add(deleteColumn);
+		deleteColumn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				 
+				
 			}
 		});
 		
