@@ -166,7 +166,7 @@ public class MainFormMng {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					//dbManager.createColumn(dbName, tableName, colName, colType);
 				}
 			});
 			
