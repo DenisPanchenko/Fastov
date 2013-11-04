@@ -136,7 +136,7 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				MainFormMng.addColumnToTable(dbManager, tree);
+				table = MainFormMng.addColumnToTable(dbManager, tree);
 			}
 		});
 		

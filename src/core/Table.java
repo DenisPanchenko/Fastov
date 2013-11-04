@@ -35,7 +35,7 @@ public class Table extends ActionPool{
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
 	private ArrayList<DataType.TYPE> _columnPattern; // types sequence for column
-	private ArrayList<String> _columnName; // name sequence for column
+	private ArrayList<String> _columnNames; // name sequence for column
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
 	
 	/**
@@ -169,7 +169,7 @@ public class Table extends ActionPool{
 				else
 					continue; 
 				_columnPattern.add(type);
-				_columnName.add(columnName);
+				_columnNames.add(columnName);
 				for(int i = 0; i < _content.size(); i++)
 					_content.get(i).add(new DataType(type));
 			}
@@ -178,8 +178,8 @@ public class Table extends ActionPool{
 				// TODO check correctness
 				String columnName = action.getValue();
 				int index = -1;
-				for(int i = 0; i < _columnName.size(); i++)
-					if(_columnName.get(i).equals(columnName))
+				for(int i = 0; i < _columnNames.size(); i++)
+					if(_columnNames.get(i).equals(columnName))
 						index = i;
 				if(index >= 0)
 					for(int i = 0; i < _content.size(); i++)
@@ -189,7 +189,19 @@ public class Table extends ActionPool{
 		}
 	}
 
-	public ArrayList<String> get_columnName() {
-		return _columnName;
-	}	
+	public ArrayList<String> get_columnNames() {
+		return _columnNames;
+	}
+
+	public ArrayList<ArrayList<DataType>> get_content() {
+		return _content;
+	}
+
+	public Integer get_WIDTH() {
+		return _WIDTH;
+	}
+
+	public Integer get_HEIGHT() {
+		return _HEIGHT;
+	}
 }

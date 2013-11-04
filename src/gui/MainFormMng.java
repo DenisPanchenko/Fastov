@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
@@ -156,7 +157,7 @@ public class MainFormMng {
 		return tree;
 	}
 
-	public static void addColumnToTable(final DBManager dbManager, JTree tree) {
+	public static JTable addColumnToTable(final DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object o = node.getUserObject();
 		Object parent = ((DefaultMutableTreeNode)node.getParent()).getUserObject();
@@ -185,6 +186,20 @@ public class MainFormMng {
 				}
 			});
 			dialog.setVisible(true);
+			return convertTableToJTable(table);
 		}
+		return null;
+	}
+	
+	public static JTable convertTableToJTable(Table table) {
+		Object[] columnNames = table.get_columnNames().toArray();
+		Object[][] tableContent = new Object[table.get_WIDTH()][];
+		for(int i = 0; i < table.get_WIDTH(); i++) {
+			for(int j = 0; j < table.get_HEIGHT(); j++) {
+				tableContent[i][j] = table.getCell(i, j);
+			}
+		}
+		
+		return new JTable(tableContent, columnNames);
 	}
 }
