@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -242,6 +243,38 @@ public class MainFormMng {
 		mainLayout.setAutoCreateGaps(true);
 		mainLayout.setAutoCreateContainerGaps(true);
 		
+		mainLayout.setHorizontalGroup(
+				mainLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+					.addGroup(
+							mainLayout.createSequentialGroup()
+								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addComponent(tables)
+								)
+								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addComponent(columnsOfSelectedTable)
+								)
+					)
+					.addGroup(mainLayout.createSequentialGroup()
+							.addComponent(unitBtn)
+							.addComponent(cancelBtn)
+					)
+				);
+		
+		mainLayout.setVerticalGroup(
+				mainLayout.createSequentialGroup()
+					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(tables)
+							.addComponent(columnsOfSelectedTable)
+					)
+					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(unitBtn)
+							.addComponent(cancelBtn)
+					)
+				);
+		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 }
