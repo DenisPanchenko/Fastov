@@ -13,6 +13,7 @@ package core;
 import java.util.*;
 import java.io.*;
 
+import javax.swing.ComboBoxModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -326,5 +327,14 @@ public class DBManager extends ActionPool{
 		}
 		for(DataBase db : _dataBases)
 			db.save();
+	}
+
+	public List<Table> getAllTables() {
+		
+		List<Table> tables = new ArrayList<Table>();
+		for(DataBase db: _dataBases) {
+			tables.addAll(db.getTableList());
+		}
+		return tables;
 	}
 }

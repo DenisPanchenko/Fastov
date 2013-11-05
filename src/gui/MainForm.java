@@ -2,16 +2,19 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.ScrollPane;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
 import core.DBManager;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,10 +58,11 @@ public class MainForm extends JFrame {
 		contentPane.add(tree, BorderLayout.WEST);
 		
 		panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.NORTH);
+		contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
-		panel_1.add(table);
+		table.setFillsViewportHeight(true);
+		panel_1.add(new JScrollPane(table));
 		
 		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.EAST);
@@ -156,6 +160,13 @@ public class MainForm extends JFrame {
 		
 		unitTableBtn = new JButton("Tables Union");
 		panel_2.add(unitTableBtn);
+		unitTableBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				table = MainFormMng.unitTable(dbManager, tree);
+			}
+		});
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
