@@ -1,7 +1,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
 import java.awt.ScrollPane;
 
 import javax.swing.JFrame;
@@ -9,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTable;
@@ -56,29 +59,35 @@ public class MainForm extends JFrame implements MouseListener{
 		dbManager = new DBManager();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(50, 50, 950, 700);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		//setBounds(50, 50, 950, 700);
+		//contentPane = new JPanel();
+		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		//contentPane.setLayout(new BorderLayout(0, 0));
+		//setContentPane(contentPane);
 		
+		Integer height = new Integer(600);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(1, 1, 0, 0));
 		tree = new JTree(MainFormMng.createTreeNodes(dbManager));
-		contentPane.add(tree, BorderLayout.WEST);
+		tree.setMinimumSize(new Dimension(75,height));
+		panel.add(tree);
 		tree.addMouseListener(this);
 		
 		panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
+		//contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
+		table.setMinimumSize(new Dimension(600, height));
 		table.setFillsViewportHeight(true);
 		panel_1.add(new JScrollPane(table));
+		panel_1.setLayout(new GridLayout(1, 1, 0, 0));
 		
-		panel = new JPanel();
-		contentPane.add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(1, 1, 0, 0));
+		//contentPane.add(panel, BorderLayout.EAST);
+		
 		
 		panel_2 = new JPanel();
-		panel.add(panel_2);
+		//panel.add(panel_2);
 		panel_2.setLayout(new GridLayout(0, 1, 10, 10));
 		
 		saveBtn = new JButton("Save");
@@ -197,8 +206,28 @@ public class MainForm extends JFrame implements MouseListener{
 			}
 		}
 		);
-		//dialog.setModal(true);
+
+		GroupLayout mainLayout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(mainLayout);
+		mainLayout.setAutoCreateGaps(true);
+		mainLayout.setAutoCreateContainerGaps(true);
+		
+		mainLayout.setHorizontalGroup(
+				mainLayout.createSequentialGroup()
+					.addComponent(panel)
+					.addComponent(panel_1)
+					.addComponent(panel_2)
+				);
+		
+		mainLayout.setVerticalGroup(
+				mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(panel)
+					.addComponent(panel_1)
+					.addComponent(panel_2)
+				);
+		
 		setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
+		pack();
 		setLocationRelativeTo(null);
 	}
 	
