@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -202,5 +203,78 @@ public class MainFormMng {
 		
 		System.out.println((String)columnNames[0]);
 		return new JTable(tableContent, columnNames);
+	}
+
+	public static JTable unitTable(DBManager dbManager, JTree tree) {
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			createUnionDialog(dbManager, table);
+		}
+		return null;
+	}
+
+	private static void createUnionDialog(final DBManager dbManager, final Table selectedTable) {
+		JDialog dialog = new JDialog();
+		
+		final JComboBox tables = new JComboBox(dbManager.getAllTables().toArray());
+		final JComboBox columnsOfSelectedTable = new JComboBox(selectedTable.get_columnNames().toArray());
+		JButton unitBtn = new JButton("Unit");
+		JButton cancelBtn = new JButton("Cancel");
+		
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setTitle("Table union");
+		
+		cancelBtn.setActionCommand("EXIT");
+		unitBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//dbManager.unitTable(selectedTable, (Table)tables.getSelectedItem(), 
+					//	(String)columnsOfSelectedTable.getSelectedItem());
+			}
+		});
+		
+		GroupLayout mainLayout = new GroupLayout(dialog.getContentPane());
+		dialog.getContentPane().setLayout(mainLayout);
+		mainLayout.setAutoCreateGaps(true);
+		mainLayout.setAutoCreateContainerGaps(true);
+		
+		mainLayout.setHorizontalGroup(
+				mainLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+					.addGroup(
+							mainLayout.createSequentialGroup()
+								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addComponent(tables)
+								)
+								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+										.addComponent(columnsOfSelectedTable)
+								)
+					)
+					.addGroup(mainLayout.createSequentialGroup()
+							.addComponent(unitBtn)
+							.addComponent(cancelBtn)
+					)
+				);
+		
+		mainLayout.setVerticalGroup(
+				mainLayout.createSequentialGroup()
+					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(tables)
+							.addComponent(columnsOfSelectedTable)
+					)
+					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+							.addComponent(unitBtn)
+							.addComponent(cancelBtn)
+					)
+				);
+		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
 }
