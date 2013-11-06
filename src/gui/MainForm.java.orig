@@ -7,6 +7,7 @@ import java.awt.ScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.JScrollPane;
@@ -15,12 +16,19 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 
 import core.DBManager;
+<<<<<<< HEAD
+=======
 import core.DataBase;
+>>>>>>> 5ed14bb4b01a3396c7a1b28b50f8aa8e66db90e1
 import core.Table;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+<<<<<<< HEAD
+import java.awt.event.MouseAdapter;
+=======
+>>>>>>> 5ed14bb4b01a3396c7a1b28b50f8aa8e66db90e1
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -42,6 +50,7 @@ public class MainForm extends JFrame implements MouseListener{
 	private static JButton addColumnBtn;
 	private static JButton deleteColumnBtn;
 	private static JButton addRowBtn;
+	private static JButton deleteRowBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -71,6 +80,7 @@ public class MainForm extends JFrame implements MouseListener{
 		
 		table = new JTable();
 		table.setFillsViewportHeight(true);
+		table.setVisible(true);
 		panel_1.add(new JScrollPane(table));
 		
 		panel = new JPanel();
@@ -150,6 +160,7 @@ public class MainForm extends JFrame implements MouseListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				table = MainFormMng.addColumnToTable(dbManager, tree);
+				table.repaint();
 			}
 		});
 		
@@ -171,6 +182,17 @@ public class MainForm extends JFrame implements MouseListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+			}
+		});
+		
+		deleteRowBtn = new JButton("Delete row");
+		panel_2.add(deleteRowBtn);
+		deleteRowBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainFormMng.deleteRowFromTable(dbManager, table, tree);
+				table.repaint();
 			}
 		});
 		
@@ -200,6 +222,22 @@ public class MainForm extends JFrame implements MouseListener{
 		//dialog.setModal(true);
 		setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 		setLocationRelativeTo(null);
+		
+		MouseListener ml = new MouseAdapter() {
+	     public void mousePressed(MouseEvent e) {
+	    	 DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+	    	 assert(node != null);
+		 	 Object o = node.getUserObject();
+				 
+	    	 if(e.getSource() instanceof JTree) {
+	    		 if(o instanceof Table && e.getClickCount() == 2) {
+	    			 table = MainFormMng.convertTableToJTable((Table)o);
+		    		 table.setVisible(true);
+		    	 }
+		   	 }
+	     }
+		};
+		tree.addMouseListener(ml);
 	}
 	
 	public static void disableButtons() {
