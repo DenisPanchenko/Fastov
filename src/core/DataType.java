@@ -104,4 +104,17 @@ public class DataType
 			_value = value;
 		}
 	}
+	
+	public static TYPE fromString(String s)
+	{
+		if(s.equals("INTEGER"))
+			return TYPE.INTEGER;
+		else if(s.equals("FLOAT"))
+			return TYPE.FLOAT;
+		else if(s.equals("STRING"))
+			return TYPE.STRING;
+		else if(s.equals("ENUM"))
+			return TYPE.ENUM;
+		return TYPE.INTEGER;
+	}
 }

@@ -101,14 +101,42 @@ public class Table extends ActionPool{
 		}
 	}
 	
-	public static Table fromFile(File t)
+	public static Table fromFile(File t) throws SAXException, IOException, ParserConfigurationException
 	{
-		try
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(t);
+		doc.normalize();
+		
+		String caption = doc.getElementsByTagName("caption").item(0).getFirstChild().getTextContent();
+		
+		Table result = new Table(caption, t.getAbsolutePath());
+
+		String width = doc.getElementsByTagName("width").item(0).getFirstChild().getTextContent();
+		result._WIDTH = Integer.parseInt(width);
+		String height = doc.getElementsByTagName("height").item(0).getFirstChild().getTextContent();
+		result._HEIGHT = Integer.parseInt(height);
+		
+		NodeList names = doc.getElementsByTagName("name");
+		for(int i = 0; i < names.getLength(); i++)
+			result._columnNames.add(names.item(i).getFirstChild().getTextContent());
+		
+		NodeList types = doc.getElementsByTagName("types");
+		for(int i = 0; i < types.getLength(); i++)
+			result._columnPattern.add(DataType.fromString(types.item(i).getTextContent()));
+		
+		NodeList rows = doc.getElementsByTagName("row");
+		for(int i = 0; i < rows.getLength(); i++)
 		{
-		Table result = new Table(t);
-		} catch(Exception e) {
-			e.printStackTrace();
+			result._content.add(new ArrayList<DataType>());
+			NodeList columns = doc.getElementsByTagName("columns");
+			for(int j = 0; j < columns.getLength(); j++)
+			{
+				DataType data = new DataType(result._columnPattern.get(i),columns.item(j).getTextContent());
+				result._content.get(i).set(j, data);
+			}
 		}
+		
 		return result;
 	}
 	

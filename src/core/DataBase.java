@@ -202,16 +202,7 @@ public class DataBase extends ActionPool{
 	{
 		try 
 		{
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(t);
-			doc.normalize();
-			Node root = doc.getElementsByTagName("table").item(0);
-			String name = doc.getElementsByTagName("caption").item(0).getFirstChild().getTextContent();
-			Table table = new Table(name, t.getAbsolutePath());
-			String width = doc.getElementsByTagName("width").item(0).getFirstChild().getTextContent();
-			NodeList columns = doc.getElementsByTagName("meta");
-			_tableList.add(table);
+			_tableList.add(Table.fromFile(t));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
