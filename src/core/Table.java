@@ -129,11 +129,11 @@ public class Table extends ActionPool{
 		for(int i = 0; i < rows.getLength(); i++)
 		{
 			result._content.add(new ArrayList<DataType>());
-			NodeList columns = doc.getElementsByTagName("columns");
+			NodeList columns = doc.getElementsByTagName("column");
 			for(int j = 0; j < columns.getLength(); j++)
 			{
 				DataType data = new DataType(result._columnPattern.get(i),columns.item(j).getTextContent());
-				result._content.get(i).set(j, data);
+				result._content.get(i).add(data);
 			}
 		}
 		
