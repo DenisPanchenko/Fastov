@@ -79,7 +79,7 @@ public class MainForm extends JFrame implements MouseListener{
 		//contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
-		table.setMinimumSize(new Dimension(600, height));
+		table.setMinimumSize(new Dimension(700, height));
 		table.setFillsViewportHeight(true);
 		panel_1.add(new JScrollPane(table));
 		panel_1.setLayout(new GridLayout(1, 1, 0, 0));

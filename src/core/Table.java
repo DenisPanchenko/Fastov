@@ -354,6 +354,11 @@ public class Table extends ActionPool{
 			removeAction();
 		}
 	}
+	
+	public void setCell(int i, int j, Object value)
+	{
+		_content.get(i).set(j, new DataType(_columnPattern.get(i), value));
+	}
 
 	public void deleteRow(Integer index)
 	{
