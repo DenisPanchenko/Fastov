@@ -188,8 +188,7 @@ public class MainFormMng {
 				}
 			});
 			dialog.setVisible(true);
-			//return convertTableToJTable(table);
-			return null;
+			return convertTableToJTable(table);
 		}
 		return null;
 	}
@@ -199,7 +198,7 @@ public class MainFormMng {
 		Object[][] tableContent = new Object[table.get_WIDTH()][];
 		for(int i = 0; i < table.get_WIDTH(); i++)
 			for(int j = 0; j < table.get_HEIGHT(); j++)
-				tableContent[i][j] = table.getCell(i, j);
+				//tableContent[i][j] = table.getCell(i, j);
 		
 		System.out.println((String)columnNames[0]);
 		return new JTable(tableContent, columnNames);
@@ -277,5 +276,21 @@ public class MainFormMng {
 		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
+	}
+
+	public static void deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
+		assert(jtable != null);
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+			DataBase dataBase = (DataBase)(parent.getUserObject());
+		
+			int rowIndex = jtable.getSelectedRow();
+			dbManager.deleteRow(dataBase.getName(), table.getTableName(), rowIndex);	
+		}
 	}
 }
