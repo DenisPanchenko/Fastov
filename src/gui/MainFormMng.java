@@ -295,4 +295,22 @@ public class MainFormMng {
 		}
 		return jtable;
 	}
+
+	public static JTable addRowToTable(DBManager dbManager, JTable jtable, JTree tree) {
+		assert(jtable != null);
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
+			DataBase dataBase = (DataBase)(parent.getUserObject());
+		
+			int rowIndex = jtable.getSelectedRow();
+			dbManager.createRow(dataBase.getName(), table.getTableName());	
+			return convertTableToJTable(table);
+		}
+		return jtable;
+	}
 }
