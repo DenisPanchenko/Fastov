@@ -7,6 +7,7 @@ import java.awt.ScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.JScrollPane;
@@ -150,7 +151,8 @@ public class MainForm extends JFrame implements MouseListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				table = MainFormMng.addColumnToTable(dbManager, tree);
+				table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
+				((AbstractTableModel)table.getModel()).fireTableDataChanged();
 			}
 		});
 		
@@ -181,8 +183,8 @@ public class MainForm extends JFrame implements MouseListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				MainFormMng.deleteRowFromTable(dbManager, table, tree);
-				table.repaint();
+				table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
+				((AbstractTableModel)table.getModel()).fireTableDataChanged();
 			}
 		});
 		
@@ -195,7 +197,8 @@ public class MainForm extends JFrame implements MouseListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				table = MainFormMng.unitTable(dbManager, tree);
+				table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
+				((AbstractTableModel)table.getModel()).fireTableDataChanged();
 			}
 		});
 		

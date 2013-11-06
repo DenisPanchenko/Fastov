@@ -278,7 +278,7 @@ public class MainFormMng {
 		dialog.setVisible(true);
 	}
 
-	public static void deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
+	public static JTable deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
 		assert(jtable != null);
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
@@ -291,6 +291,8 @@ public class MainFormMng {
 		
 			int rowIndex = jtable.getSelectedRow();
 			dbManager.deleteRow(dataBase.getName(), table.getTableName(), rowIndex);	
+			return convertTableToJTable(table);
 		}
+		return jtable;
 	}
 }
