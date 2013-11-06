@@ -300,6 +300,11 @@ public class DBManager extends ActionPool{
 		}
 	}
 	
+	public void tableJoin(String targetTableName, String destTableName, String colName)
+	{
+		
+	}
+	
 	public void cancelAllActions()
 	{
 		for(int i = 0; i < _dataBases.size(); i++)

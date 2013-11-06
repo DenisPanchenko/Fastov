@@ -207,11 +207,10 @@ public class DataBase extends ActionPool{
 			Document doc = dBuilder.parse(t);
 			doc.normalize();
 			Node root = doc.getElementsByTagName("table").item(0);
-			String name = doc.getElementsByTagName("name").item(0).getFirstChild().getTextContent();
-			Table table = new Table(name);
+			String name = doc.getElementsByTagName("caption").item(0).getFirstChild().getTextContent();
+			Table table = new Table(name, t.getAbsolutePath());
+			String width = doc.getElementsByTagName("width").item(0).getFirstChild().getTextContent();
 			NodeList columns = doc.getElementsByTagName("meta");
-			//for(Node col : )
-			// TODO read columns
 			_tableList.add(table);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -158,7 +158,7 @@ public class MainForm extends JFrame {
 		projectionBtn = new JButton("Tables Projection");
 		panel_2.add(projectionBtn);
 		
-		unitTableBtn = new JButton("Tables Union");
+		unitTableBtn = new JButton("Tables Join");
 		panel_2.add(unitTableBtn);
 		unitTableBtn.addActionListener(new ActionListener() {
 			

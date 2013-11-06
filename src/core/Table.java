@@ -28,15 +28,89 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Table extends ActionPool{
 	private Integer _WIDTH; // width of table
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
+	private FileManager _fileManager;
 	private ArrayList<DataType.TYPE> _columnPattern; // types sequence for column
 	private ArrayList<String> _columnNames; // name sequence for column
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
+	
+	class FileManager
+	{
+		// TODO all operations
+		private File _file;
+		private Document _document;
+		
+		public FileManager(File f)
+		{
+			if(f.canRead())
+			{
+				_file = f;
+				try
+				{
+					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+					_document = docBuilder.parse(f);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		public void createColumn(String columnName, String colType)
+		{
+			Element type = _document.createElement("type");
+			type.appendChild(_document.createTextNode(colType));
+			Node types = _document.getElementsByTagName("types").item(0);
+			types.appendChild(type);
+			
+			Element name = _document.createElement("name");
+			name.appendChild(_document.createTextNode(columnName));
+			Node names = _document.getElementsByTagName("names").item(0);
+			names.appendChild(name);
+			
+			Node width = _document.getElementsByTagName("width").item(0);
+			width.setTextContent(_WIDTH.toString());
+			
+			try
+			{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(_document);
+				StreamResult result = new StreamResult(_file);
+				transformer.transform(source, result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public void deleteColumn(String columnName)
+		{
+			
+		}
+		
+		public void setValue()
+		{
+			
+		}
+	}
+	
+	public static Table fromFile(File t)
+	{
+		try
+		{
+		Table result = new Table(t);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	/**
 	 * Returns default unique name for table.
@@ -70,15 +144,17 @@ public class Table extends ActionPool{
 	 * Constructor with obligatory name parameter
 	 * @param tableName - String name of the table
 	 */
-	public Table(String tableName){
+	public Table(String tableName, String file){
 		if(tableName == null)
 			_name = generateDefaultName();
 		else
 			_name = tableName;
 		_WIDTH = new Integer(0);
 		_HEIGHT = new Integer(0);
+		_columnPattern = new ArrayList<DataType.TYPE>();
 		_columnNames = new ArrayList<String>();
 		_content = new ArrayList<ArrayList<DataType> >();
+		_fileManager = new FileManager(new File(file));
 	}
 	
 	/**
@@ -95,6 +171,7 @@ public class Table extends ActionPool{
 	{
 		_WIDTH = new Integer(0);
 		_HEIGHT = new Integer(0);
+		_columnPattern = new ArrayList<DataType.TYPE>();
 		_columnNames = new ArrayList<String>();
 		_content = new ArrayList<ArrayList<DataType> >();
 		_name = t.getName();
@@ -107,12 +184,33 @@ public class Table extends ActionPool{
 		Element root = table.createElement("table");
 		table.appendChild(root);
 		
-		Element name = table.createElement("name");
+		Element name = table.createElement("caption");
 		name.appendChild(table.createTextNode(t.getName()));
 		root.appendChild(name);
 		
 		Element meta = table.createElement("meta");
+		
+		Element width = table.createElement("width");
+		width.appendChild(table.createTextNode(_WIDTH.toString()));
+		meta.appendChild(width);
+		
+		Element height = table.createElement("height");
+		height.appendChild(table.createTextNode(_HEIGHT.toString()));
+		meta.appendChild(height);
+		
+		Element types = table.createElement("types");
+		types.appendChild(table.createTextNode(""));
+		meta.appendChild(types);
+		
+		Element names = table.createElement("names");
+		names.appendChild(table.createTextNode(""));
+		meta.appendChild(names);
+		
 		root.appendChild(meta);
+		
+		Element content = table.createElement("content");
+		content.appendChild(table.createTextNode(""));
+		root.appendChild(content);
 		
 		try
 		{
@@ -124,6 +222,8 @@ public class Table extends ActionPool{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		_fileManager = new FileManager(t);
 	}
 
 	/**
@@ -170,7 +270,8 @@ public class Table extends ActionPool{
 			break;
 		}
 		a.setData(colName, typeString);
-		System.out.println(colName);
+		addAction(a);
+		//System.out.println(colName);
 	}
 	
 	public void setCellValue(int x, int y, Object newValue)
@@ -205,6 +306,7 @@ public class Table extends ActionPool{
 				for(int i = 0; i < _content.size(); i++)
 					_content.get(i).add(new DataType(type));
 				_WIDTH++;
+				_fileManager.createColumn(columnName, columnType);
 			}
 			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
 			{
@@ -216,7 +318,10 @@ public class Table extends ActionPool{
 						index = i;
 				if(index >= 0)
 					for(int i = 0; i < _content.size(); i++)
-						_content.get(i).remove(index);
+						_content.get(index).remove(i);
+				_content.remove(index);
+				_columnNames.remove(index);
+				_fileManager.deleteColumn(columnName);
 			}
 			removeAction();
 		}
@@ -226,7 +331,7 @@ public class Table extends ActionPool{
 		return _columnNames;
 	}
 
-	public ArrayList<ArrayList<DataType>> get_content() {
+	public ArrayList<ArrayList<DataType> > get_content() {
 		return _content;
 	}
 
