@@ -182,7 +182,8 @@ public class MainForm extends JFrame implements MouseListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
+				((AbstractTableModel)table.getModel()).fireTableDataChanged();
 			}
 		});
 		
