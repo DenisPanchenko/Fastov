@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,16 +9,11 @@ import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -57,7 +51,7 @@ public class MainFormMng {
 		}
 	}
 	
-	private static JTree addNewNodeToTree(Object o, JTree tree) {
+/*	private static JTree addNewNodeToTree(Object o, JTree tree) {
 		DefaultMutableTreeNode root = getRoot(tree);
 		if(o instanceof DataBase) {
 			root.add(new DefaultMutableTreeNode(o));
@@ -69,11 +63,12 @@ public class MainFormMng {
 		tree.setModel(new DefaultTreeModel(root));
 		return tree;
 	}
-	
+
 	private static DefaultMutableTreeNode getRoot(JTree tree) {
 		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 		return (DefaultMutableTreeNode)model.getRoot();
 	}
+*/
 	
 	public static JTree removeTable(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();

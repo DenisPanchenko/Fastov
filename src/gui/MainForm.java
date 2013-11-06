@@ -34,8 +34,9 @@ public class MainForm extends JFrame {
 	private static JButton projectionBtn;
 	private static JButton unitTableBtn;
 	private static JButton removeDB;
-	private static JButton addColumn;
-	private static JButton deleteColumn;
+	private static JButton addColumnBtn;
+	private static JButton deleteColumnBtn;
+	private static JButton addRowBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -134,9 +135,9 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		addColumn = new JButton("Add column");
-		panel_2.add(addColumn);
-		addColumn.addActionListener(new ActionListener() {
+		addColumnBtn = new JButton("Add column");
+		panel_2.add(addColumnBtn);
+		addColumnBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -144,13 +145,23 @@ public class MainForm extends JFrame {
 			}
 		});
 		
-		deleteColumn = new JButton("Remove column");
-		panel_2.add(deleteColumn);
-		deleteColumn.addActionListener(new ActionListener() {
+		deleteColumnBtn = new JButton("Remove column");
+		panel_2.add(deleteColumnBtn);
+		deleteColumnBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				 
+				
+			}
+		});
+		
+		addRowBtn = new JButton("Add row");
+		panel_2.add(addRowBtn);
+		addRowBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
 				
 			}
 		});
@@ -262,7 +273,7 @@ public class MainForm extends JFrame {
 				if(columnName != null) {
 					TableColumn column = new TableColumn();
 					column.setHeaderValue(columnName);
-					newTable.addColumn(column);
+					newTable.addColumnBtn(column);
 					columnsNames.add(columnName);
 					columnTypes.add(new DataType((TYPE)types.getSelectedItem()));
 					cName.setText("");
