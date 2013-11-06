@@ -234,6 +234,32 @@ public class DBManager extends ActionPool{
 		
 	}
 	
+	public void createRow(String dbName, String tableName)
+	{
+		if(dbName == null || tableName == null)
+			return;
+		int index = -1;
+		for(int i = 0; i < _dataBases.size(); i++)
+			if(_dataBases.get(i).getName().equals(dbName))
+				index = i;
+		if(index > -1)
+		{
+			DataBase db = _dataBases.get(index);
+			ArrayList<Table> tableList = db.getTableList(); 
+			for(int j = 0; j < tableList.size(); j++)
+				if(tableList.get(j).getTableName().equals(tableName))
+				{
+					tableList.get(j).createRow();
+					return;
+				}
+		}
+	}
+	
+	public void deleteRow(String dbName, String tableName, Integer rowNumnber)
+	{
+		
+	}
+	
 	public void createColumn(String dbName, String tableName, String colName, DataType.TYPE colType)
 	{
 		int index = -1;
@@ -246,7 +272,10 @@ public class DBManager extends ActionPool{
 			ArrayList<Table> tableList = db.getTableList(); 
 			for(int j = 0; j < tableList.size(); j++)
 				if(tableList.get(j).getTableName().equals(tableName))
+				{
 					tableList.get(j).createColumn(colName, colType);
+					return;
+				}
 		}
 	}
 	

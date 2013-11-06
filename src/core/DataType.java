@@ -117,4 +117,9 @@ public class DataType
 			return TYPE.ENUM;
 		return TYPE.INTEGER;
 	}
+	
+	public String toString()
+	{
+		return _value.toString();
+	}
 }

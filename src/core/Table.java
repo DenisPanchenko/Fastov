@@ -355,6 +355,19 @@ public class Table extends ActionPool{
 		}
 	}
 
+	public void deleteRow(Integer index)
+	{
+		// TODO delete row
+	}
+	
+	public void createRow()
+	{
+		_content.add(new ArrayList<DataType>());
+		for(int i = 0; i < _WIDTH; i++)
+			_content.get(_content.size() - 1).add(new DataType(_columnPattern.get(i)));
+		_HEIGHT++;
+	}
+	
 	public ArrayList<String> get_columnNames() {
 		return _columnNames;
 	}

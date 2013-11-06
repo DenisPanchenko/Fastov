@@ -8,20 +8,25 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
 import core.DBManager;
+import core.DataBase;
+import core.Table;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MainForm extends JFrame {
+public class MainForm extends JFrame implements MouseListener{
 
 	private JPanel contentPane;
 	private JTable table;
@@ -42,6 +47,8 @@ public class MainForm extends JFrame {
 	private JPanel panel_2;
 	private JTree tree;
 
+	private enum BUTTON_SET_LEVEL {MANAGER_LEVEL, DATABASE_LEVEL, TABLE_LEVEL};
+	
 	/**
 	 * Create the frame.
 	 */
@@ -57,6 +64,7 @@ public class MainForm extends JFrame {
 		
 		tree = new JTree(MainFormMng.createTreeNodes(dbManager));
 		contentPane.add(tree, BorderLayout.WEST);
+		tree.addMouseListener(this);
 		
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
@@ -190,6 +198,7 @@ public class MainForm extends JFrame {
 		}
 		);
 		//dialog.setModal(true);
+		setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 		setLocationRelativeTo(null);
 	}
 	
@@ -302,5 +311,106 @@ public class MainForm extends JFrame {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent event) {
+		// TODO Auto-generated method stub
+		TreePath path = tree.getPathForLocation(event.getX(), event.getY());
+		if(path != null)
+		{
+			if(path.getPathCount() == 3)
+			{
+				setButtonsSetLevel(BUTTON_SET_LEVEL.TABLE_LEVEL);
+				String tableName = path.getLastPathComponent().toString();
+				String dbName = path.getPathComponent(1).toString();
+				DataBase db = null;
+				for(int i = 0; i < dbManager.getDataBaseList().size(); i++)
+					if(dbManager.getDataBaseList().get(i).getName().equals(dbName))
+					{
+						db = dbManager.getDataBaseList().get(i);
+						break;
+					}
+				if(db == null)
+					return;
+				Table t = null;
+				for(int j = 0; j < db.getTableList().size(); j++)
+					if(db.getTableList().get(j).getTableName().equals(tableName))
+					{
+						t = db.getTableList().get(j);
+						break;
+					}
+				if(t == null)
+					return;
+				table.setModel(TableConverter.convertTableToJTable(t).getModel());
+				table.repaint();
+			} else if(path.getPathCount() == 2) {
+				setButtonsSetLevel(BUTTON_SET_LEVEL.DATABASE_LEVEL);
+			} else {
+				setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
+			}
+		}
+	}
+
+	public void setButtonsSetLevel(BUTTON_SET_LEVEL setLevel)
+	{
+		if(saveBtn.isEnabled())
+			if(setLevel == BUTTON_SET_LEVEL.MANAGER_LEVEL)
+			{
+				createDBBtn.setEnabled(true);
+				removeDB.setEnabled(false);
+				createTableBtn.setEnabled(false);
+				removeTableBtn.setEnabled(false);
+				addColumnBtn.setEnabled(false);
+				deleteColumnBtn.setEnabled(false);
+				addRowBtn.setEnabled(false);
+				unitTableBtn.setEnabled(false);
+				projectionBtn.setEnabled(false);
+			} else if(setLevel == BUTTON_SET_LEVEL.DATABASE_LEVEL) {
+				createDBBtn.setEnabled(true);
+				removeDB.setEnabled(true);
+				createTableBtn.setEnabled(true);
+				removeTableBtn.setEnabled(false);
+				addColumnBtn.setEnabled(false);
+				deleteColumnBtn.setEnabled(false);
+				addRowBtn.setEnabled(false);
+				unitTableBtn.setEnabled(false);
+				projectionBtn.setEnabled(false);
+			} else if(setLevel == BUTTON_SET_LEVEL.TABLE_LEVEL) {
+				createDBBtn.setEnabled(true);
+				removeDB.setEnabled(false);
+				createTableBtn.setEnabled(true);
+				removeTableBtn.setEnabled(true);
+				addColumnBtn.setEnabled(true);
+				deleteColumnBtn.setEnabled(true);
+				addRowBtn.setEnabled(true);
+				unitTableBtn.setEnabled(true);
+				projectionBtn.setEnabled(true);
+			}
+		getContentPane().repaint();
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
