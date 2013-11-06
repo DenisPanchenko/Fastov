@@ -26,6 +26,7 @@ public class MainFormMng {
 	
 	public static JTree createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		if(node.isRoot()) {
 			List<String> dbNames = new ArrayList<String>();
 			List<DataBase> dataBases = dbManager.getDataBaseList();
@@ -72,6 +73,7 @@ public class MainFormMng {
 	
 	public static JTree removeTable(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		Object userObject = node.getUserObject();
 		if(userObject instanceof Table) {
 			Table table = (Table)userObject;
@@ -114,6 +116,7 @@ public class MainFormMng {
 
 	public static JTree createTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		Object userObject = node.getUserObject();
 		if(userObject instanceof DataBase) {
 			DataBase dataBase = (DataBase) userObject;
@@ -144,6 +147,7 @@ public class MainFormMng {
 
 	public static JTree removeDB(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		Object o = node.getUserObject();
 		if(o instanceof DataBase) {
 			DataBase dataBase = (DataBase)o;
@@ -155,6 +159,7 @@ public class MainFormMng {
 
 	public static JTable addColumnToTable(final DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		Object o = node.getUserObject();
 		Object parent = ((DefaultMutableTreeNode)node.getParent()).getUserObject();
 		if(o instanceof Table && parent instanceof DataBase) {
@@ -203,6 +208,7 @@ public class MainFormMng {
 	public static JTable unitTable(DBManager dbManager, JTree tree) {
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		assert(node != null);
 		Object o = node.getUserObject();
 		if(o instanceof Table) {
 			Table table = (Table)o;
