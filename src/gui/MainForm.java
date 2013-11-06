@@ -7,17 +7,23 @@ import java.awt.ScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
 import core.DBManager;
+import core.Table;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -37,6 +43,7 @@ public class MainForm extends JFrame {
 	private static JButton addColumnBtn;
 	private static JButton deleteColumnBtn;
 	private static JButton addRowBtn;
+	private static JButton deleteRowBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -63,6 +70,7 @@ public class MainForm extends JFrame {
 		
 		table = new JTable();
 		table.setFillsViewportHeight(true);
+		table.setVisible(true);
 		panel_1.add(new JScrollPane(table));
 		
 		panel = new JPanel();
@@ -142,6 +150,7 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				table = MainFormMng.addColumnToTable(dbManager, tree);
+				table.repaint();
 			}
 		});
 		
@@ -163,6 +172,17 @@ public class MainForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+			}
+		});
+		
+		deleteRowBtn = new JButton("Delete row");
+		panel_2.add(deleteRowBtn);
+		deleteRowBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainFormMng.deleteRowFromTable(dbManager, table, tree);
+				table.repaint();
 			}
 		});
 		
@@ -191,6 +211,22 @@ public class MainForm extends JFrame {
 		);
 		//dialog.setModal(true);
 		setLocationRelativeTo(null);
+		
+		MouseListener ml = new MouseAdapter() {
+	     public void mousePressed(MouseEvent e) {
+	    	 DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+	    	 assert(node != null);
+		 	 Object o = node.getUserObject();
+				 
+	    	 if(e.getSource() instanceof JTree) {
+	    		 if(o instanceof Table && e.getClickCount() == 2) {
+	    			 table = MainFormMng.convertTableToJTable((Table)o);
+		    		 table.setVisible(true);
+		    	 }
+		   	 }
+	     }
+		};
+		tree.addMouseListener(ml);
 	}
 	
 	public static void disableButtons() {
