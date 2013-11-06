@@ -176,6 +176,7 @@ public class MainFormMng {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dbManager.createColumn(dataBase.getName(), table.getTableName(), columnName.getText(), (DataType.TYPE)types.getSelectedItem());
+					dialog.dispose();
 				}
 			});
 			
@@ -186,7 +187,8 @@ public class MainFormMng {
 				}
 			});
 			dialog.setVisible(true);
-			return convertTableToJTable(table);
+			//return convertTableToJTable(table);
+			return null;
 		}
 		return null;
 	}
@@ -194,12 +196,11 @@ public class MainFormMng {
 	public static JTable convertTableToJTable(Table table) {
 		Object[] columnNames = table.get_columnNames().toArray();
 		Object[][] tableContent = new Object[table.get_WIDTH()][];
-		for(int i = 0; i < table.get_WIDTH(); i++) {
-			for(int j = 0; j < table.get_HEIGHT(); j++) {
+		for(int i = 0; i < table.get_WIDTH(); i++)
+			for(int j = 0; j < table.get_HEIGHT(); j++)
 				tableContent[i][j] = table.getCell(i, j);
-			}
-		}
 		
+		System.out.println((String)columnNames[0]);
 		return new JTable(tableContent, columnNames);
 	}
 }

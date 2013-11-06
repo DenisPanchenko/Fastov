@@ -75,6 +75,9 @@ public class Table extends ActionPool{
 			_name = generateDefaultName();
 		else
 			_name = tableName;
+		_WIDTH = new Integer(0);
+		_HEIGHT = new Integer(0);
+		_columnNames = new ArrayList<String>();
 		_content = new ArrayList<ArrayList<DataType> >();
 	}
 	
@@ -90,6 +93,9 @@ public class Table extends ActionPool{
 	 */
 	public Table(File t) throws SAXException, IOException, ParserConfigurationException 
 	{
+		_WIDTH = new Integer(0);
+		_HEIGHT = new Integer(0);
+		_columnNames = new ArrayList<String>();
 		_content = new ArrayList<ArrayList<DataType> >();
 		_name = t.getName();
 		
@@ -141,6 +147,32 @@ public class Table extends ActionPool{
 		return _name;
 	}
 
+	public void createColumn(String colName, DataType.TYPE type)
+	{
+		Action a = new Action(Action.ACTION_TYPE.CREATE);
+		String typeString = null;
+		switch(type)
+		{
+		case INTEGER:
+			typeString = new String("INTEGER");
+			break;
+		case FLOAT:
+			typeString = new String("FLOAT");
+			break;
+		case STRING:
+			typeString = new String("STRING");
+			break;
+		case ENUM:
+			typeString = new String("ENUM");
+			break;
+		default:
+			typeString = new String("INTEGER");
+			break;
+		}
+		a.setData(colName, typeString);
+		System.out.println(colName);
+	}
+	
 	public void setCellValue(int x, int y, Object newValue)
 	{
 		_content.get(x).get(y).setValue(newValue);
@@ -172,6 +204,7 @@ public class Table extends ActionPool{
 				_columnNames.add(columnName);
 				for(int i = 0; i < _content.size(); i++)
 					_content.get(i).add(new DataType(type));
+				_WIDTH++;
 			}
 			else if(action.getAction().equals(Action.ACTION_TYPE.DELETE))
 			{
