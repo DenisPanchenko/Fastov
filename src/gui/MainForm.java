@@ -42,6 +42,7 @@ public class MainForm extends JFrame implements MouseListener{
 	private static JButton addColumnBtn;
 	private static JButton deleteColumnBtn;
 	private static JButton addRowBtn;
+	private static JButton deleteRowBtn;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -174,6 +175,17 @@ public class MainForm extends JFrame implements MouseListener{
 			}
 		});
 		
+		deleteRowBtn = new JButton("Remove row");
+		panel_2.add(deleteRowBtn);
+		deleteRowBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainFormMng.deleteRowFromTable(dbManager, table, tree);
+				table.repaint();
+			}
+		});
+		
 		projectionBtn = new JButton("Tables Projection");
 		panel_2.add(projectionBtn);
 		
@@ -210,95 +222,6 @@ public class MainForm extends JFrame implements MouseListener{
 		removeDB.setEnabled(false);
 		cancelBtn.setEnabled(false);
 	}
-	
-	/*private JDialog getCreationTableDialog() {
-		final JDialog createTableDialog = new JDialog();
-		final JTextField tName = new JTextField();
-		final JTextField cName = new JTextField();
-		final List<String> columnsNames = new ArrayList<String>();
-		final List<DataType> columnTypes = new ArrayList<DataType>();
-		final JComboBox types = new JComboBox(DataType.TYPE.values());
-		final JTable newTable = new JTable();
-		JLabel tableNameL = new JLabel("Table Name:    ");
-		JLabel columnNameL = new JLabel("Column Name: ");
-		JLabel lblNewLabel = new JLabel("Choose type:   ");
-		JPanel tablePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		JPanel columnPanel = new JPanel();
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 50, 50));
-		JPanel okPanel = new JPanel();
-		JPanel cancelPanel = new JPanel();
-		JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		JButton addBtn = new JButton("Add");
-		JButton okBtn = new JButton("   Ok   ");
-		JButton cancelBtn = new JButton("Cancel");
-		
-		cName.setColumns(19);
-		tName.setColumns(25);
-		tablePanel.add(tableNameL);
-		tablePanel.add(tName);
-		columnPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		columnPanel.add(columnNameL);
-		columnPanel.add(cName);
-		columnPanel.add(addBtn);
-		
-		createTableDialog.setSize(400, 200);
-		createTableDialog.getContentPane().setLayout(new GridLayout(4, 1, 10, 10));
-		createTableDialog.getContentPane().add(tablePanel);
-		createTableDialog.getContentPane().add(columnPanel);
-		createTableDialog.getContentPane().add(typePanel);
-		createTableDialog.getContentPane().add(buttonPanel);
-	
-		typePanel.add(lblNewLabel);
-		typePanel.add(types);
-		
-		buttonPanel.add(okPanel);
-		okBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if(tName.getText() != null) {
-					newTable.setName(tName.getText());
-				}
-				tree = MainFormMng.createTable(dbManager, tree, newTable.getName(), columnsNames, columnTypes);
-				tree.repaint();
-				createTableDialog.setVisible(false);
-			}
-		});		
-		
-		cancelBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				createTableDialog.setVisible(false);
-			}
-		});
-		
-		addBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String columnName = cName.getText(); 
-				if(columnName != null) {
-					TableColumn column = new TableColumn();
-					column.setHeaderValue(columnName);
-					newTable.addColumnBtn(column);
-					columnsNames.add(columnName);
-					columnTypes.add(new DataType((TYPE)types.getSelectedItem()));
-					cName.setText("");
-				}
-			}
-		});
-		
-		okPanel.add(okBtn);
-		buttonPanel.add(cancelPanel);
-		cancelPanel.add(cancelBtn);
-		
-		createTableDialog.setVisible(true);
-		createTableDialog.setModalityType(ModalityType.APPLICATION_MODAL);
-		
-		return createTableDialog;
-	}*/
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -364,6 +287,7 @@ public class MainForm extends JFrame implements MouseListener{
 				addColumnBtn.setEnabled(false);
 				deleteColumnBtn.setEnabled(false);
 				addRowBtn.setEnabled(false);
+				deleteRowBtn.setEnabled(false);
 				unitTableBtn.setEnabled(false);
 				projectionBtn.setEnabled(false);
 			} else if(setLevel == BUTTON_SET_LEVEL.DATABASE_LEVEL) {
@@ -374,6 +298,7 @@ public class MainForm extends JFrame implements MouseListener{
 				addColumnBtn.setEnabled(false);
 				deleteColumnBtn.setEnabled(false);
 				addRowBtn.setEnabled(false);
+				deleteRowBtn.setEnabled(false);
 				unitTableBtn.setEnabled(false);
 				projectionBtn.setEnabled(false);
 			} else if(setLevel == BUTTON_SET_LEVEL.TABLE_LEVEL) {
@@ -384,6 +309,7 @@ public class MainForm extends JFrame implements MouseListener{
 				addColumnBtn.setEnabled(true);
 				deleteColumnBtn.setEnabled(true);
 				addRowBtn.setEnabled(true);
+				deleteRowBtn.setEnabled(true);
 				unitTableBtn.setEnabled(true);
 				projectionBtn.setEnabled(true);
 			}
