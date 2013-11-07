@@ -296,6 +296,7 @@ public class MainFormMng {
 			DataBase dataBase = (DataBase)(parent.getUserObject());
 		
 			int rowIndex = jtable.getSelectedRow();
+			System.out.println(rowIndex);
 			dbManager.deleteRow(dataBase.getName(), table.getTableName(), rowIndex);	
 			return convertTableToJTable(table);
 		}

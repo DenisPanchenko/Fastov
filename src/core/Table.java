@@ -411,6 +411,7 @@ public class Table extends ActionPool{
 
 	public void deleteRow(Integer index)
 	{
+		//TODO: check correctness 
 		if(index >= 0 && index <= _HEIGHT)
 		{
 			_content.remove(index);
