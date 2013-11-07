@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
 public class Table extends ActionPool{
 	private Integer _WIDTH; // width of table
 	private Integer _HEIGHT; // height of table
@@ -63,6 +65,20 @@ public class Table extends ActionPool{
 			}
 		}
 		
+		public void writeChanges()
+		{
+			try
+			{
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(_document);
+				StreamResult result = new StreamResult(_file);
+				transformer.transform(source, result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		public void createColumn(String columnName, String colType)
 		{
 			Element type = _document.createElement("type");
@@ -78,16 +94,33 @@ public class Table extends ActionPool{
 			Node width = _document.getElementsByTagName("width").item(0);
 			width.setTextContent(_WIDTH.toString());
 			
-			try
+			writeChanges();
+		}
+		
+		public void createRow()
+		{
+			Element row = _document.createElement("row");
+			for(int i = 0; i < _WIDTH; i++)				
 			{
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(_document);
-				StreamResult result = new StreamResult(_file);
-				transformer.transform(source, result);
-			} catch (Exception e) {
-				e.printStackTrace();
+				Element col = _document.createElement("column");
+				col.appendChild(_document.createTextNode(
+						(_content.get(_HEIGHT - 1).get(i)).toString()));
+				row.appendChild(col);
 			}
+			Node content = _document.getElementsByTagName("content").item(0);
+			content.appendChild(row);
+			writeChanges();
+		}
+		
+		public void deleteRow(Integer index)
+		{
+			NodeList rows = _document.getElementsByTagName("row");
+			rows.item(index).getParentNode().removeChild(rows.item(index));
+			
+			Node height = _document.getElementsByTagName("height").item(0);
+			height.setTextContent(_HEIGHT.toString());
+			
+			writeChanges();
 		}
 		
 		public void deleteColumn(String columnName)
@@ -121,16 +154,18 @@ public class Table extends ActionPool{
 		for(int i = 0; i < names.getLength(); i++)
 			result._columnNames.add(names.item(i).getFirstChild().getTextContent());
 		
-		NodeList types = doc.getElementsByTagName("types");
+		NodeList types = doc.getElementsByTagName("type");
 		for(int i = 0; i < types.getLength(); i++)
 			result._columnPattern.add(DataType.fromString(types.item(i).getTextContent()));
 		
 		NodeList rows = doc.getElementsByTagName("row");
+		
 		for(int i = 0; i < rows.getLength(); i++)
 		{
 			result._content.add(new ArrayList<DataType>());
 			NodeList columns = doc.getElementsByTagName("column");
-			for(int j = 0; j < columns.getLength(); j++)
+			Integer c = columns.getLength();
+			for(int j = 0; j < result._WIDTH; j++)
 			{
 				DataType data = new DataType(result._columnPattern.get(i),columns.item(j).getTextContent());
 				result._content.get(i).add(data);
@@ -362,7 +397,12 @@ public class Table extends ActionPool{
 
 	public void deleteRow(Integer index)
 	{
-		// TODO delete row
+		if(index >= 0 && index <= _HEIGHT)
+		{
+			_content.remove(index);
+			_HEIGHT--;
+			_fileManager.deleteRow(index);
+		}
 	}
 	
 	public void createRow()
@@ -371,6 +411,7 @@ public class Table extends ActionPool{
 		for(int i = 0; i < _WIDTH; i++)
 			_content.get(_content.size() - 1).add(new DataType(_columnPattern.get(i)));
 		_HEIGHT++;
+		_fileManager.createRow();
 	}
 	
 	public ArrayList<String> get_columnNames() {
