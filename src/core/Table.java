@@ -94,6 +94,14 @@ public class Table extends ActionPool{
 			Node width = _document.getElementsByTagName("width").item(0);
 			width.setTextContent(_WIDTH.toString());
 			
+			NodeList rows = _document.getElementsByTagName("row");
+			for(int i = 0; i < _HEIGHT; i++)
+			{
+				Element newCol = _document.createElement("column");
+				newCol.appendChild(_document.createTextNode(_content.get(i).get(_WIDTH - 1).toString()));
+				rows.item(i).appendChild(newCol);
+			}
+			
 			writeChanges();
 		}
 		
@@ -109,6 +117,10 @@ public class Table extends ActionPool{
 			}
 			Node content = _document.getElementsByTagName("content").item(0);
 			content.appendChild(row);
+			
+			Node height = _document.getElementsByTagName("height").item(0);
+			height.setTextContent(_HEIGHT.toString());
+			
 			writeChanges();
 		}
 		
@@ -128,9 +140,11 @@ public class Table extends ActionPool{
 			
 		}
 		
-		public void setValue()
+		public void setValue(int x, int y, String value)
 		{
-			
+			Node cell = _document.getElementsByTagName("column").item(x + y * _WIDTH);
+			cell.setTextContent(value);
+			writeChanges();
 		}
 	}
 	
@@ -159,7 +173,6 @@ public class Table extends ActionPool{
 			result._columnPattern.add(DataType.fromString(types.item(i).getTextContent()));
 		
 		NodeList rows = doc.getElementsByTagName("row");
-		
 		for(int i = 0; i < rows.getLength(); i++)
 		{
 			result._content.add(new ArrayList<DataType>());
@@ -167,7 +180,8 @@ public class Table extends ActionPool{
 			Integer c = columns.getLength();
 			for(int j = 0; j < result._WIDTH; j++)
 			{
-				DataType data = new DataType(result._columnPattern.get(i),columns.item(j).getTextContent());
+				DataType data = new DataType(
+						result._columnPattern.get(j),columns.item(j + (i * result._WIDTH)).getTextContent());
 				result._content.get(i).add(data);
 			}
 		}
@@ -334,12 +348,12 @@ public class Table extends ActionPool{
 		}
 		a.setData(colName, typeString);
 		addAction(a);
-		//System.out.println(colName);
 	}
 	
-	public void setCellValue(int x, int y, Object newValue)
+	public void setCellValue(int x, int y, String newValue)
 	{
 		_content.get(x).get(y).setValue(newValue);
+		_fileManager.setValue(x, y, newValue);
 	}
 	
 	@Override

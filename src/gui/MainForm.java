@@ -28,7 +28,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MainForm extends JFrame implements MouseListener, TableModelListener {
+public class MainForm extends JFrame implements ActionListener, MouseListener, TableModelListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -80,11 +80,11 @@ public class MainForm extends JFrame implements MouseListener, TableModelListene
 		table = new JTable();
 		table.setMinimumSize(new Dimension(700, height));
 		table.setFillsViewportHeight(true);
+		table.getModel().addTableModelListener(this);
 		panel_1.add(new JScrollPane(table));
 		panel_1.setLayout(new GridLayout(1, 1, 0, 0));
 		
 		//contentPane.add(panel, BorderLayout.EAST);
-		
 		
 		panel_2 = new JPanel();
 		//panel.add(panel_2);
@@ -92,123 +92,72 @@ public class MainForm extends JFrame implements MouseListener, TableModelListene
 		
 		saveBtn = new JButton("Save");
 		panel_2.add(saveBtn);
-		saveBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dbManager.save();
-				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-				model.setRoot(MainFormMng.createTreeNodes(dbManager));
-			}
-		});
+		saveBtn.setActionCommand("SAVE");
+		saveBtn.addActionListener(this);
 		
 		cancelBtn = new JButton("Cancel");
 		panel_2.add(cancelBtn);
-		cancelBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dbManager.cancelAllActions();
-			}
-		});
+		cancelBtn.setActionCommand("CANCEL");
+		cancelBtn.addActionListener(this);
+				
 		
 		createDBBtn = new JButton("Create DB");
 		panel_2.add(createDBBtn);
-		createDBBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				tree = MainFormMng.createDB(dbManager, tree);
-			}
-		});
+		createDBBtn.setActionCommand("CREATE_DB");
+		createDBBtn.addActionListener(this);
+				
 		
 		removeDB = new JButton("Remove DB");
 		panel_2.add(removeDB);
-		removeDB.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tree = MainFormMng.removeDB(tree, dbManager);
-			}
-		});
+		removeDB.setActionCommand("DELETE_DB");
+		removeDB.addActionListener(this);
+				
 		
 		createTableBtn = new JButton("Create Table");
 		panel_2.add(createTableBtn);
-		createTableBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tree = MainFormMng.createTable(dbManager, tree);
-			}
-		});
+		createTableBtn.setActionCommand("CREATE_TABLE");
+		createTableBtn.addActionListener(this);
+				
 		
 		removeTableBtn = new JButton("Remove Table");
 		panel_2.add(removeTableBtn);
-		removeTableBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				tree = MainFormMng.removeTable(tree, dbManager);
-			}
-		});
+		removeTableBtn.setActionCommand("DELETE_TABLE");
+		removeTableBtn.addActionListener(this);
+				
 		
 		addColumnBtn = new JButton("Add column");
 		panel_2.add(addColumnBtn);
-		addColumnBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
-				((AbstractTableModel)table.getModel()).fireTableDataChanged();
-			}
-		});
+		addColumnBtn.setActionCommand("CREATE_COLUMN");
+		addColumnBtn.addActionListener(this);
+				
 		
 		deleteColumnBtn = new JButton("Remove column");
 		panel_2.add(deleteColumnBtn);
-		deleteColumnBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				 
-				
-			}
-		});
+		deleteColumnBtn.setActionCommand("DELETE_COLUMN");
+		deleteColumnBtn.addActionListener(this);
 		
 		addRowBtn = new JButton("Add row");
 		panel_2.add(addRowBtn);
-		addRowBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
-				((AbstractTableModel)table.getModel()).fireTableDataChanged();
-			}
-		});
+		addRowBtn.setActionCommand("ADD_ROW");
+		addRowBtn.addActionListener(this);
+				
 		
 		deleteRowBtn = new JButton("Remove row");
 		panel_2.add(deleteRowBtn);
-		deleteRowBtn.addActionListener(new ActionListener() {
+		deleteRowBtn.setActionCommand("DELETE_ROW");
+		deleteRowBtn.addActionListener(this); 
+				
 			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
-				((AbstractTableModel)table.getModel()).fireTableDataChanged();
-			}
-		});
-		
 		projectionBtn = new JButton("Tables Projection");
 		panel_2.add(projectionBtn);
+		projectionBtn.setActionCommand("PROJECTION");
+		projectionBtn.addActionListener(this);
 		
 		unitTableBtn = new JButton("Tables Join");
 		panel_2.add(unitTableBtn);
-		unitTableBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
-				((AbstractTableModel)table.getModel()).fireTableDataChanged();
-			}
-		});
+		unitTableBtn.setActionCommand("JOIN");
+		unitTableBtn.addActionListener(this);
+				
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
@@ -297,6 +246,7 @@ public class MainForm extends JFrame implements MouseListener, TableModelListene
 				if(t == null)
 					return;
 				table.setModel(TableConverter.convertTableToJTable(t).getModel());
+				table.getModel().addTableModelListener(this);
 				table.repaint();
 			} else if(path.getPathCount() == 2) {
 				setButtonsSetLevel(BUTTON_SET_LEVEL.DATABASE_LEVEL);
@@ -376,9 +326,45 @@ public class MainForm extends JFrame implements MouseListener, TableModelListene
 		int row = e.getFirstRow();
         int col = e.getColumn();
         String columnName = table.getModel().getColumnName(col);
-        Object data = table.getModel().getValueAt(row, col);
+        String data = (String)table.getModel().getValueAt(row, col);
 
         table.setModel(MainFormMng.setNewCellToTable(tree, table, row, col, data).getModel());
 		((AbstractTableModel)table.getModel()).fireTableDataChanged();
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		if(event.getActionCommand().equals("SAVE"))
+		{
+			dbManager.save();
+			DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+			model.setRoot(MainFormMng.createTreeNodes(dbManager));
+		} else if(event.getActionCommand().equals("CANCEL")) {
+			dbManager.cancelAllActions();
+		} else if(event.getActionCommand().equals("CREATE_DB")) {
+			tree = MainFormMng.createDB(dbManager, tree);
+		} else if(event.getActionCommand().equals("DELETE_DB")) {
+			tree = MainFormMng.removeDB(tree, dbManager);
+		} else if(event.getActionCommand().equals("CREATE_TABLE")) {
+			tree = MainFormMng.createTable(dbManager, tree);
+		} else if(event.getActionCommand().equals("DELETE_TABLE")) {
+			tree = MainFormMng.removeTable(tree, dbManager);
+		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
+			table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
+			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
+			
+		} else if(event.getActionCommand().equals("ADD_ROW")) {
+			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
+			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+		} else if(event.getActionCommand().equals("DELETE_ROW")) {
+			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
+			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+		} else if(event.getActionCommand().equals("JOIN")) {
+			table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
+			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+		} else if(event.getActionCommand().equals("PROJECTION")) {
+			
+		}
+	} 
 }

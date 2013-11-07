@@ -3,6 +3,7 @@ package gui;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,34 +23,36 @@ import core.DataBase;
 import core.DataType;
 import core.Table;
 
-public class MainFormMng {
+public class MainFormMng { 
 	
 	public static JTree createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
-		if(node.isRoot()) {
-			List<String> dbNames = new ArrayList<String>();
-			List<DataBase> dataBases = dbManager.getDataBaseList();
-			
-			String dbName = JOptionPane.showInputDialog("Enter data base name");
-			
-			if(dataBases != null) {
-				for(DataBase db: dataBases) {
-					dbNames.add(db.getName());
-				}
+		List<String> dbNames = new ArrayList<String>();
+		List<DataBase> dataBases = dbManager.getDataBaseList();
+
+		String dbName = JOptionPane.showInputDialog("Enter data base name");
+
+		if(dataBases != null) {
+			for(DataBase db: dataBases) {
+				dbNames.add(db.getName());
 			}
-			while(dbNames.contains(dbName) && dbName != null){
-				dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
-			}
-			if(dbName != null) {
-				dbManager.createDB(dbName);
-				return tree;
-			} else {
-				return tree;
-			}
-		} else {
-			return tree;
 		}
+		while(dbNames.contains(dbName) && dbName != null){
+			dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
+		}
+		if(dbName != null) {
+			
+			// ATTENTION BELOW YOU CAN SEE SIMPLE REFLECTION EXAMPLE
+			try {
+				Method m = DBManager.class.getMethod("createDB", String.class);
+				m.invoke(dbManager, dbName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return tree;
 	}
 	
 /*	private static JTree addNewNodeToTree(Object o, JTree tree) {
@@ -151,7 +154,17 @@ public class MainFormMng {
 		Object o = node.getUserObject();
 		if(o instanceof DataBase) {
 			DataBase dataBase = (DataBase)o;
-			dbManager.deleteDB(dataBase.getName());
+			
+			// ATTENTION BELOW YOU CAN SEE SIMPLE REFLECTION EXAMPLE
+			
+			try 
+			{
+				Method deleteDB = DBManager.class.getMethod("deleteDB", String.class);
+				deleteDB.invoke(dbManager, dataBase.getName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			removeNodeFromTree(dataBase);
 		}
 		return tree;
@@ -307,7 +320,7 @@ public class MainFormMng {
 		return jtable;
 	}
 
-	public static JTable setNewCellToTable(JTree tree, JTable jtable, int x, int y, Object newValue) {
+	public static JTable setNewCellToTable(JTree tree, JTable jtable, int x, int y, String newValue) {
 		assert(jtable != null);
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
