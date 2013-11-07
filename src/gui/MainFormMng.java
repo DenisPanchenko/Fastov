@@ -313,4 +313,19 @@ public class MainFormMng {
 		}
 		return jtable;
 	}
+
+	public static JTable setNewCellToTable(JTree tree, JTable jtable, int x, int y, Object newValue) {
+		assert(jtable != null);
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			table.setCellValue(x, y, newValue);
+			return convertTableToJTable(table);
+		}
+		
+		return jtable;
+	}
 }

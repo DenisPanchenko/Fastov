@@ -1,14 +1,12 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.ScrollPane;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -30,7 +28,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MainForm extends JFrame implements MouseListener{
+public class MainForm extends JFrame implements MouseListener, TableModelListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -371,5 +369,16 @@ public class MainForm extends JFrame implements MouseListener{
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		int row = e.getFirstRow();
+        int col = e.getColumn();
+        String columnName = table.getModel().getColumnName(col);
+        Object data = table.getModel().getValueAt(row, col);
+
+        table.setModel(MainFormMng.setNewCellToTable(tree, table, row, col, data).getModel());
+		((AbstractTableModel)table.getModel()).fireTableDataChanged();
 	}
 }
