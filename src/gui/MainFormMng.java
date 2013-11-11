@@ -41,8 +41,8 @@ public class MainFormMng {
 		while(dbNames.contains(dbName) && dbName != null){
 			dbName = JOptionPane.showInputDialog("DataBase is already exists. Enter another name");
 		}
-		if(dbName != null) {
-			
+		if(dbName != null) 
+		{	
 			// ATTENTION BELOW YOU CAN SEE SIMPLE REFLECTION EXAMPLE
 			try {
 				Method m = DBManager.class.getMethod("createDB", String.class);
@@ -187,6 +187,8 @@ public class MainFormMng {
 			dialog.initialize(columnName, types, "Add column", "Column name:", "Type:", "Add");
 			dialog.getAcceptButton().addActionListener(new ActionListener() {
 
+			//	TODO Deny empty string as name for new column
+				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					dbManager.createColumn(dataBase.getName(), table.getTableName(), columnName.getText(), (DataType.TYPE)types.getSelectedItem());
@@ -210,6 +212,7 @@ public class MainFormMng {
 		return TableConverter.convertTableToJTable(table);
 	}
 
+	// UniT method =D
 	public static JTable unitTable(DBManager dbManager, JTree tree) {
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
@@ -225,8 +228,12 @@ public class MainFormMng {
 	private static void createUnionDialog(final DBManager dbManager, final Table selectedTable) {
 		JDialog dialog = new JDialog();
 		
+		// TODO Smth wrong here because I can see list of all tables within DBManager =((
+		
 		final JComboBox tables = new JComboBox(dbManager.getAllTables().toArray());
-		final JComboBox columnsOfSelectedTable = new JComboBox(selectedTable.get_columnNames().toArray());
+		final JComboBox columnsOfSelectedTable = new JComboBox(selectedTable.getColumnNames().toArray());
+		
+		//  UniT button =D 
 		JButton unitBtn = new JButton("Unit");
 		JButton cancelBtn = new JButton("Cancel");
 		
@@ -322,6 +329,7 @@ public class MainFormMng {
 	}
 
 	public static JTable setNewCellToTable(JTree tree, JTable jtable, int x, int y, String newValue) {
+		
 		assert(jtable != null);
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
@@ -330,7 +338,7 @@ public class MainFormMng {
 		if(o instanceof Table) {
 			Table table = (Table)o;
 			table.setCellValue(x, y, newValue);
-			return convertTableToJTable(table);
+			//return convertTableToJTable(table);
 		}
 		
 		return jtable;

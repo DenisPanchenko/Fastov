@@ -231,7 +231,23 @@ public class DBManager extends ActionPool{
 	
 	public void deleteColumn(String dbName, String tableName, String colName)
 	{
-		
+		if(dbName == null || tableName == null || colName == null)
+			return;
+		int index = -1;
+		for(int i = 0; i < _dataBases.size(); i++)
+			if(_dataBases.get(i).getName().equals(dbName))
+				index = i;
+		if(index > -1)
+		{
+			DataBase db = _dataBases.get(index);
+			ArrayList<Table> tableList = db.getTableList(); 
+			for(int j = 0; j < tableList.size(); j++)
+				if(tableList.get(j).getTableName().equals(tableName))
+				{
+					tableList.get(j).deleteColumn(colName);
+					return;
+				}
+		}
 	}
 	
 	public void createRow(String dbName, String tableName)
@@ -307,12 +323,9 @@ public class DBManager extends ActionPool{
 	
 	public void deleteTable(String dbName, String tableName) 
 	{
-		//TODO
 		for(int i = 0; i < _dataBases.size(); i++)
-		{
 			if(_dataBases.get(i).getName().equals(dbName))
 				_dataBases.get(i).removeTable(tableName);
-		}
 	}
 	
 	public void createTable(String dbName, String tableName)
@@ -331,6 +344,9 @@ public class DBManager extends ActionPool{
 		}
 	}
 	
+	//	UNUSED METHOD
+	
+	/*
 	public void createTable(String dbName, List<String> columnNames, List<DataType> columnTypes) 
 	{
 		DataBase dataBase = null;
@@ -344,10 +360,11 @@ public class DBManager extends ActionPool{
 			dataBase.addAction(createTable);
 		}
 	}
+	*/
 	
-	public void tableJoin(String targetTableName, String destTableName, String colName)
+	public void tableJoin(String dbName, String targetTableName, String destTableName, String colName)
 	{
-		
+		//	TODO table join operation
 	}
 	
 	public void cancelAllActions()

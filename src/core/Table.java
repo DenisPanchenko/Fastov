@@ -135,14 +135,32 @@ public class Table extends ActionPool{
 			writeChanges();
 		}
 		
-		public void deleteColumn(String columnName)
+		public void deleteColumn(int index)
 		{
+			//	TODO Check correctness
 			
+			NodeList rows = _document.getElementsByTagName("row");
+			for(int i = 0; i < rows.getLength(); i++)
+			{
+				NodeList columns = rows.item(i).getChildNodes();
+				columns.item(index).getParentNode().removeChild(columns.item(index));
+			}
+			
+			Node height = _document.getElementsByTagName("width").item(0);
+			height.setTextContent(_WIDTH.toString());
+			
+			NodeList names = _document.getElementsByTagName("name");
+			names.item(index).getParentNode().removeChild(names.item(index));
+			
+			NodeList types = _document.getElementsByTagName("type");
+			types.item(index).getParentNode().removeChild(types.item(index));
+			
+			writeChanges();
 		}
 		
 		public void setValue(int x, int y, String value)
 		{
-			Node cell = _document.getElementsByTagName("column").item(x + y * _WIDTH);
+			Node cell = _document.getElementsByTagName("column").item(y + x * _WIDTH);
 			cell.setTextContent(value);
 			writeChanges();
 		}
@@ -350,6 +368,13 @@ public class Table extends ActionPool{
 		addAction(a);
 	}
 	
+	public void deleteColumn(String colName)
+	{
+		Action a = new Action(Action.ACTION_TYPE.DELETE);
+		a.setData("name", colName);
+		addAction(a);
+	}
+	
 	public void setCellValue(int x, int y, String newValue)
 	{
 		_content.get(x).get(y).setValue(newValue);
@@ -398,23 +423,38 @@ public class Table extends ActionPool{
 						_content.get(index).remove(i);
 				_content.remove(index);
 				_columnNames.remove(index);
-				_fileManager.deleteColumn(columnName);
+				_WIDTH--;
+				_fileManager.deleteColumn(index);
 			}
 			removeAction();
 		}
 	}
 	
+	/**
+	 * Sets new value defined by value parameter
+	 * for cell in i-th row and j-th col.
+	 * ATTENTION! UNSAFE METHOD!
+	 * Doesn't check if the cell exists
+	 * @param i - int value of cell row
+	 * @param j - int value of cell column
+	 * @param value
+	 */
 	public void setCell(int i, int j, Object value)
 	{
 		_content.get(i).set(j, new DataType(_columnPattern.get(i), value));
 	}
 
+	
+	/**
+	 * Deletes row from table.
+	 * If index non-exists do nothing.
+	 * @param index - Integer value of removed row
+	 */
 	public void deleteRow(Integer index)
 	{
-		//TODO: check correctness 
-		if(index >= 0 && index <= _HEIGHT)
+		if(index >= 0 && index < _HEIGHT)
 		{
-			_content.remove(index);
+			_content.remove(index.intValue());
 			_HEIGHT--;
 			_fileManager.deleteRow(index);
 		}
@@ -422,6 +462,8 @@ public class Table extends ActionPool{
 	
 	public void createRow()
 	{
+		if(_columnPattern.isEmpty() == true)
+			return;
 		_content.add(new ArrayList<DataType>());
 		for(int i = 0; i < _WIDTH; i++)
 			_content.get(_content.size() - 1).add(new DataType(_columnPattern.get(i)));
@@ -429,19 +471,19 @@ public class Table extends ActionPool{
 		_fileManager.createRow();
 	}
 	
-	public ArrayList<String> get_columnNames() {
+	public ArrayList<String> getColumnNames() {
 		return _columnNames;
 	}
 
-	public ArrayList<ArrayList<DataType> > get_content() {
+	public ArrayList<ArrayList<DataType> > getContent() {
 		return _content;
 	}
 
-	public Integer get_WIDTH() {
+	public Integer getWidth() {
 		return _WIDTH;
 	}
 
-	public Integer get_HEIGHT() {
+	public Integer getHeight() {
 		return _HEIGHT;
 	}
 }

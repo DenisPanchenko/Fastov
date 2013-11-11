@@ -218,11 +218,10 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		// TODO Auto-generated method stub
 		TreePath path = tree.getPathForLocation(event.getX(), event.getY());
 		if(path != null)
 		{
-			if(path.getPathCount() == 3)
+			if(path.getPathCount() == 3) // level of table in a tree
 			{
 				setButtonsSetLevel(BUTTON_SET_LEVEL.TABLE_LEVEL);
 				String tableName = path.getLastPathComponent().toString();
@@ -248,9 +247,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				table.setModel(TableConverter.convertTableToJTable(t).getModel());
 				table.getModel().addTableModelListener(this);
 				table.repaint();
-			} else if(path.getPathCount() == 2) {
+			} else if(path.getPathCount() == 2) { // level of database in a tree
 				setButtonsSetLevel(BUTTON_SET_LEVEL.DATABASE_LEVEL);
-			} else {
+			} else { // level of manager in a tree
 				setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 			}
 		}
@@ -298,38 +297,50 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	}
 	
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseEntered(MouseEvent arg0) 
+	{
 		
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseExited(MouseEvent arg0) 
+	{
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mousePressed(MouseEvent arg0) 
+	{
 		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseReleased(MouseEvent arg0) 
+	{
 		
 	}
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
+		
+		//	TODO Something wrong here, during table modifications magic things happen!
+		
+		// 	TODO Add input validation here!
+		//	enum must have next format: <token1>,<token2>, ..., <token>
+		
 		int row = e.getFirstRow();
         int col = e.getColumn();
         String columnName = table.getModel().getColumnName(col);
         String data = (String)table.getModel().getValueAt(row, col);
-
+        
+        MainFormMng.setNewCellToTable(tree, table, row, col, data);
+        
+        //	Seems to work fine without next lines
+        
+        /*
         table.setModel(MainFormMng.setNewCellToTable(tree, table, row, col, data).getModel());
 		((AbstractTableModel)table.getModel()).fireTableDataChanged();
+		*/
 	}
 
 	@Override
@@ -350,9 +361,13 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		} else if(event.getActionCommand().equals("DELETE_TABLE")) {
 			tree = MainFormMng.removeTable(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
+			//
 			table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
+			
+			//	TODO Bind this method to 
+			//	DBManager.deleteColumn(String database, String table, String column);
 			
 		} else if(event.getActionCommand().equals("ADD_ROW")) {
 			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
@@ -361,6 +376,10 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("JOIN")) {
+			
+			//  TODO Bind this method to
+			//	DBManager.tableJoin()
+			
 			table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("PROJECTION")) {
