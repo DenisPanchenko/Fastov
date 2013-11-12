@@ -215,6 +215,7 @@ public class MainFormMng {
 	// UniT method =D
 	public static JTable unitTable(DBManager dbManager, JTree tree) {
 		
+		/*
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
 		Object o = node.getUserObject();
@@ -222,32 +223,61 @@ public class MainFormMng {
 			Table table = (Table)o;
 			createUnionDialog(dbManager, table);
 		}
+		*/
 		return null;
 	}
 
-	private static void createUnionDialog(final DBManager dbManager, final Table selectedTable) {
-		JDialog dialog = new JDialog();
+	public static void createJoinDialog(final DBManager dbManager, final String dbName,
+			final String selectedTable) {
+		
+		final JDialog dialog = new JDialog();
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setTitle("Table join");
 		
 		// TODO Smth wrong here because I can see list of all tables within DBManager =((
 		
-		final JComboBox tables = new JComboBox(dbManager.getAllTables().toArray());
-		final JComboBox columnsOfSelectedTable = new JComboBox(selectedTable.getColumnNames().toArray());
+		DataBase database = null;
+		Table table = null;
+		for(int i = 0; i < dbManager.getDataBaseList().size(); i++)
+			if(dbManager.getDataBaseList().get(i).getName().equals(dbName))
+			{
+				database = dbManager.getDataBaseList().get(i);
+				break;
+			}
+		for(int i = 0; i < database.getTableList().size(); i++)
+			if(database.getTableList().get(i).getTableName().equals(selectedTable))
+			{
+				table = database.getTableList().get(i);
+				break;
+			}
+		if(database == null || table == null)
+			return;
 		
-		//  UniT button =D 
-		JButton unitBtn = new JButton("Unit");
-		JButton cancelBtn = new JButton("Cancel");
-		
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setTitle("Table union");
-		
-		cancelBtn.setActionCommand("EXIT");
-		unitBtn.addActionListener(new ActionListener() {
-			
+		final JComboBox tables = new JComboBox(database.getTableList().toArray());
+		final JComboBox columnsOfSelectedTable = new JComboBox(table.getColumnNames().toArray());
+		 
+		JButton joinBtn = new JButton("Join");
+		joinBtn.setActionCommand("JOIN");
+		joinBtn.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				
-				//dbManager.unitTable(selectedTable, (Table)tables.getSelectedItem(), 
-					//	(String)columnsOfSelectedTable.getSelectedItem());
+			public void actionPerformed(ActionEvent e)
+			{
+				if(e.getActionCommand().equals("JOIN"))
+					dbManager.tableJoin(dbName, selectedTable,
+							tables.getSelectedItem().toString(),
+							columnsOfSelectedTable.getSelectedItem().toString());
+					dialog.dispose();
+			}
+		});
+		
+		final JButton cancelBtn = new JButton("Cancel");
+		cancelBtn.setActionCommand("EXIT");
+		cancelBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("EXIT")){
+					dialog.dispose();
+				}
 			}
 		});
 		
@@ -268,7 +298,7 @@ public class MainFormMng {
 								)
 					)
 					.addGroup(mainLayout.createSequentialGroup()
-							.addComponent(unitBtn)
+							.addComponent(joinBtn)
 							.addComponent(cancelBtn)
 					)
 				);
@@ -280,7 +310,7 @@ public class MainFormMng {
 							.addComponent(columnsOfSelectedTable)
 					)
 					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-							.addComponent(unitBtn)
+							.addComponent(joinBtn)
 							.addComponent(cancelBtn)
 					)
 				);

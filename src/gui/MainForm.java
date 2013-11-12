@@ -49,6 +49,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	private JPanel panel_1;
 	private JPanel panel_2;
 	private JTree tree;
+	
+	private String selectedTable;
+	private String selectedDB;
 
 	private enum BUTTON_SET_LEVEL {MANAGER_LEVEL, DATABASE_LEVEL, TABLE_LEVEL};
 	
@@ -223,12 +226,14 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		{
 			if(path.getPathCount() == 3) // level of table in a tree
 			{
+				selectedTable = path.getLastPathComponent().toString();
+				selectedDB = path.getPathComponent(1).toString();
+				
 				setButtonsSetLevel(BUTTON_SET_LEVEL.TABLE_LEVEL);
-				String tableName = path.getLastPathComponent().toString();
-				String dbName = path.getPathComponent(1).toString();
+				
 				DataBase db = null;
 				for(int i = 0; i < dbManager.getDataBaseList().size(); i++)
-					if(dbManager.getDataBaseList().get(i).getName().equals(dbName))
+					if(dbManager.getDataBaseList().get(i).getName().equals(selectedDB))
 					{
 						db = dbManager.getDataBaseList().get(i);
 						break;
@@ -237,7 +242,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 					return;
 				Table t = null;
 				for(int j = 0; j < db.getTableList().size(); j++)
-					if(db.getTableList().get(j).getTableName().equals(tableName))
+					if(db.getTableList().get(j).getTableName().equals(selectedTable))
 					{
 						t = db.getTableList().get(j);
 						break;
@@ -248,8 +253,12 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				table.getModel().addTableModelListener(this);
 				table.repaint();
 			} else if(path.getPathCount() == 2) { // level of database in a tree
+				selectedTable = null;
+				selectedDB = path.getLastPathComponent().toString();
 				setButtonsSetLevel(BUTTON_SET_LEVEL.DATABASE_LEVEL);
 			} else { // level of manager in a tree
+				selectedTable = null;
+				selectedDB = null;
 				setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 			}
 		}
@@ -379,9 +388,15 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			
 			//  TODO Bind this method to
 			//	DBManager.tableJoin()
+			String dbName = selectedDB;
+			String targetTableName = selectedTable;
 			
-			table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
-			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+			MainFormMng.createJoinDialog(dbManager, dbName, targetTableName);
+//			dbManager.tableJoin(null, targetTableName, destTableName, colName);
+			
+			//table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
+			//((AbstractTableModel)table.getModel()).fireTableDataChanged();
+			
 		} else if(event.getActionCommand().equals("PROJECTION")) {
 			
 		}

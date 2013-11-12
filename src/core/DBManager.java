@@ -231,84 +231,34 @@ public class DBManager extends ActionPool{
 	
 	public void deleteColumn(String dbName, String tableName, String colName)
 	{
-		if(dbName == null || tableName == null || colName == null)
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
 			return;
-		int index = -1;
-		for(int i = 0; i < _dataBases.size(); i++)
-			if(_dataBases.get(i).getName().equals(dbName))
-				index = i;
-		if(index > -1)
-		{
-			DataBase db = _dataBases.get(index);
-			ArrayList<Table> tableList = db.getTableList(); 
-			for(int j = 0; j < tableList.size(); j++)
-				if(tableList.get(j).getTableName().equals(tableName))
-				{
-					tableList.get(j).deleteColumn(colName);
-					return;
-				}
-		}
+		table.deleteColumn(colName);
 	}
 	
 	public void createRow(String dbName, String tableName)
 	{
-		if(dbName == null || tableName == null)
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
 			return;
-		int index = -1;
-		for(int i = 0; i < _dataBases.size(); i++)
-			if(_dataBases.get(i).getName().equals(dbName))
-				index = i;
-		if(index > -1)
-		{
-			DataBase db = _dataBases.get(index);
-			ArrayList<Table> tableList = db.getTableList(); 
-			for(int j = 0; j < tableList.size(); j++)
-				if(tableList.get(j).getTableName().equals(tableName))
-				{
-					tableList.get(j).createRow();
-					return;
-				}
-		}
+		table.createRow();
 	}
 	
 	public void deleteRow(String dbName, String tableName, Integer rowNumnber)
 	{
-		if(dbName == null || tableName == null)
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
 			return;
-		int index = -1;
-		for(int i = 0; i < _dataBases.size(); i++)
-			if(_dataBases.get(i).getName().equals(dbName))
-				index = i;
-		if(index > -1)
-		{
-			DataBase db = _dataBases.get(index);
-			ArrayList<Table> tableList = db.getTableList(); 
-			for(int j = 0; j < tableList.size(); j++)
-				if(tableList.get(j).getTableName().equals(tableName))
-				{
-					tableList.get(j).deleteRow(rowNumnber);
-					return;
-				}
-		}
+		table.deleteRow(rowNumnber);
 	}
 	
 	public void createColumn(String dbName, String tableName, String colName, DataType.TYPE colType)
 	{
-		int index = -1;
-		for(int i = 0; i < _dataBases.size(); i++)
-			if(_dataBases.get(i).getName().equals(dbName))
-				index = i;
-		if(index > -1)
-		{
-			DataBase db = _dataBases.get(index);
-			ArrayList<Table> tableList = db.getTableList(); 
-			for(int j = 0; j < tableList.size(); j++)
-				if(tableList.get(j).getTableName().equals(tableName))
-				{
-					tableList.get(j).createColumn(colName, colType);
-					return;
-				}
-		}
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
+			return;
+		table.createColumn(colName, colType);
 	}
 	
 	public void undoAction()
@@ -330,18 +280,14 @@ public class DBManager extends ActionPool{
 	
 	public void createTable(String dbName, String tableName)
 	{
-		DataBase dataBase = null;
-		for(DataBase db : _dataBases)
-			if(db.getName().equals(dbName))
-				dataBase = db;
-		if(dataBase != null)
-		{
-			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
-			if(tableName == null)
-				tableName = Table.generateDefaultName();
-			createTable.setData("name", tableName);
-			dataBase.addAction(createTable);
-		}
+		DataBase dataBase = getDBByName(dbName);
+		if(dataBase == null)
+			return;
+		Action createTable = new Action(Action.ACTION_TYPE.CREATE);
+		if(tableName == null)
+			tableName = Table.generateDefaultName();
+		createTable.setData("name", tableName);
+		dataBase.addAction(createTable);
 	}
 	
 	//	UNUSED METHOD
@@ -365,6 +311,16 @@ public class DBManager extends ActionPool{
 	public void tableJoin(String dbName, String targetTableName, String destTableName, String colName)
 	{
 		//	TODO table join operation
+		System.out.println("JOIN OPERATION TRIGGERED");
+		System.out.println(dbName);
+		System.out.println(targetTableName);
+		System.out.println(destTableName);
+		System.out.println(colName);
+		
+		DataBase db = getDBByName(dbName);
+		if(db == null)
+			return;
+		db.tableJoin(targetTableName, destTableName, colName);
 	}
 	
 	public void cancelAllActions()
@@ -414,5 +370,30 @@ public class DBManager extends ActionPool{
 			tables.addAll(db.getTableList());
 		}
 		return tables;
+	}
+	
+	protected DataBase getDBByName(String dbName)
+	{
+		DataBase result = null;
+		if(dbName == null)
+			return result;
+		for(int i = 0; i < _dataBases.size(); i++)
+			if(_dataBases.get(i).equals(dbName))
+				result = _dataBases.get(i);
+		return result;
+	}
+	
+	protected Table getTableByName(String dbName, String tableName)
+	{
+		DataBase db = getDBByName(dbName);
+		Table result = null;
+		if(db == null)
+			return result;
+		if(tableName == null)
+			return result;
+		for(int i = 0; i < db.getTableList().size(); i++)
+			if(db.getTableList().get(i).getTableName().equals(tableName))
+				result = db.getTableList().get(i);
+		return result;
 	}
 }

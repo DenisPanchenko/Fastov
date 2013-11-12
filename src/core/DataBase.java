@@ -198,6 +198,30 @@ public class DataBase extends ActionPool{
 		return "DB" + File.separator + getName() + File.separator;
 	}
 	
+	public void tableJoin(String tTableName, String dTableName, String colName)
+	{
+		try
+		{
+			String resultName = "Join:" + tTableName + ":" + dTableName + ":" + colName;
+			for(Table t : _tableList)
+				if(t.getTableName().equals(resultName))
+					return;
+			File f = new File(getPath() + resultName);
+			Table result = new Table(f);
+			Table tTable = getTableByName(tTableName);
+			Table dTable = getTableByName(dTableName);
+			for(int i = 0; i < tTable.getHeight(); i++)
+			{
+				for(int j = 0; j < dTable.getHeight(); j++)
+				{
+					//	TODO implement full-join here
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addExistingTableFromFile(File t) 
 	{
 		try 
@@ -206,5 +230,14 @@ public class DataBase extends ActionPool{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected Table getTableByName(String name)
+	{
+		Table result = null;
+		for(int i = 0; i < _tableList.size(); i++)
+			if(_tableList.get(i).getTableName().equals(name))
+				result = _tableList.get(i);
+		return result;
 	}
 }
