@@ -18,9 +18,10 @@
 
 package core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DataType 
+public class DataType implements Serializable
 {
 	public enum TYPE {INTEGER, FLOAT, STRING, ENUM}; // list of available types
 	protected TYPE _type; // current type

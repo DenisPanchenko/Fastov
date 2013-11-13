@@ -11,9 +11,13 @@
 package core;
 
 import java.util.*;
+import java.awt.Dimension;
 import java.io.*;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.plaf.synth.Region;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -26,7 +30,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DBManager extends ActionPool{
+import java.net.InetAddress;
+import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+
+public class DBManager extends ActionPool implements Remote, Serializable{
 	
 	/**
 	 * Class create DataBase object based on
@@ -396,4 +405,7 @@ public class DBManager extends ActionPool{
 				result = db.getTableList().get(i);
 		return result;
 	}
+
+	
+	
 }

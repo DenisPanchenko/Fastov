@@ -15,6 +15,7 @@ package core;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
 
 import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
-public class Table extends ActionPool{
+public class Table extends ActionPool implements Serializable{
 	private Integer _WIDTH; // width of table
 	private Integer _HEIGHT; // height of table
 	private String _name; // name of table
@@ -43,7 +44,7 @@ public class Table extends ActionPool{
 	private ArrayList<String> _columnNames; // name sequence for column
 	private ArrayList<ArrayList<DataType> > _content; // actually content of table
 	
-	class FileManager
+	class FileManager implements Serializable
 	{
 		// TODO all operations
 		private File _file;

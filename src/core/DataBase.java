@@ -13,6 +13,7 @@
 package core;
 
 import java.io.File;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,7 +24,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DataBase extends ActionPool{
+public class DataBase extends ActionPool implements Serializable{
+	
 	private String _dbName;
 	
 	private ArrayList<Table> _tableList; // list of tables	

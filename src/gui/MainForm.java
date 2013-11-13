@@ -18,6 +18,8 @@ import javax.swing.JButton;
 
 import core.DBManager;
 import core.DataBase;
+import core.RMIInterface;
+import core.RMIWrapper;
 import core.Table;
 
 import java.awt.GridLayout;
@@ -27,6 +29,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class MainForm extends JFrame implements ActionListener, MouseListener, TableModelListener {
 
@@ -59,7 +65,23 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	 * Create the frame.
 	 */
 	public MainForm() {
-		dbManager = new DBManager();
+		//dbManager = new DBManager();
+		
+		dbManager = null;
+		Registry registry;
+		try {
+			registry = LocateRegistry.getRegistry("127.0.1.1",12345);
+			
+			RMIInterface wr = (RMIInterface)(registry.lookup("RMIWrapper"));
+			dbManager = wr.getManager();
+			if(dbManager == null)
+				System.out.println("Error");
+			else
+				System.out.println("SUCCESS");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(50, 50, 950, 700);
