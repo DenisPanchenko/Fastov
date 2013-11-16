@@ -65,8 +65,11 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	 * Create the frame.
 	 */
 	public MainForm() {
-		//dbManager = new DBManager();
+		dbManager = new DBManager();
 		
+		/*
+		 * RMI JNDI implementation
+		 * 
 		dbManager = null;
 		Registry registry;
 		try {
@@ -75,13 +78,13 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			RMIInterface wr = (RMIInterface)(registry.lookup("RMIWrapper"));
 			dbManager = wr.getManager();
 			if(dbManager == null)
-				System.out.println("Error");
+				System.out.println("ERROR");
 			else
 				System.out.println("SUCCESS");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    
+	    */
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(50, 50, 950, 700);

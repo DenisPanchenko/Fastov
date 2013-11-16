@@ -472,10 +472,16 @@ public class Table extends ActionPool implements Serializable{
 		_fileManager.createRow();
 	}
 	
-	public ArrayList<String> getColumnNames() {
+	public ArrayList<DataType.TYPE> getColumnTypes()
+	{
+		return _columnPattern;
+	}
+	
+	public ArrayList<String> getColumnNames() 
+	{
 		return _columnNames;
 	}
-
+	
 	public ArrayList<ArrayList<DataType> > getContent() {
 		return _content;
 	}

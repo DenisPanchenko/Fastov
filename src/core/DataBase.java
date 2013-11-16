@@ -209,16 +209,44 @@ public class DataBase extends ActionPool implements Serializable{
 				if(t.getTableName().equals(resultName))
 					return;
 			File f = new File(getPath() + resultName);
+			f.createNewFile();
+			//System.out.println(getPath() + resultName);
 			Table result = new Table(f);
 			Table tTable = getTableByName(tTableName);
 			Table dTable = getTableByName(dTableName);
+			Integer tIndex = tTable.getColumnNames().indexOf(colName);
+			Integer dIndex = dTable.getColumnNames().indexOf(colName);
+			if(dIndex == null)
+			{
+				result = tTable;
+				_tableList.add(result);
+				return;
+			}
+			for(int i = 0; i < tTable.getWidth(); i++)
+				result.createColumn(tTable.getColumnNames().get(i),
+						tTable.getColumnTypes().get(i));
+			for(int i = 0; i < dTable.getWidth(); i++)
+				if(i != dIndex)
+					result.createColumn(dTable.getColumnNames().get(i),
+							dTable.getColumnTypes().get(i));
+			result.performAll();
 			for(int i = 0; i < tTable.getHeight(); i++)
 			{
+				result.createRow();
+				for(int k = 0; k < tTable.getWidth(); k++)
+					result.setCell(result.getHeight() - 1, k, tTable.getCell(i, k).getValue());
+				
 				for(int j = 0; j < dTable.getHeight(); j++)
 				{
-					//	TODO implement full-join here
+					//System.out.println(tTable.getCell(i, tIndex));
+					//System.out.println(dTable.getCell(j, dIndex));
+					if(tTable.getCell(i, tIndex).equals(dTable.getCell(j, dIndex)))
+						for(int k = 0; k < dTable.getWidth(); k++)
+							if(k != dIndex)
+								result.setCell(k + tTable.getWidth() - 1, result.getHeight() - 1, dTable.getCell(k, j));
 				}
 			}
+			performAll();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

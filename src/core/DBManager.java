@@ -387,7 +387,7 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		if(dbName == null)
 			return result;
 		for(int i = 0; i < _dataBases.size(); i++)
-			if(_dataBases.get(i).equals(dbName))
+			if(_dataBases.get(i).getName().equals(dbName))
 				result = _dataBases.get(i);
 		return result;
 	}
