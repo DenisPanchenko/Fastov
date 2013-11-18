@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.GroupLayout;
@@ -109,6 +110,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		table.setMinimumSize(new Dimension(700, height));
 		table.setFillsViewportHeight(true);
 		table.getModel().addTableModelListener(this);
+		table.setColumnSelectionAllowed(true);
 		panel_1.add(new JScrollPane(table));
 		panel_1.setLayout(new GridLayout(1, 1, 0, 0));
 		
@@ -400,7 +402,12 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
-			MainFormMng.deleteColumn(dbManager, tree);
+			if(table.getSelectedColumn() != -1) {
+				TableColumn col = table.getColumnModel().getColumn(table.getSelectedColumn());
+				table.getColumnModel().removeColumn(col);
+				MainFormMng.deleteColumn(dbManager, selectedDB, selectedTable, col.getHeaderValue().toString());
+			}
+			
 			//	TODO Bind this method to 
 			//	DBManager.deleteColumn(String database, String table, String column);
 		} else if(event.getActionCommand().equals("ADD_ROW")) {

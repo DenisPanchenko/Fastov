@@ -381,8 +381,8 @@ public class MainFormMng {
 		return jtable;
 	}
 
-	public static void deleteColumn(DBManager dbManager, JTree tree) {
+	public static void deleteColumn(DBManager dbManager, String dbName, String tableName, String colName) {
 		
-		
+		dbManager.deleteColumn(dbName, tableName, colName);
 	}
 }
