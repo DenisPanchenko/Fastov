@@ -3,8 +3,10 @@ package gui;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -234,8 +236,6 @@ public class MainFormMng {
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setTitle("Table join");
 		
-		// TODO Smth wrong here because I can see list of all tables within DBManager =((
-		
 		DataBase database = null;
 		Table table = null;
 		for(int i = 0; i < dbManager.getDataBaseList().size(); i++)
@@ -253,73 +253,80 @@ public class MainFormMng {
 		if(database == null || table == null)
 			return;
 		
-		final JComboBox tables = new JComboBox(database.getTableList().toArray());
-		final JComboBox columnsOfSelectedTable = new JComboBox(table.getColumnNames().toArray());
-		 
-		JButton joinBtn = new JButton("Join");
-		joinBtn.setActionCommand("JOIN");
-		joinBtn.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				if(e.getActionCommand().equals("JOIN"))
-					dbManager.tableJoin(dbName, selectedTable,
-							tables.getSelectedItem().toString(),
-							columnsOfSelectedTable.getSelectedItem().toString());
-					dialog.dispose();
-			}
-		});
+		List<Table> tables = new ArrayList<Table>(database.getTableList());
+		tables.remove(table);
 		
-		final JButton cancelBtn = new JButton("Cancel");
-		cancelBtn.setActionCommand("EXIT");
-		cancelBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals("EXIT")){
-					dialog.dispose();
+		if(!tables.isEmpty()) {
+			final JComboBox tablesCB = new JComboBox(tables.toArray());
+			final JComboBox columnsOfSelectedTable = new JComboBox(((Table)tablesCB.getSelectedItem()).getColumnNames().toArray());
+			 
+			JButton joinBtn = new JButton("Join");
+			joinBtn.setActionCommand("JOIN");
+			joinBtn.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					if(e.getActionCommand().equals("JOIN"))
+						dbManager.tableJoin(dbName, selectedTable,
+								tablesCB.getSelectedItem().toString(),
+								columnsOfSelectedTable.getSelectedItem().toString());
+						dialog.dispose();
 				}
+			});
+			
+			final JButton cancelBtn = new JButton("Cancel");
+			cancelBtn.setActionCommand("EXIT");
+			cancelBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(e.getActionCommand().equals("EXIT")){
+						dialog.dispose();
+					}
+				}
+			});
+			
+			GroupLayout mainLayout = new GroupLayout(dialog.getContentPane());
+			dialog.getContentPane().setLayout(mainLayout);
+			mainLayout.setAutoCreateGaps(true);
+			mainLayout.setAutoCreateContainerGaps(true);
+			
+			mainLayout.setHorizontalGroup(
+					mainLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+						.addGroup(
+								mainLayout.createSequentialGroup()
+									.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+											.addComponent(tablesCB)
+									)
+									.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+											.addComponent(columnsOfSelectedTable)
+									)
+						)
+						.addGroup(mainLayout.createSequentialGroup()
+								.addComponent(joinBtn)
+								.addComponent(cancelBtn)
+						)
+					);
+			
+			mainLayout.setVerticalGroup(
+					mainLayout.createSequentialGroup()
+						.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(tablesCB)
+								.addComponent(columnsOfSelectedTable)
+						)
+						.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(joinBtn)
+								.addComponent(cancelBtn)
+						)
+					);
+			dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+			dialog.pack();
+			dialog.setResizable(false);
+			dialog.setLocationRelativeTo(null);
+			dialog.setVisible(true);
+
+		}
+		
 			}
-		});
-		
-		GroupLayout mainLayout = new GroupLayout(dialog.getContentPane());
-		dialog.getContentPane().setLayout(mainLayout);
-		mainLayout.setAutoCreateGaps(true);
-		mainLayout.setAutoCreateContainerGaps(true);
-		
-		mainLayout.setHorizontalGroup(
-				mainLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
-					.addGroup(
-							mainLayout.createSequentialGroup()
-								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(tables)
-								)
-								.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(columnsOfSelectedTable)
-								)
-					)
-					.addGroup(mainLayout.createSequentialGroup()
-							.addComponent(joinBtn)
-							.addComponent(cancelBtn)
-					)
-				);
-		
-		mainLayout.setVerticalGroup(
-				mainLayout.createSequentialGroup()
-					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-							.addComponent(tables)
-							.addComponent(columnsOfSelectedTable)
-					)
-					.addGroup(mainLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-							.addComponent(joinBtn)
-							.addComponent(cancelBtn)
-					)
-				);
-		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-		dialog.pack();
-		dialog.setResizable(false);
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
-	}
 
 	public static JTable deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
 		assert(jtable != null);
@@ -372,5 +379,10 @@ public class MainFormMng {
 		}
 		
 		return jtable;
+	}
+
+	public static void deleteColumn(DBManager dbManager, JTree tree) {
+		
+		
 	}
 }

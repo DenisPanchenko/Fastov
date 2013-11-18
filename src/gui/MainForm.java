@@ -45,7 +45,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	private static JButton createTableBtn;
 	private static JButton removeTableBtn;
 	private static JButton projectionBtn;
-	private static JButton unitTableBtn;
+	private static JButton joinTablesBtn;
 	private static JButton removeDB;
 	private static JButton addColumnBtn;
 	private static JButton deleteColumnBtn;
@@ -181,10 +181,10 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		projectionBtn.setActionCommand("PROJECTION");
 		projectionBtn.addActionListener(this);
 		
-		unitTableBtn = new JButton("Tables Join");
-		panel_2.add(unitTableBtn);
-		unitTableBtn.setActionCommand("JOIN");
-		unitTableBtn.addActionListener(this);
+		joinTablesBtn = new JButton("Tables Join");
+		panel_2.add(joinTablesBtn);
+		joinTablesBtn.setActionCommand("JOIN");
+		joinTablesBtn.addActionListener(this);
 				
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
@@ -302,7 +302,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				deleteColumnBtn.setEnabled(false);
 				addRowBtn.setEnabled(false);
 				deleteRowBtn.setEnabled(false);
-				unitTableBtn.setEnabled(false);
+				joinTablesBtn.setEnabled(false);
 				projectionBtn.setEnabled(false);
 			} else if(setLevel == BUTTON_SET_LEVEL.DATABASE_LEVEL) {
 				createDBBtn.setEnabled(true);
@@ -313,7 +313,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				deleteColumnBtn.setEnabled(false);
 				addRowBtn.setEnabled(false);
 				deleteRowBtn.setEnabled(false);
-				unitTableBtn.setEnabled(false);
+				joinTablesBtn.setEnabled(false);
 				projectionBtn.setEnabled(false);
 			} else if(setLevel == BUTTON_SET_LEVEL.TABLE_LEVEL) {
 				createDBBtn.setEnabled(true);
@@ -324,7 +324,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				deleteColumnBtn.setEnabled(true);
 				addRowBtn.setEnabled(true);
 				deleteRowBtn.setEnabled(true);
-				unitTableBtn.setEnabled(true);
+				joinTablesBtn.setEnabled(true);
 				projectionBtn.setEnabled(true);
 			}
 		getContentPane().repaint();
@@ -400,9 +400,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
+			MainFormMng.deleteColumn(dbManager, tree);
 			//	TODO Bind this method to 
 			//	DBManager.deleteColumn(String database, String table, String column);
-			
 		} else if(event.getActionCommand().equals("ADD_ROW")) {
 			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
@@ -410,14 +410,8 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("JOIN")) {
-			
-			//  TODO Bind this method to
-			//	DBManager.tableJoin()
-			String dbName = selectedDB;
-			String targetTableName = selectedTable;
-			
-			MainFormMng.createJoinDialog(dbManager, dbName, targetTableName);
-//			dbManager.tableJoin(null, targetTableName, destTableName, colName);
+
+			MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable);
 			
 			//table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
 			//((AbstractTableModel)table.getModel()).fireTableDataChanged();
