@@ -419,10 +419,12 @@ public class Table extends ActionPool implements Serializable{
 				for(int i = 0; i < _columnNames.size(); i++)
 					if(_columnNames.get(i).equals(columnName))
 						index = i;
+				
+				/*this piece of code is unnecessary, but I don't know why
 				if(index >= 0)
 					for(int i = 0; i < _content.size(); i++)
 						_content.get(index).remove(i);
-				_content.remove(index);
+				_content.remove(index);*/
 				_columnNames.remove(index);
 				_WIDTH--;
 				_fileManager.deleteColumn(index);

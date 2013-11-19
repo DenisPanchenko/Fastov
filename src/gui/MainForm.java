@@ -370,13 +370,6 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
         String data = (String)table.getModel().getValueAt(row, col);
         
         MainFormMng.setNewCellToTable(tree, table, row, col, data);
-        
-        //	Seems to work fine without next lines
-        
-        /*
-        table.setModel(MainFormMng.setNewCellToTable(tree, table, row, col, data).getModel());
-		((AbstractTableModel)table.getModel()).fireTableDataChanged();
-		*/
 	}
 
 	@Override
@@ -404,12 +397,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			
 			if(table.getSelectedColumn() != -1) {
 				TableColumn col = table.getColumnModel().getColumn(table.getSelectedColumn());
-				table.getColumnModel().removeColumn(col);
 				MainFormMng.deleteColumn(dbManager, selectedDB, selectedTable, col.getHeaderValue().toString());
+				table.getColumnModel().removeColumn(col);
 			}
-			
-			//	TODO Bind this method to 
-			//	DBManager.deleteColumn(String database, String table, String column);
 		} else if(event.getActionCommand().equals("ADD_ROW")) {
 			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
 			((AbstractTableModel)table.getModel()).fireTableDataChanged();
