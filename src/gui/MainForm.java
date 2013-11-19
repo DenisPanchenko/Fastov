@@ -363,13 +363,14 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		
 		// 	TODO Add input validation here!
 		//	enum must have next format: <token1>,<token2>, ..., <token>
-		
-		int row = e.getFirstRow();
-        int col = e.getColumn();
-        String columnName = table.getModel().getColumnName(col);
-        String data = (String)table.getModel().getValueAt(row, col);
-        
-        MainFormMng.setNewCellToTable(tree, table, row, col, data);
+		if(e.getType() == TableModelEvent.UPDATE) {
+			int row = e.getFirstRow();
+	        int col = e.getColumn();
+	        String columnName = table.getModel().getColumnName(col);
+	        String data = (String)table.getModel().getValueAt(row, col);
+	        
+	        MainFormMng.setNewCellToTable(tree, table, row, col, data);	
+		}
 	}
 
 	@Override
