@@ -189,12 +189,13 @@ public class MainFormMng {
 			dialog.initialize(columnName, types, "Add column", "Column name:", "Type:", "Add");
 			dialog.getAcceptButton().addActionListener(new ActionListener() {
 
-			//	TODO Deny empty string as name for new column
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					dbManager.createColumn(dataBase.getName(), table.getTableName(), columnName.getText(), (DataType.TYPE)types.getSelectedItem());
-					dialog.dispose();
+					String colName = columnName.getText(); 
+					if(colName.matches("\\S") && !colName.isEmpty()) {
+						dbManager.createColumn(dataBase.getName(), table.getTableName(), colName, (DataType.TYPE)types.getSelectedItem());
+						dialog.dispose();
+					}
 				}
 			});
 			
@@ -266,11 +267,14 @@ public class MainFormMng {
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					if(e.getActionCommand().equals("JOIN"))
-						dbManager.tableJoin(dbName, selectedTable,
-								tablesCB.getSelectedItem().toString(),
-								columnsOfSelectedTable.getSelectedItem().toString());
-						dialog.dispose();
+					if(e.getActionCommand().equals("JOIN")) {
+						if(columnsOfSelectedTable.getSelectedItem() != null) {
+							dbManager.tableJoin(dbName, selectedTable,
+									tablesCB.getSelectedItem().toString(),
+									columnsOfSelectedTable.getSelectedItem().toString());
+							dialog.dispose();
+						}
+					}
 				}
 			});
 			

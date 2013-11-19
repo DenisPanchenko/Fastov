@@ -421,6 +421,7 @@ public class Table extends ActionPool implements Serializable{
 						index = i;
 				
 				/*this piece of code is unnecessary, but I don't know why
+				 * content is already deleted before this loop
 				if(index >= 0)
 					for(int i = 0; i < _content.size(); i++)
 						_content.get(index).remove(i);
