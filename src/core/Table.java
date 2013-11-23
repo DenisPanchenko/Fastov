@@ -421,10 +421,11 @@ public class Table extends ActionPool implements Serializable{
 						index = i;
 				
 				if(index >= 0)
-					for(int i = 0; i < _content.size(); i++)
+					for(int i = 0; i <  _content.get(index).size(); i++)
 						_content.get(index).remove(i);
 				_content.remove(index);
 				_columnNames.remove(index);
+				_columnPattern.remove(index);
 				_WIDTH--;
 				_fileManager.deleteColumn(index);
 			}

@@ -359,8 +359,6 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		
-		//	TODO Something wrong here, during table modifications magic things happen!
-		
 		// 	TODO Add input validation here!
 		//	enum must have next format: <token1>,<token2>, ..., <token>
 		if(e.getType() == TableModelEvent.UPDATE) {
@@ -403,10 +401,10 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			}
 		} else if(event.getActionCommand().equals("ADD_ROW")) {
 			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
-			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("DELETE_ROW")) {
 			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
-			((AbstractTableModel)table.getModel()).fireTableDataChanged();
+			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("JOIN")) {
 
 			MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable);
