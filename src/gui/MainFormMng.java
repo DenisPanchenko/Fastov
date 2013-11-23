@@ -380,8 +380,12 @@ public class MainFormMng {
 		
 		if(o instanceof Table) {
 			Table table = (Table)o;
-			table.setCellValue(x, y, newValue);
-			//return convertTableToJTable(table);
+			
+			try {
+				table.setCellValue(x, y, newValue);
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Invalid data");
+			}
 		}
 		
 		return jtable;

@@ -376,10 +376,14 @@ public class Table extends ActionPool implements Serializable{
 		addAction(a);
 	}
 	
-	public void setCellValue(int x, int y, String newValue)
+	public void setCellValue(int x, int y, String newValue) throws NumberFormatException
 	{
-		_content.get(x).get(y).setValue(newValue);
-		_fileManager.setValue(x, y, newValue);
+		try {
+			_content.get(x).get(y).setValue(newValue);
+			_fileManager.setValue(x, y, newValue);
+		} catch (NumberFormatException e) {
+			throw e;
+		}
 	}
 	
 	@Override

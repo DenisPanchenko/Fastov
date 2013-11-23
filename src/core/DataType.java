@@ -84,27 +84,46 @@ public class DataType implements Serializable
 		return _value;
 	}
 	
+	private void setDefaultValue() {
+		if(_type == TYPE.INTEGER)
+			_value = new Integer(0);
+		else if(_type == TYPE.FLOAT)
+			_value = new Float(0.0);
+		else if(_type == TYPE.STRING)
+			_value = new String("");
+		else if(_type == TYPE.ENUM)
+			_value = new ArrayList<String>();
+		else return;
+	}
+	
 	/**
 	 * Sets the value.
 	 * @param value - Object
 	 */
 	public void setValue(Object value)
 	{
-		if(value == null)
-		{
-			if(_type == TYPE.INTEGER)
-				_value = new Integer(0);
-			else if(_type == TYPE.FLOAT)
-				_value = new Float(0.0);
-			else if(_type == TYPE.STRING)
-				_value = new String("");
-			else if(_type == TYPE.ENUM)
-				_value = new ArrayList<String>();
-			else return;
-		} else {
-			_value = value;
+		try {
+			if(value == null)
+			{
+				setDefaultValue();
+			} else {
+				if(_type == TYPE.INTEGER) {
+					Integer intNum = new Integer(value.toString());
+					_value = intNum;
+				} else if(_type == TYPE.FLOAT) {
+					Float fltNum = new Float(value.toString());
+					_value = fltNum;
+				} else if(_type == TYPE.STRING)
+					_value = value.toString();
+				else if(_type == TYPE.ENUM)
+					_value = new ArrayList<String>();
+				else return;
+			}
+		} catch (NumberFormatException e) {
+			throw e;
 		}
 	}
+	
 	
 	public static TYPE fromString(String s)
 	{
@@ -121,6 +140,7 @@ public class DataType implements Serializable
 	
 	public String toString()
 	{
+		System.out.println("tostring " +_value);
 		return _value.toString();
 	}
 }

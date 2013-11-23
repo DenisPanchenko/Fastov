@@ -358,15 +358,12 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		
-		// 	TODO Add input validation here!
-		//	enum must have next format: <token1>,<token2>, ..., <token>
 		if(e.getType() == TableModelEvent.UPDATE) {
 			int row = e.getFirstRow();
 	        int col = e.getColumn();
 	        String columnName = table.getModel().getColumnName(col);
-	        String data = (String)table.getModel().getValueAt(row, col);
 	        
+	        String data = (String)table.getModel().getValueAt(row, col);
 	        MainFormMng.setNewCellToTable(tree, table, row, col, data);	
 		}
 	}
@@ -389,9 +386,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		} else if(event.getActionCommand().equals("DELETE_TABLE")) {
 			tree = MainFormMng.removeTable(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
-			//
 			table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
-			((AbstractTableModel)table.getModel()).fireTableDataChanged();
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
 			if(table.getSelectedColumn() != -1) {
