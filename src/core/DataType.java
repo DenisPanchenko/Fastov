@@ -19,7 +19,10 @@
 package core;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DataType implements Serializable
 {
@@ -100,30 +103,43 @@ public class DataType implements Serializable
 	 * Sets the value.
 	 * @param value - Object
 	 */
-	public void setValue(Object value)
-	{
-		try {
-			if(value == null)
-			{
-				setDefaultValue();
-			} else {
-				if(_type == TYPE.INTEGER) {
-					Integer intNum = new Integer(value.toString());
-					_value = intNum;
-				} else if(_type == TYPE.FLOAT) {
-					Float fltNum = new Float(value.toString());
-					_value = fltNum;
-				} else if(_type == TYPE.STRING)
-					_value = value.toString();
-				else if(_type == TYPE.ENUM)
-					_value = new ArrayList<String>();
-				else return;
-			}
-		} catch (NumberFormatException e) {
-			throw e;
+	public void setValue(Object value) throws NumberFormatException
+	{		
+		if(value == null)
+		{
+			setDefaultValue();
+		} else {
+			if(_type == TYPE.INTEGER) {
+				Integer intNum = new Integer(value.toString());
+				_value = intNum;
+			} else if(_type == TYPE.FLOAT) {
+				Float fltNum = new Float(value.toString());
+				_value = fltNum;
+			} else if(_type == TYPE.STRING)
+				_value = value.toString();
+			else if(_type == TYPE.ENUM) {
+				List<String> enumTypes = validateEnumValue(value.toString());
+				_value = enumTypes;
+			} else return;
 		}
 	}
 	
+	private List<String> validateEnumValue(String value) throws NumberFormatException {
+		if(value.equals("[]")) {
+			return new ArrayList<String>();
+		}
+		String types = value.toUpperCase().substring(1, value.length() - 1);
+		String[] splitedTypes = types.split(", ");
+		for(String type: splitedTypes) {
+			try {
+				TYPE.valueOf(type);
+			} catch (Exception e) {
+				throw new NumberFormatException();
+			}
+		}
+		return Arrays.asList(splitedTypes);
+				
+	}
 	
 	public static TYPE fromString(String s)
 	{

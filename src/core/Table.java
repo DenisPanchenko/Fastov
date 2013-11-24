@@ -378,12 +378,8 @@ public class Table extends ActionPool implements Serializable{
 	
 	public void setCellValue(int x, int y, String newValue) throws NumberFormatException
 	{
-		try {
-			_content.get(x).get(y).setValue(newValue);
-			_fileManager.setValue(x, y, newValue);
-		} catch (NumberFormatException e) {
-			throw e;
-		}
+		_content.get(x).get(y).setValue(newValue);
+		_fileManager.setValue(x, y, newValue);
 	}
 	
 	@Override
