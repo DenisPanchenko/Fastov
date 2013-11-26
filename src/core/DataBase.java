@@ -204,6 +204,7 @@ public class DataBase extends ActionPool implements Serializable{
 	{
 		try
 		{
+			//	create result table in a database
 			String resultName = "Join:" + tTableName + ":" + dTableName + ":" + colName;
 			for(Table t : _tableList)
 				if(t.getTableName().equals(resultName))
@@ -211,6 +212,8 @@ public class DataBase extends ActionPool implements Serializable{
 			File f = new File(getPath() + resultName);
 			f.createNewFile();
 			//System.out.println(getPath() + resultName);
+			
+			//	create an object result table
 			Table result = new Table(f);
 			Table tTable = getTableByName(tTableName);
 			Table dTable = getTableByName(dTableName);
@@ -218,18 +221,27 @@ public class DataBase extends ActionPool implements Serializable{
 			Integer dIndex = dTable.getColumnNames().indexOf(colName);
 			if(dIndex == null)
 			{
+				//	TODO Here can be a copy problem.
+				//	Modifications to tTable will change result table also
 				result = tTable;
 				_tableList.add(result);
+				System.out.println("Destination table: " + dTable.getTableName()
+						+ " has no join column: " + tTable.getColumnNames().get(dIndex));
 				return;
 			}
+			//	create columns from target table
 			for(int i = 0; i < tTable.getWidth(); i++)
 				result.createColumn(tTable.getColumnNames().get(i),
 						tTable.getColumnTypes().get(i));
+			
+			//	append columns from destination table 
 			for(int i = 0; i < dTable.getWidth(); i++)
 				if(i != dIndex)
 					result.createColumn(dTable.getColumnNames().get(i),
 							dTable.getColumnTypes().get(i));
-			result.performAll();
+			
+			result.performAll(); //	force to create columns
+			
 			for(int i = 0; i < tTable.getHeight(); i++)
 			{
 				result.createRow();

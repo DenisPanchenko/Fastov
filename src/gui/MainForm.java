@@ -364,7 +364,8 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	        String columnName = table.getModel().getColumnName(col);
 	        
 	        String data = (String)table.getModel().getValueAt(row, col);
-	        MainFormMng.setNewCellToTable(tree, table, row, col, data);	
+	        MainFormMng.setNewCellToTable(tree, table, row, col, data);
+	        
 		}
 	}
 
@@ -387,6 +388,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			tree = MainFormMng.removeTable(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
 			table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
+			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
 			if(table.getSelectedColumn() != -1) {
