@@ -1,6 +1,9 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
@@ -9,11 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -394,5 +400,45 @@ public class MainFormMng {
 	public static void deleteColumn(DBManager dbManager, String dbName, String tableName, String colName) {
 		
 		dbManager.deleteColumn(dbName, tableName, colName);
+	}
+	
+	public static void projectTable(DBManager dbManager, JTree tree) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			createProjectionDialog(dbManager, table);
+		}
+	}
+	
+	private static void createProjectionDialog(final DBManager dbManager, Table table) {
+		
+		List<String> columnNames = table.getColumnNames();
+		
+		if(!columnNames.isEmpty()) {
+			final JDialog projDialog = new JDialog();
+			
+			for(int i = 0; i < columnNames.size(); i++) {
+				projDialog.add(new JCheckBox(columnNames.get(i)));
+			}
+		
+			JButton projBtn = new JButton("Project");
+			projBtn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					projDialog.dispose();
+				}
+			});
+			
+			projDialog.setTitle("Choose columns for table projection");
+			projDialog.setLayout(new FlowLayout());
+			projDialog.add(projBtn);
+			projDialog.setVisible(true);
+			projDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+			projDialog.pack();
+			projDialog.setLocationRelativeTo(null);
+		}
 	}
 }

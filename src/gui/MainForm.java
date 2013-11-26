@@ -358,6 +358,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
+		//TODO refresh table when user puts invalid data
 		if(e.getType() == TableModelEvent.UPDATE) {
 			int row = e.getFirstRow();
 	        int col = e.getColumn();
@@ -386,6 +387,12 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		} else if(event.getActionCommand().equals("DELETE_TABLE")) {
 			tree = MainFormMng.removeTable(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
+			//TODO fix bug
+			//when we create 2 equal columns and save it 
+			//dbManager creates two equal columns 
+			//But when we create 1 column, save it
+			//then create the same column
+			//dbManager doesn't create the last one
 			table.setModel(MainFormMng.addColumnToTable(dbManager, tree).getModel());
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
@@ -408,7 +415,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			//((AbstractTableModel)table.getModel()).fireTableDataChanged();
 			
 		} else if(event.getActionCommand().equals("PROJECTION")) {
-			
+			MainFormMng.projectTable(dbManager, tree);
 		}
 	} 
 }
