@@ -406,6 +406,10 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		return result;
 	}
 
+	public void projectTable(List<Integer> numbersOfSelectedCB, Table table) {
+				
+	}
+
 	
 	
 }

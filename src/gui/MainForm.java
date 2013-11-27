@@ -408,12 +408,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
 			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("JOIN")) {
-
 			MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable);
-			
-			//table.setModel(MainFormMng.unitTable(dbManager, tree).getModel());
-			//((AbstractTableModel)table.getModel()).fireTableDataChanged();
-			
 		} else if(event.getActionCommand().equals("PROJECTION")) {
 			MainFormMng.projectTable(dbManager, tree);
 		}

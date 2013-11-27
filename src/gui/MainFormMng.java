@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Checkbox;
 import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
 import java.awt.FlowLayout;
@@ -223,21 +224,6 @@ public class MainFormMng {
 		return TableConverter.convertTableToJTable(table);
 	}
 
-	// UniT method =D
-	public static JTable unitTable(DBManager dbManager, JTree tree) {
-		
-		/*
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		assert(node != null);
-		Object o = node.getUserObject();
-		if(o instanceof Table) {
-			Table table = (Table)o;
-			createUnionDialog(dbManager, table);
-		}
-		*/
-		return null;
-	}
-
 	public static void createJoinDialog(final DBManager dbManager, final String dbName,
 			final String selectedTable) {
 		
@@ -412,15 +398,19 @@ public class MainFormMng {
 		}
 	}
 	
-	private static void createProjectionDialog(final DBManager dbManager, Table table) {
+	private static void createProjectionDialog(final DBManager dbManager, final Table table) {
 		
 		List<String> columnNames = table.getColumnNames();
 		
 		if(!columnNames.isEmpty()) {
+			final List<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+			final List<Integer> numbersOfSelectedCB = new ArrayList<Integer>();
 			final JDialog projDialog = new JDialog();
 			
 			for(int i = 0; i < columnNames.size(); i++) {
-				projDialog.add(new JCheckBox(columnNames.get(i)));
+				JCheckBox checkBox = new JCheckBox(columnNames.get(i));
+				checkBoxes.add(checkBox);
+				projDialog.add(checkBox);
 			}
 		
 			JButton projBtn = new JButton("Project");
@@ -428,6 +418,12 @@ public class MainFormMng {
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					for(int i = 0; i < checkBoxes.size(); i++) {
+						if(checkBoxes.get(i).isSelected()) {
+							numbersOfSelectedCB.add(i);
+						}
+					}
+					dbManager.projectTable(numbersOfSelectedCB, table);
 					projDialog.dispose();
 				}
 			});
