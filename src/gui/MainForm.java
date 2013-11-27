@@ -318,7 +318,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				joinTablesBtn.setEnabled(false);
 				projectionBtn.setEnabled(false);
 			} else if(setLevel == BUTTON_SET_LEVEL.TABLE_LEVEL) {
-				createDBBtn.setEnabled(true);
+				createDBBtn.setEnabled(false);
 				removeDB.setEnabled(false);
 				createTableBtn.setEnabled(true);
 				removeTableBtn.setEnabled(true);
@@ -379,13 +379,13 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		} else if(event.getActionCommand().equals("CANCEL")) {
 			dbManager.cancelAllActions();
 		} else if(event.getActionCommand().equals("CREATE_DB")) {
-			tree = MainFormMng.createDB(dbManager, tree);
+			MainFormMng.createDB(dbManager, tree);
 		} else if(event.getActionCommand().equals("DELETE_DB")) {
-			tree = MainFormMng.removeDB(tree, dbManager);
+			MainFormMng.removeDB(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_TABLE")) {
-			tree = MainFormMng.createTable(dbManager, tree);
+			MainFormMng.createTable(dbManager, tree);
 		} else if(event.getActionCommand().equals("DELETE_TABLE")) {
-			tree = MainFormMng.removeTable(tree, dbManager);
+			MainFormMng.removeTable(tree, dbManager);
 		} else if(event.getActionCommand().equals("CREATE_COLUMN")) {
 			//TODO fix bug
 			//when we create 2 equal columns and save it 
@@ -408,7 +408,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			table.setModel(MainFormMng.deleteRowFromTable(dbManager, table, tree).getModel());
 			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("JOIN")) {
-			MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable);
+			tree = MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable, tree);
 		} else if(event.getActionCommand().equals("PROJECTION")) {
 			MainFormMng.projectTable(dbManager, tree);
 		}
