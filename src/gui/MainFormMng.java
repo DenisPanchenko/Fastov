@@ -1,6 +1,10 @@
 package gui;
 
+import java.awt.Checkbox;
+import java.awt.Dimension;
 import java.awt.Dialog.ModalityType;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
@@ -9,11 +13,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -27,7 +34,7 @@ import core.Table;
 
 public class MainFormMng { 
 	
-	public static JTree createDB(DBManager dbManager, JTree tree) {
+	public static void createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
 		List<String> dbNames = new ArrayList<String>();
@@ -53,8 +60,6 @@ public class MainFormMng {
 				e.printStackTrace();
 			}
 		}
-		
-		return tree;
 	}
 	
 /*	private static JTree addNewNodeToTree(Object o, JTree tree) {
@@ -76,7 +81,7 @@ public class MainFormMng {
 	}
 */
 	
-	public static JTree removeTable(JTree tree, DBManager dbManager) {
+	public static void removeTable(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
 		Object userObject = node.getUserObject();
@@ -87,7 +92,6 @@ public class MainFormMng {
 			dbManager.deleteTable(dataBase.getName(), table.getTableName());
 		}
 		removeNodeFromTree(node);
-		return tree;
 	}
 	
 	public static void removeNodeFromTree(Object o) {
@@ -119,7 +123,7 @@ public class MainFormMng {
 		return root;
 	}
 
-	public static JTree createTable(DBManager dbManager, JTree tree) {
+	public static void createTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
 		Object userObject = node.getUserObject();
@@ -139,18 +143,11 @@ public class MainFormMng {
 			}
 			if(tableName != null) {
 				dbManager.createTable(dataBase.getName(), tableName);
-				return tree;
-			} else {
-				return tree;
 			}
-			//Table table = dbManager.createTable(dataBase, columnsNames, columnTypes);
-			//dbManager.createTable(((DataBase) userObject).getName(), columnsNames, columnTypes);
-			//return addNewNodeToTree(table, tree);
 		}
-		return tree;
 	}
 
-	public static JTree removeDB(JTree tree, DBManager dbManager) {
+	public static void removeDB(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
 		Object o = node.getUserObject();
@@ -169,7 +166,6 @@ public class MainFormMng {
 			
 			removeNodeFromTree(dataBase);
 		}
-		return tree;
 	}
 
 	public static JTable addColumnToTable(final DBManager dbManager, JTree tree) {
@@ -217,23 +213,8 @@ public class MainFormMng {
 		return TableConverter.convertTableToJTable(table);
 	}
 
-	// UniT method =D
-	public static JTable unitTable(DBManager dbManager, JTree tree) {
-		
-		/*
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		assert(node != null);
-		Object o = node.getUserObject();
-		if(o instanceof Table) {
-			Table table = (Table)o;
-			createUnionDialog(dbManager, table);
-		}
-		*/
-		return null;
-	}
-
-	public static void createJoinDialog(final DBManager dbManager, final String dbName,
-			final String selectedTable) {
+	public static JTree createJoinDialog(final DBManager dbManager, final String dbName,
+			final String selectedTable, JTree tree) {
 		
 		final JDialog dialog = new JDialog();
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -254,7 +235,7 @@ public class MainFormMng {
 				break;
 			}
 		if(database == null || table == null)
-			return;
+			return tree;
 		
 		List<Table> tables = new ArrayList<Table>(database.getTableList());
 		tables.remove(table);
@@ -331,8 +312,8 @@ public class MainFormMng {
 			dialog.setVisible(true);
 
 		}
-		
-			}
+		return tree;
+	}
 
 	public static JTable deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
 		assert(jtable != null);
@@ -394,5 +375,56 @@ public class MainFormMng {
 	public static void deleteColumn(DBManager dbManager, String dbName, String tableName, String colName) {
 		
 		dbManager.deleteColumn(dbName, tableName, colName);
+	}
+	
+	public static JTree projectTable(DBManager dbManager, JTree tree) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		Object o = node.getUserObject();
+		
+		if(o instanceof Table) {
+			Table table = (Table)o;
+			createProjectionDialog(dbManager, table);
+		}
+		return tree;
+	}
+	
+	private static void createProjectionDialog(final DBManager dbManager, final Table table) {
+		
+		List<String> columnNames = table.getColumnNames();
+		
+		if(!columnNames.isEmpty()) {
+			final List<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+			final List<Integer> numbersOfSelectedCB = new ArrayList<Integer>();
+			final JDialog projDialog = new JDialog();
+			
+			for(int i = 0; i < columnNames.size(); i++) {
+				JCheckBox checkBox = new JCheckBox(columnNames.get(i));
+				checkBoxes.add(checkBox);
+				projDialog.add(checkBox);
+			}
+		
+			JButton projBtn = new JButton("Project");
+			projBtn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					for(int i = 0; i < checkBoxes.size(); i++) {
+						if(checkBoxes.get(i).isSelected()) {
+							numbersOfSelectedCB.add(i);
+						}
+					}
+					dbManager.projectTable(numbersOfSelectedCB, table);
+					projDialog.dispose();
+				}
+			});
+			
+			projDialog.setTitle("Choose columns for table projection");
+			projDialog.setLayout(new FlowLayout());
+			projDialog.add(projBtn);
+			projDialog.setVisible(true);
+			projDialog.setModalityType(ModalityType.APPLICATION_MODAL);
+			projDialog.pack();
+			projDialog.setLocationRelativeTo(null);
+		}
 	}
 }
