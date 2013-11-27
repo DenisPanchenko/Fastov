@@ -406,10 +406,12 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		return result;
 	}
 
-	public void projectTable(List<Integer> numbersOfSelectedCB, Table table) {
-				
+	public void projectTable(List<Integer> numbersOfcolumns, String tableName, String dbName) {
+		//TODO check correctness
+		DataBase db = getDBByName(dbName);
+		if(db == null)
+			return;
+		db.projectTable(numbersOfcolumns, tableName);		
 	}
-
-	
 	
 }
