@@ -282,4 +282,19 @@ public class DataBase extends ActionPool implements Serializable{
 				result = _tableList.get(i);
 		return result;
 	}
+
+	public void projectTable(List<Integer> numbersOfcolumns, String tableName) {
+		try
+		{
+			String resultName = "Projection:" + tableName;
+			File f = new File(getPath() + resultName);
+			f.createNewFile();
+			
+			//TODO implement method
+			
+			performAll();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

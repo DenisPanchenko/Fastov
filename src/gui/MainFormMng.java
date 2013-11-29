@@ -380,15 +380,18 @@ public class MainFormMng {
 	public static JTree projectTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object o = node.getUserObject();
+		Object parent = ((DefaultMutableTreeNode)node.getParent()).getUserObject();
 		
-		if(o instanceof Table) {
+		if(o instanceof Table && parent instanceof DataBase) {
 			Table table = (Table)o;
-			createProjectionDialog(dbManager, table);
+			DataBase dataBase = (DataBase)parent;
+			createProjectionDialog(dbManager, table, dataBase.getName());
 		}
 		return tree;
 	}
 	
-	private static void createProjectionDialog(final DBManager dbManager, final Table table) {
+	private static void createProjectionDialog(final DBManager dbManager, final Table table
+			, final String dataBaseName) {
 		
 		List<String> columnNames = table.getColumnNames();
 		
@@ -413,7 +416,7 @@ public class MainFormMng {
 							numbersOfSelectedCB.add(i);
 						}
 					}
-					dbManager.projectTable(numbersOfSelectedCB, table);
+					dbManager.projectTable(numbersOfSelectedCB, table.getTableName(), dataBaseName);
 					projDialog.dispose();
 				}
 			});
