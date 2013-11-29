@@ -156,7 +156,6 @@ public class DataType implements Serializable
 	
 	public String toString()
 	{
-		System.out.println("tostring " +_value);
 		return _value.toString();
 	}
 }

@@ -1,7 +1,12 @@
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,8 +16,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -52,6 +60,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	private static JButton deleteColumnBtn;
 	private static JButton addRowBtn;
 	private static JButton deleteRowBtn;
+	private static JButton exitButton;
 	private static DBManager dbManager;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -98,12 +107,15 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 1, 0, 0));
+		panel.setBorder(BorderFactory.createTitledBorder("Databases:"));
+		panel.setBackground(Color.white);
 		tree = new JTree(MainFormMng.createTreeNodes(dbManager));
 		tree.setMinimumSize(new Dimension(75,height));
 		panel.add(tree);
 		tree.addMouseListener(this);
 		
 		panel_1 = new JPanel();
+		panel_1.setBorder(BorderFactory.createLoweredSoftBevelBorder());
 		//contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
@@ -117,77 +129,127 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		//contentPane.add(panel, BorderLayout.EAST);
 		
 		panel_2 = new JPanel();
-		//panel.add(panel_2);
-		panel_2.setLayout(new GridLayout(0, 1, 10, 10));
+		panel_2.setBorder(BorderFactory.createTitledBorder("Control panel:"));
 		
+		GridBagConstraints separatorConstraint = new GridBagConstraints();
+		separatorConstraint.weightx = 1.0;
+		separatorConstraint.fill = GridBagConstraints.HORIZONTAL;
+		separatorConstraint.gridwidth = GridBagConstraints.REMAINDER;
+
+		JSeparator separator  = new JSeparator(JSeparator.HORIZONTAL);
+		JSeparator separator2 = new JSeparator(JSeparator.HORIZONTAL);
+		JSeparator separator3 = new JSeparator(JSeparator.HORIZONTAL);
+		JSeparator separator4 = new JSeparator(JSeparator.HORIZONTAL);
+		JSeparator separator5 = new JSeparator(JSeparator.HORIZONTAL);
+		Dimension separatorDimension = new Dimension(
+				Integer.MAX_VALUE,
+				separator.getPreferredSize().height);
+		separator.setMaximumSize(separatorDimension);
+		separator2.setMaximumSize(separatorDimension);
+		separator3.setMaximumSize(separatorDimension);
+		separator4.setMaximumSize(separatorDimension);
+		separator5.setMaximumSize(separatorDimension);
+		
+		exitButton = new JButton("Exit");
+		exitButton.setActionCommand("EXIT");
+		exitButton.addActionListener(this);	
+
 		saveBtn = new JButton("Save");
-		panel_2.add(saveBtn);
 		saveBtn.setActionCommand("SAVE");
 		saveBtn.addActionListener(this);
 		
 		cancelBtn = new JButton("Cancel");
-		panel_2.add(cancelBtn);
 		cancelBtn.setActionCommand("CANCEL");
 		cancelBtn.addActionListener(this);
-				
 		
 		createDBBtn = new JButton("Create DB");
-		panel_2.add(createDBBtn);
 		createDBBtn.setActionCommand("CREATE_DB");
 		createDBBtn.addActionListener(this);
-				
 		
 		removeDB = new JButton("Remove DB");
-		panel_2.add(removeDB);
 		removeDB.setActionCommand("DELETE_DB");
 		removeDB.addActionListener(this);
 				
-		
 		createTableBtn = new JButton("Create Table");
-		panel_2.add(createTableBtn);
 		createTableBtn.setActionCommand("CREATE_TABLE");
 		createTableBtn.addActionListener(this);
 				
-		
 		removeTableBtn = new JButton("Remove Table");
-		panel_2.add(removeTableBtn);
 		removeTableBtn.setActionCommand("DELETE_TABLE");
 		removeTableBtn.addActionListener(this);
-				
 		
 		addColumnBtn = new JButton("Add column");
-		panel_2.add(addColumnBtn);
 		addColumnBtn.setActionCommand("CREATE_COLUMN");
 		addColumnBtn.addActionListener(this);
-				
 		
 		deleteColumnBtn = new JButton("Remove column");
-		panel_2.add(deleteColumnBtn);
 		deleteColumnBtn.setActionCommand("DELETE_COLUMN");
 		deleteColumnBtn.addActionListener(this);
 		
 		addRowBtn = new JButton("Add row");
-		panel_2.add(addRowBtn);
 		addRowBtn.setActionCommand("ADD_ROW");
 		addRowBtn.addActionListener(this);
 				
-		
 		deleteRowBtn = new JButton("Remove row");
-		panel_2.add(deleteRowBtn);
 		deleteRowBtn.setActionCommand("DELETE_ROW");
 		deleteRowBtn.addActionListener(this); 
 				
-			
 		projectionBtn = new JButton("Tables Projection");
-		panel_2.add(projectionBtn);
 		projectionBtn.setActionCommand("PROJECTION");
 		projectionBtn.addActionListener(this);
 		
 		joinTablesBtn = new JButton("Tables Join");
-		panel_2.add(joinTablesBtn);
 		joinTablesBtn.setActionCommand("JOIN");
 		joinTablesBtn.addActionListener(this);
-				
+		
+		GroupLayout panel2Layout = new GroupLayout(panel_2);
+		panel_2.setLayout(panel2Layout);
+		panel2Layout.setAutoCreateContainerGaps(true);
+		panel2Layout.setAutoCreateGaps(true);
+		
+		panel2Layout.setVerticalGroup(
+				panel2Layout.createSequentialGroup()
+					.addComponent(saveBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(cancelBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator2)
+					.addComponent(createDBBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(removeDB, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator3)
+					.addComponent(createTableBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(removeTableBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator4)
+					.addComponent(addColumnBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(deleteColumnBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(addRowBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(deleteRowBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator5)
+					.addComponent(joinTablesBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(projectionBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator)
+					.addComponent(exitButton, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				);
+		
+		panel2Layout.setHorizontalGroup(
+				panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(saveBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(cancelBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator2)
+					.addComponent(createDBBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(removeDB, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator3)
+					.addComponent(createTableBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(removeTableBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator4)
+					.addComponent(addColumnBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(deleteColumnBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(addRowBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(deleteRowBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator5)
+					.addComponent(joinTablesBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(projectionBtn, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(separator)
+					.addComponent(exitButton, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				);
 		
 		AutorizationWindow dialog = new AutorizationWindow(dbManager);
 		
@@ -219,6 +281,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 					.addComponent(panel_2)
 				);
 		
+		setTitle("Database manager v.0.6.9");
 		setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 		pack();
 		setLocationRelativeTo(null);
@@ -366,7 +429,8 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	        
 	        String data = (String)table.getModel().getValueAt(row, col);
 	        MainFormMng.setNewCellToTable(tree, table, row, col, data);
-	        
+	        table.setModel(table.getModel());
+			table.repaint();
 		}
 	}
 
@@ -399,6 +463,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		} else if(event.getActionCommand().equals("DELETE_COLUMN")) {
 			
 			if(table.getSelectedColumn() != -1) {
+				//	TODO bug fix
+				//	when deleting column model must be updated
+				//	because of that indexOutOfBounds error rises
 				TableColumn col = table.getColumnModel().getColumn(table.getSelectedColumn());
 				MainFormMng.deleteColumn(dbManager, selectedDB, selectedTable, col.getHeaderValue().toString());
 				table.getColumnModel().removeColumn(col);
@@ -413,6 +480,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			tree = MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable, tree);
 		} else if(event.getActionCommand().equals("PROJECTION")) {
 			MainFormMng.projectTable(dbManager, tree);
+		} else if(event.getActionCommand().equals("EXIT")) {
+			this.dispose();
 		}
+		table.repaint();
 	} 
 }

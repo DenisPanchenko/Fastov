@@ -211,7 +211,6 @@ public class DataBase extends ActionPool implements Serializable{
 					return;
 			File f = new File(getPath() + resultName);
 			f.createNewFile();
-			//System.out.println(getPath() + resultName);
 			
 			//	create an object result table
 			Table result = new Table(f);
@@ -242,6 +241,9 @@ public class DataBase extends ActionPool implements Serializable{
 			
 			result.performAll(); //	force to create columns
 			
+			System.out.println(result.getColumnNames().toString());
+			System.out.println(result.getColumnTypes().toString());
+			
 			for(int i = 0; i < tTable.getHeight(); i++)
 			{
 				result.createRow();
@@ -252,10 +254,16 @@ public class DataBase extends ActionPool implements Serializable{
 				{
 					//System.out.println(tTable.getCell(i, tIndex));
 					//System.out.println(dTable.getCell(j, dIndex));
+					/*
+					DataType tCell = tTable.getCell(i, tIndex);
+					DataType dCell = dTable.getCell(j, dIndex);
+					System.out.println(tCell.toString());
+					System.out.println(dCell.toString());
 					if(tTable.getCell(i, tIndex).equals(dTable.getCell(j, dIndex)))
 						for(int k = 0; k < dTable.getWidth(); k++)
 							if(k != dIndex)
 								result.setCell(k + tTable.getWidth() - 1, result.getHeight() - 1, dTable.getCell(k, j));
+								*/
 				}
 			}
 			performAll();
