@@ -34,6 +34,11 @@ import core.Table;
 
 public class MainFormMng { 
 	
+	/**
+	 * Create new data base
+	 * @param dbManager
+	 * @param tree 
+	 */
 	public static void createDB(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
@@ -81,6 +86,11 @@ public class MainFormMng {
 	}
 */
 	
+	/**
+	 * Remove selected table
+	 * @param tree 
+	 * @param dbManager
+	 */
 	public static void removeTable(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
@@ -99,6 +109,11 @@ public class MainFormMng {
 		node.removeFromParent();
 	}
 	
+	/**
+	 * Create tree with all nodes (databases and tables)
+	 * @param dbManager
+	 * @return root "Available data bases" of tree
+	 */
 	public static DefaultMutableTreeNode createTreeNodes(DBManager dbManager) {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Available data bases");
@@ -123,6 +138,11 @@ public class MainFormMng {
 		return root;
 	}
 
+	/**
+	 * Create new table in selected database
+	 * @param dbManager
+	 * @param tree
+	 */
 	public static void createTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
@@ -147,6 +167,11 @@ public class MainFormMng {
 		}
 	}
 
+	/**
+	 * Remove selected database
+	 * @param tree
+	 * @param dbManager
+	 */
 	public static void removeDB(JTree tree, DBManager dbManager) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
@@ -168,6 +193,13 @@ public class MainFormMng {
 		}
 	}
 
+	/**
+	 * Create input dialog with column name and column type fields
+	 * User has to enter name and select type from list and press "Add" button
+	 * @param dbManager
+	 * @param tree
+	 * @return table with added column
+	 */
 	public static JTable addColumnToTable(final DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		assert(node != null);
@@ -214,6 +246,16 @@ public class MainFormMng {
 		return TableConverter.convertTableToJTable(table);
 	}
 
+	/**
+	 * create dialog where user has to
+	 * choose table that will be joined with selected table
+	 * and column of choosed table 
+	 * @param dbManager
+	 * @param dbName - name of selected db
+	 * @param selectedTable
+	 * @param tree
+	 * @return result of two tables joining
+	 */
 	public static JTree createJoinDialog(final DBManager dbManager, final String dbName,
 			final String selectedTable, JTree tree) {
 		
@@ -316,6 +358,13 @@ public class MainFormMng {
 		return tree;
 	}
 
+	/**
+	 * delete selected row of table
+	 * @param dbManager
+	 * @param jtable
+	 * @param tree
+	 * @return table 
+	 */
 	public static JTable deleteRowFromTable(DBManager dbManager, JTable jtable, JTree tree) {
 		assert(jtable != null);
 		
@@ -335,6 +384,13 @@ public class MainFormMng {
 		return jtable;
 	}
 
+	/**
+	 * add new row with default values
+	 * @param dbManager
+	 * @param jtable
+	 * @param tree
+	 * @return table
+	 */
 	public static JTable addRowToTable(DBManager dbManager, JTable jtable, JTree tree) {
 		assert(jtable != null);
 		
@@ -353,6 +409,16 @@ public class MainFormMng {
 		return jtable;
 	}
 
+	/**
+	 * set new value to cell in table
+	 * if value is unavailable, warning message appears
+	 * @param tree
+	 * @param jtable
+	 * @param x - x-axis coordinate of cell
+	 * @param y - y-axis coordinate of cell
+	 * @param newValue
+	 * @return table
+	 */
 	public static JTable setNewCellToTable(JTree tree, JTable jtable, int x, int y, String newValue) {
 		
 		assert(jtable != null);
@@ -378,6 +444,13 @@ public class MainFormMng {
 		dbManager.deleteColumn(dbName, tableName, colName);
 	}
 	
+	/**
+	 * project table by selected columns, 
+	 * user has to choose columns 
+	 * @param dbManager
+	 * @param tree
+	 * @return tree
+	 */
 	public static JTree projectTable(DBManager dbManager, JTree tree) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		Object o = node.getUserObject();
@@ -391,6 +464,12 @@ public class MainFormMng {
 		return tree;
 	}
 	
+	/**
+	 * create projection dialog where user has to choose columns 
+	 * @param dbManager
+	 * @param table
+	 * @param dataBaseName
+	 */
 	private static void createProjectionDialog(final DBManager dbManager, final Table table
 			, final String dataBaseName) {
 		
