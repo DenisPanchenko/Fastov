@@ -115,7 +115,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		tree.addMouseListener(this);
 		
 		panel_1 = new JPanel();
-		panel_1.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+		panel_1.setBorder(BorderFactory.createLoweredBevelBorder());
 		//contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
@@ -469,6 +469,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 				TableColumn col = table.getColumnModel().getColumn(table.getSelectedColumn());
 				MainFormMng.deleteColumn(dbManager, selectedDB, selectedTable, col.getHeaderValue().toString());
 				table.getColumnModel().removeColumn(col);
+				table.setColumnModel(table.getColumnModel());
 			}
 		} else if(event.getActionCommand().equals("ADD_ROW")) {
 			table.setModel(MainFormMng.addRowToTable(dbManager, table, tree).getModel());
