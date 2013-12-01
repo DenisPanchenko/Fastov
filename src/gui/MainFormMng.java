@@ -189,7 +189,8 @@ public class MainFormMng {
 				public void actionPerformed(ActionEvent e) {
 					String colName = columnName.getText(); 
 					if(!colName.trim().isEmpty()) {
-						if(!table.getColumnNames().contains(colName)) {
+						if(!table.getColumnNames().contains(colName) && 
+						   !table.getUncompleteNames().contains(colName)) {
 							dbManager.createColumn(dataBase.getName(), table.getTableName(), colName, (DataType.TYPE)types.getSelectedItem());
 							dialog.dispose();
 						}

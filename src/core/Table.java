@@ -479,6 +479,15 @@ public class Table extends ActionPool implements Serializable{
 		return _columnPattern;
 	}
 	
+	public ArrayList<String> getUncompleteNames()
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		for(int i = 0; i < _actionPool.size(); i++)
+			if(_actionPool.get(i).getAction().equals(Action.ACTION_TYPE.CREATE))
+				result.add(_actionPool.get(i).getField());
+		return result;
+	}
+	
 	public ArrayList<String> getColumnNames() 
 	{
 		return _columnNames;
