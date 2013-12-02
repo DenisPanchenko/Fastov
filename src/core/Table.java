@@ -167,6 +167,18 @@ public class Table extends ActionPool implements Serializable{
 		}
 	}
 	
+	public void copyContent(Table another)
+	{
+		for(int i = 0; i < another.getColumnNames().size(); i++)
+			createColumn(another.getColumnNames().get(i), another.getColumnTypes().get(i));
+		performAll();
+		for(int i = 0; i < another.getHeight(); i++)
+			createRow();
+		for(int i = 0; i < another.getHeight(); i++)
+			for(int j = 0; j < another.getWidth(); j++)
+				setCellValue(i, j, another.getCell(i, j).toString());
+	}
+	
 	public static Table fromFile(File t) throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -433,19 +445,6 @@ public class Table extends ActionPool implements Serializable{
 		}
 	}
 	
-	/**
-	 * Sets new value defined by value parameter
-	 * for cell in i-th row and j-th col.
-	 * ATTENTION! UNSAFE METHOD!
-	 * Doesn't check if the cell exists
-	 * @param i - int value of cell row
-	 * @param j - int value of cell column
-	 * @param value
-	 */
-	public void setCell(int i, int j, Object value)
-	{
-		_content.get(i).set(j, new DataType(_columnPattern.get(i), value));
-	}
 
 	
 	/**

@@ -153,6 +153,20 @@ public class DataType implements Serializable
 			return TYPE.ENUM;
 		return TYPE.INTEGER;
 	}
+	/**
+	 * Test the equality of two objects.
+	 * @param another - DataType
+	 * @return boolean - whether two objects are equals or not
+	 */
+	public boolean equals(DataType another)
+	{
+		boolean result = true;
+		if(!another.getType().equals(getType()))
+			result = false;
+		else if(!another.toString().equals(toString()))
+			result = false;
+		return result;
+	}
 	
 	public String toString()
 	{

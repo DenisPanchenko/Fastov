@@ -96,7 +96,12 @@ public class DataBase extends ActionPool implements Serializable{
 		
 		return result;
 	}
-	
+	/**
+	 * Removes table from database.
+	 * If name is null do nothing, otherwise push the
+	 * delete action to the pool.
+	 * @param tableName - String name of the table
+	 */
 	public void removeTable(String tableName)
 	{
 		if(tableName == null)
@@ -126,12 +131,18 @@ public class DataBase extends ActionPool implements Serializable{
 		return _tableList;
 	};
 	
+	/**
+	 * Construct a new database with default name
+	 */
 	public DataBase(){
 		super();
 		_dbName = generateDefaultName();
 		
 	}
-	
+	/**
+	 * Construct a new database by the given name
+	 * @param name - String the name of the database
+	 */
 	public DataBase(String name){
 		super();
 		if(name == null)
@@ -140,21 +151,35 @@ public class DataBase extends ActionPool implements Serializable{
 		_tableList = new ArrayList<Table>();
 	}
 	
+	/**
+	 * Returns the name of the database
+	 * @return String - name of the database
+	 */
 	public String getName(){
 		return _dbName;
 	}
 
+	/**
+	 * External interface for perform all function.
+	 */
 	public void save()
 	{
 		performAll();
 	}
 	
+	/**
+	 * Returns the name of the database.
+	 * @return String - actually the name of the database 
+	 */
 	@Override
 	public String toString() 
 	{		
 		return getName();
 	}
 
+	/**
+	 * Perform all actions from the action pool
+	 */
 	@Override
 	protected void performAll() {
 		while(!_actionPool.isEmpty())
@@ -218,16 +243,16 @@ public class DataBase extends ActionPool implements Serializable{
 			Table dTable = getTableByName(dTableName);
 			Integer tIndex = tTable.getColumnNames().indexOf(colName);
 			Integer dIndex = dTable.getColumnNames().indexOf(colName);
-			if(dIndex == null)
+			
+			if(tIndex == -1) //	if the destination table does not have the joining field
 			{
-				//	TODO Here can be a copy problem.
-				//	Modifications to tTable will change result table also
-				result = tTable;
+				//result.copyContent(tTable);
 				_tableList.add(result);
-				System.out.println("Destination table: " + dTable.getTableName()
-						+ " has no join column: " + tTable.getColumnNames().get(dIndex));
+				System.out.println("Target table: " + tTable.getTableName()
+						+ " has no join column: " + dTable.getColumnNames().get(dIndex));
 				return;
 			}
+			
 			//	create columns from target table
 			for(int i = 0; i < tTable.getWidth(); i++)
 				result.createColumn(tTable.getColumnNames().get(i),
@@ -246,27 +271,37 @@ public class DataBase extends ActionPool implements Serializable{
 			
 			for(int i = 0; i < tTable.getHeight(); i++)
 			{
-				result.createRow();
-				for(int k = 0; k < tTable.getWidth(); k++)
-					result.setCell(result.getHeight() - 1, k, tTable.getCell(i, k).getValue());
-				
 				for(int j = 0; j < dTable.getHeight(); j++)
 				{
 					//System.out.println(tTable.getCell(i, tIndex));
 					//System.out.println(dTable.getCell(j, dIndex));
-					/*
 					DataType tCell = tTable.getCell(i, tIndex);
 					DataType dCell = dTable.getCell(j, dIndex);
 					System.out.println(tCell.toString());
 					System.out.println(dCell.toString());
+					if(tCell.equals(dCell))
+					{
+						// Create new row and concat values here
+						result.createRow();
+						System.out.println("HEIGHT IS: " + result.getHeight());
+						for(int k = 0; k < tTable.getWidth(); k++)
+							result.setCellValue(result.getHeight() - 1, k, tTable.getCell(i, k).toString());
+						
+						for(int k = 0; k < dTable.getWidth(); k++)
+							if(k != dIndex)
+								result.setCellValue(result.getHeight() - 1, k + tTable.getWidth() - 1, dTable.getCell(j, k).toString());
+					}
+					/*
 					if(tTable.getCell(i, tIndex).equals(dTable.getCell(j, dIndex)))
 						for(int k = 0; k < dTable.getWidth(); k++)
 							if(k != dIndex)
 								result.setCell(k + tTable.getWidth() - 1, result.getHeight() - 1, dTable.getCell(k, j));
-								*/
+					 */
 				}
 			}
+			result.performAll();
 			performAll();
+			_tableList.add(result);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -294,13 +329,26 @@ public class DataBase extends ActionPool implements Serializable{
 	public void projectTable(List<Integer> numbersOfcolumns, String tableName) {
 		try
 		{
-			String resultName = "Projection:" + tableName;
-			File f = new File(getPath() + resultName);
-			f.createNewFile();
-			
-			//TODO implement method
-			
-			performAll();
+			StringBuilder code = new StringBuilder();
+			for(int index : numbersOfcolumns)
+				code.append(index);
+			String resultName = "Projection:" + tableName + code.toString();
+			if(!_tableList.contains(resultName))
+			{
+				File f = new File(getPath() + resultName);
+				f.createNewFile();
+				Table result = new Table(f);
+				Table sourceTable = getTableByName(tableName);
+
+				result.copyContent(sourceTable);
+
+				for(int i = 0; i < result.getWidth(); i++)
+					if(!numbersOfcolumns.contains(i))
+						result.deleteColumn(sourceTable.getColumnNames().get(i));
+				result.performAll();
+
+				_tableList.add(result);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

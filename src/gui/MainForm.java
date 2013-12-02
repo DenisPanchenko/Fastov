@@ -473,8 +473,12 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			table.getModel().addTableModelListener(this);
 		} else if(event.getActionCommand().equals("JOIN")) {
 			tree = MainFormMng.createJoinDialog(dbManager, selectedDB, selectedTable, tree);
+			DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+			model.setRoot(MainFormMng.createTreeNodes(dbManager));
 		} else if(event.getActionCommand().equals("PROJECTION")) {
 			MainFormMng.projectTable(dbManager, tree);
+			DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+			model.setRoot(MainFormMng.createTreeNodes(dbManager));
 		} else if(event.getActionCommand().equals("EXIT")) {
 			System.exit(0);
 		}
