@@ -6,32 +6,28 @@
  * 
  * @author:			Denis Panchenko, Tanya Pushchalo
  * Wriiten:			20/10/2013
- * Last Updated:	20/10/2013	
+ * Last Updated:	09/12/2013	
  */
 package core;
 
-import java.util.*;
-import java.awt.Dimension;
 import java.io.*;
+import java.util.*;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.plaf.synth.Region;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
 
-import java.net.InetAddress;
+// imports for RMI JNDI
 import java.rmi.*;
+import java.net.InetAddress;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -59,10 +55,8 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		}
 	}
 	
-	static class ConfigManager // TODO translate class into STATE object
+	static class ConfigManager
 	{
-		
-		// TODO implement action queue
 		private static File _file;
 		private static String _configFilePath;
 		private static Document _configDoc;
@@ -83,11 +77,11 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 					_configDoc = dBuilder.parse(_file);
 					_configDoc.normalize();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
+		
 		/**
 		 * Add new database specified by name
 		 * to configuration file.
@@ -238,30 +232,15 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		addAction(removeDatabase);
 	}
 	
-	public void deleteColumn(String dbName, String tableName, String colName)
-	{
-		Table table = getTableByName(dbName, tableName);
-		if(table == null)
-			return;
-		table.deleteColumn(colName);
-	}
-	
-	public void createRow(String dbName, String tableName)
-	{
-		Table table = getTableByName(dbName, tableName);
-		if(table == null)
-			return;
-		table.createRow();
-	}
-	
-	public void deleteRow(String dbName, String tableName, Integer rowNumnber)
-	{
-		Table table = getTableByName(dbName, tableName);
-		if(table == null)
-			return;
-		table.deleteRow(rowNumnber);
-	}
-	
+	/**
+	 * Creates new column.
+	 * If there is no such table or such database
+	 * to create column in, do nothing.
+	 * @param dbName - String database name
+	 * @param tableName - String table name
+	 * @param colName - String new column name
+	 * @param colType - DataType.TYPE - new column type
+	 */
 	public void createColumn(String dbName, String tableName, String colName, DataType.TYPE colType)
 	{
 		Table table = getTableByName(dbName, tableName);
@@ -270,11 +249,68 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		table.createColumn(colName, colType);
 	}
 	
+	/**
+	 * Delete column in specified table in
+	 * specified database by column name.
+	 * If there is no such column or table or database
+	 * do nothing.
+	 * @param dbName - String database name
+	 * @param tableName - String table name
+	 * @param colName - String column name
+	 */
+	public void deleteColumn(String dbName, String tableName, String colName)
+	{
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
+			return;
+		table.deleteColumn(colName);
+	}
+	
+	/**
+	 * Create new row in the specified table in
+	 * the specified database.
+	 * If there is no such table or database 
+	 * do nothing.
+	 * @param dbName - String database name
+	 * @param tableName - String table name
+	 */
+	public void createRow(String dbName, String tableName)
+	{
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
+			return;
+		table.createRow();
+	}
+	
+	/**
+	 * Delete row by its number in the
+	 * specified table in the specified database.
+	 * If there is no such table or database
+	 * do nothing.
+	 * Delegates to Table class.
+	 * @param dbName - String database name
+	 * @param tableName - String table name
+	 * @param rowNumnber - Integer deleted row number
+	 */
+	public void deleteRow(String dbName, String tableName, Integer rowNumnber)
+	{
+		Table table = getTableByName(dbName, tableName);
+		if(table == null)
+			return;
+		table.deleteRow(rowNumnber);
+	}
+	
+	/**
+	 * Cancel last action in pool.
+	 */
 	public void undoAction()
 	{
 		removeAction();
 	}
-
+	
+	/**
+	 * Save all operations from queue.
+	 */
 	public void save()
 	{
 		performAll();
@@ -299,33 +335,8 @@ public class DBManager extends ActionPool implements Remote, Serializable{
 		dataBase.addAction(createTable);
 	}
 	
-	//	UNUSED METHOD
-	
-	/*
-	public void createTable(String dbName, List<String> columnNames, List<DataType> columnTypes) 
-	{
-		DataBase dataBase = null;
-		for(DataBase db : _dataBases)
-			if(db.getName().equals(dbName))
-				dataBase = db;
-		if(dataBase != null)
-		{
-			Action createTable = new Action(Action.ACTION_TYPE.CREATE);
-			createTable.setData("name", "");
-			dataBase.addAction(createTable);
-		}
-	}
-	*/
-	
 	public void tableJoin(String dbName, String targetTableName, String destTableName, String colName)
 	{
-		//	TODO table join operation
-		System.out.println("JOIN OPERATION TRIGGERED");
-		System.out.println(dbName);
-		System.out.println(targetTableName);
-		System.out.println(destTableName);
-		System.out.println(colName);
-		
 		DataBase db = getDBByName(dbName);
 		if(db == null)
 			return;

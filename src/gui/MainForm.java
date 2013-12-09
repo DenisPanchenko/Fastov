@@ -1,53 +1,55 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
+//	Swing imports 
+import javax.swing.JTree;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTree;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JSeparator;
+import javax.swing.GroupLayout;
+import javax.swing.JScrollPane;
+import javax.swing.tree.TreePath;
+import javax.swing.BorderFactory;
+import javax.swing.table.TableColumn;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+//	end of Swing imports
 
-import core.DBManager;
-import core.DataBase;
-import core.RMIInterface;
-import core.RMIWrapper;
-import core.Table;
-
+//	Awt imports
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.GridBagConstraints;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+//	end of Awt imports
+
+//	Core imports
+import core.Table;
+import core.DataBase;
+import core.DBManager;
+//	end of Core imports
+
+// Imports for RMI JNDI
+import core.RMIWrapper;
+import core.RMIInterface;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
+// enf of imports for RMI JNDI
+
 
 public class MainForm extends JFrame implements ActionListener, MouseListener, TableModelListener {
-
-	private JPanel contentPane;
+	
 	private JTable table;
-	private JPanel panel;
 	private static JButton saveBtn;
 	private static JButton cancelBtn;
 	private static JButton createDBBtn;
@@ -97,11 +99,6 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 	    */
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(50, 50, 950, 700);
-		//contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		//contentPane.setLayout(new BorderLayout(0, 0));
-		//setContentPane(contentPane);
 		
 		Integer height = new Integer(600);
 		
@@ -116,7 +113,6 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		
 		panel_1 = new JPanel();
 		panel_1.setBorder(BorderFactory.createLoweredBevelBorder());
-		//contentPane.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
 		table.setMinimumSize(new Dimension(700, height));
@@ -125,8 +121,6 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 		table.setColumnSelectionAllowed(true);
 		panel_1.add(new JScrollPane(table));
 		panel_1.setLayout(new GridLayout(1, 1, 0, 0));
-		
-		//contentPane.add(panel, BorderLayout.EAST);
 		
 		panel_2 = new JPanel();
 		panel_2.setBorder(BorderFactory.createTitledBorder("Control panel:"));
@@ -281,7 +275,7 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 					.addComponent(panel_2)
 				);
 		
-		setTitle("Database manager v.0.6.9");
+		setTitle("Database manager v.0.9.3");
 		setButtonsSetLevel(BUTTON_SET_LEVEL.MANAGER_LEVEL);
 		pack();
 		setLocationRelativeTo(null);

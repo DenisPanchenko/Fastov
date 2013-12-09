@@ -53,6 +53,10 @@ public abstract class ActionPool {
 	 */
 	protected abstract void performAll();
 	
+	/**
+	 * Default constructor.
+	 * Creates an empty action pool.
+	 */
 	public ActionPool()
 	{
 		_actionPool = new ArrayList<Action>();

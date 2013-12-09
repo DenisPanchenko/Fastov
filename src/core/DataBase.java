@@ -273,12 +273,8 @@ public class DataBase extends ActionPool implements Serializable{
 			{
 				for(int j = 0; j < dTable.getHeight(); j++)
 				{
-					//System.out.println(tTable.getCell(i, tIndex));
-					//System.out.println(dTable.getCell(j, dIndex));
-					DataType tCell = tTable.getCell(i, tIndex);
-					DataType dCell = dTable.getCell(j, dIndex);
-					System.out.println(tCell.toString());
-					System.out.println(dCell.toString());
+					DataType tCell = tTable.getCell(i, tIndex); //	value from target cell
+					DataType dCell = dTable.getCell(j, dIndex); //	value from destination cell
 					if(tCell.equals(dCell))
 					{
 						// Create new row and concat values here
@@ -291,12 +287,6 @@ public class DataBase extends ActionPool implements Serializable{
 							if(k != dIndex)
 								result.setCellValue(result.getHeight() - 1, k + tTable.getWidth() - 1, dTable.getCell(j, k).toString());
 					}
-					/*
-					if(tTable.getCell(i, tIndex).equals(dTable.getCell(j, dIndex)))
-						for(int k = 0; k < dTable.getWidth(); k++)
-							if(k != dIndex)
-								result.setCell(k + tTable.getWidth() - 1, result.getHeight() - 1, dTable.getCell(k, j));
-					 */
 				}
 			}
 			result.performAll();
