@@ -477,5 +477,9 @@ public class MainForm extends JFrame implements ActionListener, MouseListener, T
 			System.exit(0);
 		}
 		table.repaint();
+	}
+
+	public DBManager getDBManager() {
+		return dbManager;
 	} 
 }

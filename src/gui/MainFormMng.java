@@ -27,6 +27,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import web_service.IDBWebService;
 import core.DBManager;
 import core.DataBase;
 import core.DataType;
@@ -34,6 +35,12 @@ import core.Table;
 
 public class MainFormMng { 
 	
+	private static IDBWebService dbService;
+
+	public static void setDbService(IDBWebService dbWebService) {
+		dbService = dbWebService;
+	}
+
 	/**
 	 * Create new data base
 	 * @param dbManager
@@ -295,9 +302,17 @@ public class MainFormMng {
 				{
 					if(e.getActionCommand().equals("JOIN")) {
 						if(columnsOfSelectedTable.getSelectedItem() != null) {
-							dbManager.tableJoin(dbName, selectedTable,
-									tablesCB.getSelectedItem().toString(),
-									columnsOfSelectedTable.getSelectedItem().toString());
+							if(dbService == null) {
+								dbManager.tableJoin(dbName, selectedTable,
+										tablesCB.getSelectedItem().toString(),
+										columnsOfSelectedTable.getSelectedItem().toString());
+								
+							} else {
+								dbService.joinTables(dbName, selectedTable,
+										tablesCB.getSelectedItem().toString(), 
+										columnsOfSelectedTable.getSelectedItem().toString());
+							
+							}
 							dialog.dispose();
 						}
 					}
@@ -477,7 +492,7 @@ public class MainFormMng {
 		
 		if(!columnNames.isEmpty()) {
 			final List<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
-			final List<Integer> numbersOfSelectedCB = new ArrayList<Integer>();
+			final ArrayList<Integer> numbersOfSelectedCB = new ArrayList<Integer>();
 			final JDialog projDialog = new JDialog();
 			
 			for(int i = 0; i < columnNames.size(); i++) {
@@ -496,7 +511,12 @@ public class MainFormMng {
 							numbersOfSelectedCB.add(i);
 						}
 					}
-					dbManager.projectTable(numbersOfSelectedCB, table.getTableName(), dataBaseName);
+					if(dbService == null) {
+						dbManager.projectTable(numbersOfSelectedCB, table.getTableName(), dataBaseName);
+					} else {
+						dbService.projectTable(numbersOfSelectedCB, table.getTableName(), dataBaseName);
+					}
+					
 					projDialog.dispose();
 				}
 			});
